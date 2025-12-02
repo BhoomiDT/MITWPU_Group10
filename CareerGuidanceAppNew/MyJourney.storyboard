@@ -31,6 +31,7 @@
                                     <segment title="Milestone History"/>
                                     <segment title="Learned Skills"/>
                                 </segments>
+                                <color key="selectedSegmentTintColor" red="0.12156862745098039" green="0.6470588235294118" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <action selector="segmentChanged:" destination="Y6W-OH-hqX" eventType="valueChanged" id="Vcf-3u-usw"/>
                                 </connections>

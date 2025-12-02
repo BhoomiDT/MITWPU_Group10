@@ -29,6 +29,13 @@ class JourneyViewController: UIViewController {
             segmentedControl.setTitle("Learned Skills", forSegmentAt: 1)
         }
         segmentedControl.selectedSegmentIndex = 0
+        segmentedControl.setTitleTextAttributes([
+            .foregroundColor: UIColor.label
+        ], for: .normal)
+
+        segmentedControl.setTitleTextAttributes([
+            .foregroundColor: UIColor.white
+        ], for: .selected)
     }
 
     private func setupTableView() {
