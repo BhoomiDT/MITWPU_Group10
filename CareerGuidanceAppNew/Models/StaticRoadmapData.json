@@ -1,0 +1,38 @@
+{
+  "title": "Web Development",
+  "description": "Master core web languages, specialize in front- or back-end, then learn architecture and deployment.",
+  "imageName": null,
+  "modules": null,
+  "milestones": [
+    {
+      "title": "HTML & CSS Basics",
+      "subtitle": "Structure and style the web",
+      "iconName": "building.columns",
+      "iconBackgroundColor": "systemBlue"
+    },
+    {
+      "title": "JavaScript Essentials",
+      "subtitle": "Add logic and interactivity",
+      "iconName": "cube.box",
+      "iconBackgroundColor": "systemOrange"
+    },
+    {
+      "title": "Frontend Frameworks",
+      "subtitle": "Build dynamic user interfaces",
+      "iconName": "star.circle",
+      "iconBackgroundColor": "systemGreen"
+    },
+    {
+      "title": "Backend Development",
+      "subtitle": "Power your apps with servers",
+      "iconName": "person.3",
+      "iconBackgroundColor": "systemPurple"
+    },
+    {
+      "title": "APIs & Databases",
+      "subtitle": "Connect data and services",
+      "iconName": "cloud",
+      "iconBackgroundColor": "systemCyan"
+    }
+  ]
+}

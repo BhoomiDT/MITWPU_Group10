@@ -1,0 +1,83 @@
+[
+  {
+    "title": "Data Analysis",
+    "description": "Mastering the collection, transformation, and modeling of data to draw conclusions and drive decisions.",
+    "imageName": "data-analytics-role",
+    "modules": [
+      {
+        "title": "Module 1: Foundations",
+        "lessons": [
+          {
+            "name": "Visual Design Principles",
+            "dueDate": "Dec 15",
+            "status": "See Results"
+          },
+          {
+            "name": "Color Theory & Typography",
+            "dueDate": "Dec 15",
+            "status": "Start Test"
+          },
+          {
+            "name": "Layout & Responsive Grids",
+            "dueDate": "Dec 15",
+            "status": "Start Test"
+          }
+        ]
+      },
+      {
+        "title": "Module 2: Core Skills",
+        "lessons": [
+          {
+            "name": "Design to Code: HTML & CSS",
+            "dueDate": "Dec 22",
+            "status": "Start Test"
+          },
+          {
+            "name": "Interactive UI with JavaScript",
+            "dueDate": "Dec 22",
+            "status": "Start Test"
+          },
+          {
+            "name": "Portfolio Website Design",
+            "dueDate": "Dec 22",
+            "status": "Start Test"
+          }
+        ]
+      },
+      {
+        "title": "Module 3: Advanced Concepts",
+        "lessons": [
+          {
+            "name": "Design Production & Goals",
+            "dueDate": "Dec 29",
+            "status": "Start Test"
+          },
+          {
+            "name": "High-Fidelity UI Design",
+            "dueDate": "Dec 29",
+            "status": "Start Test"
+          },
+          {
+            "name": "Usability Testing & Iteration",
+            "dueDate": "Dec 29",
+            "status": "Start Test"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "AI & Machine Learning",
+    "description": "Developing algorithms that allow machines to learn from data and make predictions or decisions.",
+    "imageName": "aiml-role",
+    "modules": [
+      {
+        "title": "Module 1: ML Fundamentals",
+        "lessons": [
+          {"name": "Introduction to Python", "dueDate": "Dec 15", "status": "See Results"},
+          {"name": "Linear Algebra for ML", "dueDate": "Dec 15", "status": "Start Test"}
+        ]
+      }
+    ]
+  }
+]
