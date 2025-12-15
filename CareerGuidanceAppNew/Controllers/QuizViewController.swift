@@ -9,10 +9,14 @@ import UIKit
 
 class QuizViewController: UIViewController {
     var lesson: Lesson?
+    var quiz: Quiz?
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Quiz"
-        // load quiz for lesson
+
+//        title = quiz.lessonName
+//        nextButton.layer.cornerRadius = 20
+//
+//        loadQuestion()
     }
 }

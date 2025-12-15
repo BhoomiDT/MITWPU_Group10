@@ -42,7 +42,7 @@ class RoadmapsViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         
-        collectionView.backgroundColor = .systemGroupedBackground
+        //collectionView.backgroundColor = .systemGroupedBackground
         
         collectionView.setCollectionViewLayout(generateRoadmapLayout(), animated: false)
     }

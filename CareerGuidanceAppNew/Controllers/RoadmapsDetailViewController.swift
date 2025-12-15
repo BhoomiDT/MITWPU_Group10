@@ -18,6 +18,12 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
             super.viewDidLoad()
             self.title = selectedRoadmap.title
             setupTableView()
+//        if let sheet = self.sheetPresentationController {
+//            sheet.presentedViewController.view.backgroundColor = .white
+//        }
+//        
+//        view.backgroundColor = .white
+        //view.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         }
 
         private func setupTableView() {
@@ -76,17 +82,28 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
 
         navigationController?.pushViewController(resultsVC, animated: true)
     }
-        private func openTest(for lesson: Lesson) {
-            // Example using storyboard identifier "QuizViewController"
-            let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-            guard let quizVC = storyboard.instantiateViewController(withIdentifier: "QuizViewController") as? QuizViewController else {
-                print("QuizViewController not found")
-                return
+    private func openTest(for lesson: Lesson) {
+        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+        guard let modalVC = storyboard.instantiateViewController(
+            withIdentifier: "StartTestModalVC"
+        ) as? StartTestModalViewController else { return }
+
+        modalVC.lesson = lesson
+        modalVC.delegate = self
+
+        if let sheet = modalVC.sheetPresentationController {
+            let customDetent = UISheetPresentationController.Detent.custom { context in
+                return 600   // height in points (approx 3/4 screen on most iPhones)
             }
-            // pass data
-            quizVC.lesson = lesson
-            navigationController?.pushViewController(quizVC, animated: true)
+
+            sheet.detents = [customDetent]
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 20
+            //sheet.largestUndimmedDetentIdentifier = nil
         }
+
+        present(modalVC, animated: true)
+    }
     }
 
     
@@ -203,3 +220,15 @@ extension RoadmapDetailViewController {
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }
+extension RoadmapDetailViewController: StartTestModalDelegate {
+
+    func didTapStartTest(quiz: Quiz) {
+        let sb = UIStoryboard(name: "Roadmaps", bundle: nil)
+        let quizVC = sb.instantiateViewController(
+            withIdentifier: "QuizViewController"
+        ) as! QuizViewController
+
+        quizVC.quiz = quiz   // pass quiz data
+        navigationController?.pushViewController(quizVC, animated: true)
+    }
+}
