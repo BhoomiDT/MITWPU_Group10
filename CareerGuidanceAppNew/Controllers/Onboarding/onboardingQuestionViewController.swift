@@ -16,6 +16,7 @@ class onboardingQuestionViewController: UIViewController {
     @IBOutlet weak var optionButton3: UIButton!
     @IBOutlet weak var optionButton4: UIButton!
     
+    @IBOutlet weak var optionButton5: UIButton!
     @IBOutlet weak var nextButton: UIButton!
     @IBOutlet weak var progressView: UIProgressView!
 
@@ -33,7 +34,7 @@ class onboardingQuestionViewController: UIViewController {
         questionLabel.text = String(question.qText)
 
         let options = question.options
-        let buttons = [optionButton1, optionButton2, optionButton3, optionButton4]
+        let buttons = [optionButton1, optionButton2, optionButton3, optionButton4,optionButton5]
 
         for i in 0..<buttons.count {
             if i < options.count {

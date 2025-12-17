@@ -118,11 +118,51 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     @objc func continueOnboarding() {
         if let nextVC = OnboardingManager.shared.getNextViewController() { navigationController?.pushViewController(nextVC, animated: true) }
     }
-    
+    /*
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeaderView", for: indexPath) as! HomeSectionHeaderView
         header.titleLabel.text = ["", OnboardingManager.shared.isOnboardingFullyComplete() ? "My Roadmaps" : "Finish Setup", "My Journey", "", "", "Trending Domains"][indexPath.section]
         header.viewAllButton.isHidden = indexPath.section != 5
+        return header
+    }
+    */
+    
+    func collectionView(
+        _ collectionView: UICollectionView,
+        viewForSupplementaryElementOfKind kind: String,
+        at indexPath: IndexPath
+    ) -> UICollectionReusableView {
+
+        let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: "SectionHeaderView",
+            for: indexPath
+        ) as! HomeSectionHeaderView
+
+        header.titleLabel.text = [
+            "",
+            OnboardingManager.shared.isOnboardingFullyComplete() ? "My Roadmaps" : "Finish Setup",
+            "My Journey",
+            "",
+            "",
+            "Trending Domains"
+        ][indexPath.section]
+
+        header.viewAllButton.isHidden = indexPath.section != 5
+
+
+        header.onViewAllTapped = { [weak self] in
+            guard let self else { return }
+
+            if indexPath.section == 5 {
+                let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+                let vc = storyboard.instantiateViewController(
+                    withIdentifier: "TrendingVC"
+                )
+                self.navigationController?.pushViewController(vc, animated: true)
+            }
+        }
+
         return header
     }
     
@@ -177,5 +217,6 @@ class HomeSectionHeaderView: UICollectionReusableView {
         ])
     }
     required init?(coder: NSCoder) { fatalError() }
-    @objc func tap() { onViewAllTapped?() }
+    @objc func tap() { onViewAllTapped?()}
+      
 }

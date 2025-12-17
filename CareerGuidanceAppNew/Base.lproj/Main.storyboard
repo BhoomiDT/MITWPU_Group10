@@ -520,7 +520,7 @@
                         <outlet property="optionButton2" destination="pqx-xB-hBc" id="pgV-5i-ZjK"/>
                         <outlet property="optionButton3" destination="gEB-Fz-Rir" id="mgQ-29-EKV"/>
                         <outlet property="optionButton4" destination="WUI-aQ-Tcs" id="o2r-Gx-pPT"/>
-                        <outlet property="optionButton5" destination="XjS-EU-gXV" id="Jh0-a0-CFg"/>
+                        <outlet property="optionButton5" destination="XjS-EU-gXV" id="6su-lQ-bqa"/>
                         <outlet property="progressView" destination="mtD-U2-0We" id="Iu0-g2-afv"/>
                         <outlet property="questionLabel" destination="XDd-Ng-Aff" id="T2k-Pz-ohH"/>
                         <outlet property="subtitleLabel" destination="YTk-eu-Nfc" id="dDe-yc-dKQ"/>
@@ -636,8 +636,8 @@
     </scenes>
     <resources>
         <image name="gearshape.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="minus.circle.fill" width="128" height="128"/>
         <image name="minus.circle.fill" catalog="system" width="128" height="123"/>
+        <image name="minus.circle.fill" width="128" height="128"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
