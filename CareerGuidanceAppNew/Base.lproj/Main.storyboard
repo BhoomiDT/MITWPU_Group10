@@ -430,6 +430,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="fTR-4Y-6aG"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pqx-xB-hBc">
                                         <rect key="frame" x="0.0" y="73.666666666666657" width="345" height="61.666666666666657"/>
@@ -440,6 +443,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="yxx-iU-GvG"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gEB-Fz-Rir">
                                         <rect key="frame" x="0.0" y="147.33333333333334" width="345" height="61.666666666666657"/>
@@ -450,6 +456,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="zlX-pG-Fy7"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WUI-aQ-Tcs">
                                         <rect key="frame" x="0.0" y="221.00000000000003" width="345" height="61.666666666666657"/>
@@ -460,6 +469,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="QJ3-tM-JmZ"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XjS-EU-gXV">
                                         <rect key="frame" x="0.0" y="294.66666666666674" width="345" height="61.666666666666686"/>
@@ -470,6 +482,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="6fZ-eY-z3z"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -636,17 +651,17 @@
     </scenes>
     <resources>
         <image name="gearshape.circle.fill" catalog="system" width="128" height="123"/>
-        <image name="minus.circle.fill" catalog="system" width="128" height="123"/>
         <image name="minus.circle.fill" width="128" height="128"/>
+        <image name="minus.circle.fill" catalog="system" width="128" height="123"/>
         <image name="plus.circle.fill" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray2Color">
-            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

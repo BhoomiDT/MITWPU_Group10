@@ -11,17 +11,17 @@ struct TrendingModel {
         TrendingItem(
             title: "AI & Machine Learning",
             description: "Teaching machines to learn and make smart decisions.",
-            imageName: "MachineLearning"
+            imageName: "aiml-role"
         ),
         TrendingItem(
             title: "Web Development",
             description: "Building responsive websites and web applications.",
-            imageName: "WebDev"
+            imageName: "appdev-role 1"
         ),
         TrendingItem(
             title: "Cyber Security",
             description: "Protecting systems and networks from digital attacks.",
-            imageName: "CyberSecurity"
+            imageName: "cyber-security-role"
         )
     ]
 }

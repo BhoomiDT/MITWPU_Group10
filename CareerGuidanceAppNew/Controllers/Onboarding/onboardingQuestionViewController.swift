@@ -56,11 +56,27 @@ class onboardingQuestionViewController: UIViewController {
         let progress = Float(current) / Float(totalQuestions)
         progressView.setProgress(progress, animated: true)
     }
+    private func resetOptionButtonBorders() {
+        let buttons = [
+            optionButton1,
+            optionButton2,
+            optionButton3,
+            optionButton4,
+            optionButton5
+        ]
 
-    // MARK: - Actions
+        for button in buttons {
+            button?.layer.borderWidth = 0
+            button?.layer.borderColor = UIColor.clear.cgColor
+        }
+    }
 
     @IBAction func optionTapped(_ sender: UIButton) {
-       
+        resetOptionButtonBorders()
+        sender.layer.borderWidth = 2
+        sender.layer.borderColor = UIColor(hex:"1fa5a1").cgColor
+        sender.layer.cornerRadius = 8
+        sender.clipsToBounds = true
         print("Selected option: \(sender.currentTitle ?? "")")
     }
 
