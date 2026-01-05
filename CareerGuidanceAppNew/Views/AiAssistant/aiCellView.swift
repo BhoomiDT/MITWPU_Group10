@@ -17,8 +17,6 @@ class aiCellView: UITableViewCell {
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
         messageLabel.numberOfLines = 0
-        
-        // ADDED: This adds 16px padding from the screen edges
         bubbleLeadingConstraint.constant = 16
         bubbleTrailingConstraint.constant = 16
     }

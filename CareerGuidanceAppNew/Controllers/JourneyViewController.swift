@@ -1,16 +1,16 @@
 import UIKit
 
-class JourneyViewController: UIViewController {
+class JourneyViewController: UIViewController,UITableViewDelegate{
 
-    // MARK: - Outlets
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
 
-    // MARK: - Data
-    private var sections: [JourneySection] = JourneyData.milestones   // default tab
 
-    // MARK: - Lifecycle
+    private var sections: [JourneySection] = JourneyData.milestones
+
+   
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGroupedBackground
@@ -19,11 +19,9 @@ class JourneyViewController: UIViewController {
         setupTableView()
     }
 
-    // MARK: - Setup
+  
     private func setupUI() {
         titleLabel.text = "My Journey"
-
-        // In case titles are not set in storyboard
         if segmentedControl.numberOfSegments == 2 {
             segmentedControl.setTitle("Milestone History", forSegmentAt: 0)
             segmentedControl.setTitle("Learned Skills", forSegmentAt: 1)
@@ -39,25 +37,20 @@ class JourneyViewController: UIViewController {
     }
 
     private func setupTableView() {
-        // Register the XIB-based cell
         let nib = UINib(nibName: "JourneyTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "JourneyTableViewCell")
-
         tableView.dataSource = self
         tableView.delegate = self
-        
         tableView.sectionHeaderTopPadding = 8
-
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
         tableView.separatorStyle = .none
-        
         tableView.backgroundColor = .systemGroupedBackground
             view.backgroundColor = .systemGroupedBackground
 
     }
 
-    // MARK: - Actions
+
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
             sections = JourneyData.milestones
@@ -68,7 +61,7 @@ class JourneyViewController: UIViewController {
     }
 }
 
-// MARK: - UITableViewDataSource
+
 extension JourneyViewController: UITableViewDataSource {
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -101,7 +94,3 @@ extension JourneyViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - UITableViewDelegate
-extension JourneyViewController: UITableViewDelegate {
-    // later you can add didSelectRowAt if needed
-}

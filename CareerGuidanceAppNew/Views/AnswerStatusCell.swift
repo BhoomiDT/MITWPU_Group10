@@ -17,8 +17,6 @@ class AnswerStatusCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        // Ensure the status background is rounded
         statusBackgroundView.layer.cornerRadius = 8
         statusBackgroundView.layer.masksToBounds = true
     }

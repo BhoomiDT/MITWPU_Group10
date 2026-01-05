@@ -82,7 +82,7 @@ class roadmapScrollCollectionViewCell: UICollectionViewCell {
         shapeLayer.lineWidth = 8
         shapeLayer.fillColor = UIColor.clear.cgColor
         shapeLayer.lineCap = .round
-        shapeLayer.strokeEnd = 0 // Animation starts from 0
+        shapeLayer.strokeEnd = 0 
         circularProgressContainer.layer.addSublayer(shapeLayer)
     }
     

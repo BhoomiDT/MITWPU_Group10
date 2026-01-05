@@ -15,15 +15,10 @@ class trendingHomePage: UICollectionViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
-        
 //        self.backgroundColor = .white
 //        self.layer.cornerRadius = 16
 //        self.layer.masksToBounds = true
 //        
-     
-       
-        
     }
 
     func configure(item: TrendingItem) {

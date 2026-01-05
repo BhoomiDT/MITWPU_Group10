@@ -19,10 +19,8 @@ class SelectedSkillCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // visual polish
-        leftButton.layer.cornerRadius = 18  // half of 36
+        leftButton.layer.cornerRadius = 18
         leftButton.clipsToBounds = true
-        // prevent button from dimming the cell
         leftButton.adjustsImageWhenHighlighted = true
     }
 

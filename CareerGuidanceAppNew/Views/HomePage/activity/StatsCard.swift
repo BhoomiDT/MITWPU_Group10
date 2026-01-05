@@ -54,7 +54,6 @@ class StatsCard: UICollectionViewCell {
 //    }
 
     private func setupSeparators() {
-            // MARK: - FIX 2: Use Width Multipliers (1/3 and 2/3)
             // We use the 'trailing' (width) attribute to calculate exact thirds.
             let multipliers: [CGFloat] = [1.0/3.0, 2.0/3.0]
             
@@ -66,16 +65,13 @@ class StatsCard: UICollectionViewCell {
                 
                 NSLayoutConstraint.activate([
                     v.widthAnchor.constraint(equalToConstant: 1),
-                    // Anchor top/bottom to the titles/values to match height
                     v.topAnchor.constraint(equalTo: xpTitle.topAnchor),
                     v.bottomAnchor.constraint(equalTo: xpValue.bottomAnchor),
-                    
-                    // Place the separator at 33% and 66% of the TOTAL WIDTH (Trailing)
                     NSLayoutConstraint(item: v,
                                        attribute: .centerX,
                                        relatedBy: .equal,
                                        toItem: self,
-                                       attribute: .trailing, // Use Trailing (Width) instead of CenterX
+                                       attribute: .trailing,
                                        multiplier: m,
                                        constant: 0)
                 ])

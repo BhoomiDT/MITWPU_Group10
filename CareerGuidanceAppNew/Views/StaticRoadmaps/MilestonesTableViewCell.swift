@@ -17,8 +17,6 @@ class MilestonesTableViewCell: UITableViewCell {
 
         override func awakeFromNib() {
             super.awakeFromNib()
-
-            // Rounded card
             containerView.layer.cornerRadius = 16
             containerView.clipsToBounds = true
             selectionStyle = .none

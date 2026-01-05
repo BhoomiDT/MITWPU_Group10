@@ -94,7 +94,6 @@ class QuizViewController: UIViewController {
         print("Next Button tapped")
 //        guard let selectedIndex = selectedOptionIndices[currentQuestionIndex] else { return }
 //        selectedOptionIndices[currentQuestionIndex] = selectedIndex
-        // Ensure user selected an option
         guard isCurrentQuestionAnswered() else {
             showAlert(
                 title: "Select an option",
@@ -103,11 +102,10 @@ class QuizViewController: UIViewController {
             return
         }
 
-        // LAST QUESTION → SUBMIT
+        // If last question then submit func called
         if currentQuestionIndex == quiz.questions.count - 1 {
             showSubmitConfirmation()
         } else {
-            // Move to next question
             currentQuestionIndex += 1
             loadQuestion()
         }

@@ -99,9 +99,6 @@ extension RoadmapsViewController: UICollectionViewDelegate {
 extension RoadmapsViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        // Implement filtering logic here.
-        // 1. Filter the roadmapsData array based on searchText
-        // 2. Reload the collection view: collectionView.reloadData()
         print("Search text changed: \(searchText)")
     }
     

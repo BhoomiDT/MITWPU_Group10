@@ -21,12 +21,8 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
         }
 
         private func setupTableView() {
-
-            // Register Header Cell (card top)
             let headerNib = UINib(nibName: "RoadmapSectionHeaderCell", bundle: nil)
             tableView.register(headerNib, forCellReuseIdentifier: "section_header_cell")
-
-            // Register Lesson Cell (rows inside card)
             let lessonNib = UINib(nibName: "RoadmapLessonRowCell", bundle: nil)
             tableView.register(lessonNib, forCellReuseIdentifier: "lesson_row_cell")
 
@@ -44,10 +40,8 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
     func roadmapLessonRowCell(_ cell: RoadmapLessonRowCell, didTapStatusFor lesson: Lesson) {
             switch lesson.status {
             case .seeResults:
-                // open Results screen
                 openResults(for: lesson)
             case .startTest:
-                // open Test/Quiz screen
                 openTest(for: lesson)
             }
         }
@@ -78,14 +72,12 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
             sheet.detents = [customDetent]
             sheet.prefersGrabberVisible = false
             sheet.preferredCornerRadius = 20
-            //sheet.largestUndimmedDetentIdentifier = nil
         }
         print("Delegate set:", modalVC.delegate != nil)
         present(modalVC, animated: true)
     }
     }
 
-// MARK: - Section Headers for Module Titles
 extension RoadmapDetailViewController {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -113,48 +105,36 @@ extension RoadmapDetailViewController {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 44   // adjust to match the left screenshot (42–56 looks good)
+        return 44
     }
 }
 
-    // MARK: - TABLE DATA SOURCE
     extension RoadmapDetailViewController: UITableViewDataSource {
 
         func numberOfSections(in tableView: UITableView) -> Int {
             return selectedRoadmap.modules.count
         }
-
-        // 1 header row + lesson count
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
             return 1 + selectedRoadmap.modules[section].lessons.count
         }
-
         func tableView(_ tableView: UITableView,
                        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
-            let module = selectedRoadmap.modules[indexPath.section]
+        let module = selectedRoadmap.modules[indexPath.section]
 
             if indexPath.row == 0 {
-                // -------- HEADER CELL --------
                 let cell = tableView.dequeueReusableCell(
                     withIdentifier: "section_header_cell",
                     for: indexPath
                 ) as! RoadmapSectionHeaderCell
-
-                // Module due date = due date of first lesson
                 if let firstDue = module.lessons.first?.dueDate {
                     cell.configure(dueText: "Due \(firstDue)")
                 }
-
-                // Round top corners only
                 cell.cardContainerView.layer.cornerRadius = 12
                 cell.cardContainerView.layer.maskedCorners = [.layerMinXMinYCorner,
                                                               .layerMaxXMinYCorner]
 
                 return cell
             } else {
-
-                // -------- LESSON CELL --------
                 let cell = tableView.dequeueReusableCell(
                     withIdentifier: "lesson_row_cell",
                     for: indexPath
@@ -166,7 +146,6 @@ extension RoadmapDetailViewController {
 
                 cell.configure(with: lesson)
                 cell.delegate = self
-                // CELL CORNER LOGIC
                 let isFirstLesson = lessonIndex == 0
                 let isLastLesson = lessonIndex == lastIndex
 
@@ -187,7 +166,7 @@ extension RoadmapDetailViewController {
 
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
-            if indexPath.row == 0 { return } // header tap ignored
+            if indexPath.row == 0 { return }
 
             let lessonIndex = indexPath.row - 1
             let lesson = selectedRoadmap.modules[indexPath.section].lessons[lessonIndex]

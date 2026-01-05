@@ -12,9 +12,6 @@ class showLeaderboard: UICollectionViewCell {
         super.awakeFromNib()
         
     }
-    
-   
-    
     @IBAction func leaderboardact(_ sender: Any) {
         onChevronTapped?()
     }

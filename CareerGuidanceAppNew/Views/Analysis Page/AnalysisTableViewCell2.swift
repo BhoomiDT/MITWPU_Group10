@@ -8,15 +8,13 @@
 import UIKit
 
 class AnalysisTableViewCell2: UITableViewCell {
-    @IBOutlet weak var labelCategory: UILabel!  // The RIASEC label (e.g., "Realistic")
-        @IBOutlet weak var progressBar: UIProgressView! // The actual progress bar
+    @IBOutlet weak var labelCategory: UILabel!
+        @IBOutlet weak var progressBar: UIProgressView!
         @IBOutlet weak var labelScore: UILabel!
     @IBOutlet weak var labelTopConstraint: NSLayoutConstraint!
         @IBOutlet weak var progressBottomConstraint: NSLayoutConstraint!
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        
         let desiredThickness: CGFloat = 0.5
                 
                 progressBar.transform = CGAffineTransform(scaleX: 1.0, y: desiredThickness)
@@ -24,8 +22,6 @@ class AnalysisTableViewCell2: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
     }
     
    

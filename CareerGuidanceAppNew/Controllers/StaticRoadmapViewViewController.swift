@@ -52,7 +52,6 @@ class StaticRoadmapViewViewController: UIViewController {
 
         header.bodyLabel.text = roadmap.description
 
-        // Auto-size
         header.layoutIfNeeded()
         tableView.tableHeaderView = header.sizedForTableHeader()
     }

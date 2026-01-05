@@ -18,7 +18,7 @@ class TestResultsViewController: UIViewController {
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
     
     var lesson: Lesson?
-    //var result: TestResult?
+
     
     
     private let scorePercentage = 80

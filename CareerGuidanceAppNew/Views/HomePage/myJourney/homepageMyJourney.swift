@@ -18,12 +18,7 @@ class homepageMyJourney: UICollectionViewCell {
 
         override func awakeFromNib() {
             super.awakeFromNib()
-            
-//            setupIcons()
-            
             overviewLabel.textColor = .appTeal
-            
-           
             setupChevronInteraction()
         }
         

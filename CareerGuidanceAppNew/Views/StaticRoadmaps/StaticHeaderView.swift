@@ -21,11 +21,8 @@ class StaticHeaderView: UIView {
     }
 
     private func setupUI() {
-        // Card styling
         cardContainer.layer.cornerRadius = 16
         cardContainer.clipsToBounds = true
-
-        // Button styling
         startButton.layer.cornerRadius = 28
         startButton.clipsToBounds = true
 
