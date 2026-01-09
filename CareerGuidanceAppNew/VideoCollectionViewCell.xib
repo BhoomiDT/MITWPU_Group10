@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="VideoCollectionViewCell" customModule="CareerGuidanceAppNew" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SIW-qm-4X7">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3XM-b7-hD3">
+                                <rect key="frame" x="10" y="10" width="120" height="70"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="70" id="WhB-de-uPz"/>
+                                    <constraint firstAttribute="width" constant="120" id="qkh-4V-SXq"/>
+                                </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="12"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="clipsToBounds" value="YES"/>
+                                    <userDefinedRuntimeAttribute type="string" keyPath="contentMode" value="scaleAspectFill"/>
+                                </userDefinedRuntimeAttributes>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tB2-Rg-eI9">
+                                <rect key="frame" x="140" y="9.9999999999999982" width="170" height="19.333333333333329"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="16"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="youtube" translatesAutoresizingMaskIntoConstraints="NO" id="hfe-Kv-wOI">
+                                <rect key="frame" x="140" y="60" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="0wF-bE-cfK"/>
+                                    <constraint firstAttribute="width" constant="20" id="r3s-6B-h72"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ldk-F1-80G">
+                                <rect key="frame" x="170" y="62" width="140" height="18"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                <color key="textColor" systemColor="secondaryLabelColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="3XM-b7-hD3" secondAttribute="bottom" constant="10" id="AP2-66-cYK"/>
+                            <constraint firstAttribute="bottom" secondItem="Ldk-F1-80G" secondAttribute="bottom" constant="10" id="Igq-LE-zJ1"/>
+                            <constraint firstItem="3XM-b7-hD3" firstAttribute="leading" secondItem="SIW-qm-4X7" secondAttribute="leading" constant="10" id="Ip4-Et-6vl"/>
+                            <constraint firstItem="3XM-b7-hD3" firstAttribute="top" secondItem="SIW-qm-4X7" secondAttribute="top" constant="10" id="Lj1-tg-pbo"/>
+                            <constraint firstAttribute="trailing" secondItem="Ldk-F1-80G" secondAttribute="trailing" constant="10" id="TQp-1O-2uM"/>
+                            <constraint firstItem="tB2-Rg-eI9" firstAttribute="leading" secondItem="3XM-b7-hD3" secondAttribute="trailing" constant="10" id="V7T-sl-zqr"/>
+                            <constraint firstItem="Ldk-F1-80G" firstAttribute="leading" secondItem="hfe-Kv-wOI" secondAttribute="trailing" constant="10" id="YLb-wp-xjO"/>
+                            <constraint firstAttribute="trailing" secondItem="tB2-Rg-eI9" secondAttribute="trailing" constant="10" id="dgL-aW-St7"/>
+                            <constraint firstAttribute="bottom" secondItem="hfe-Kv-wOI" secondAttribute="bottom" constant="10" id="fDo-E9-E4Q"/>
+                            <constraint firstItem="hfe-Kv-wOI" firstAttribute="leading" secondItem="3XM-b7-hD3" secondAttribute="trailing" constant="10" id="pwD-I2-GpO"/>
+                            <constraint firstItem="tB2-Rg-eI9" firstAttribute="top" secondItem="SIW-qm-4X7" secondAttribute="top" constant="10" id="zfl-5Y-do3"/>
+                        </constraints>
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                <integer key="value" value="12"/>
+                            </userDefinedRuntimeAttribute>
+                        </userDefinedRuntimeAttributes>
+                    </view>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="SIW-qm-4X7" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="Hu2-nb-iSq"/>
+                <constraint firstAttribute="bottom" secondItem="SIW-qm-4X7" secondAttribute="bottom" id="KT9-Af-1Eb"/>
+                <constraint firstAttribute="trailing" secondItem="SIW-qm-4X7" secondAttribute="trailing" id="LJu-LJ-t2Z"/>
+                <constraint firstItem="SIW-qm-4X7" firstAttribute="leading" secondItem="gTV-IL-0wX" secondAttribute="leading" id="eNr-gz-a8p"/>
+            </constraints>
+            <size key="customSize" width="320" height="90"/>
+            <connections>
+                <outlet property="playIconImageView" destination="hfe-Kv-wOI" id="4Ll-MR-V41"/>
+                <outlet property="thumbnailImageView" destination="3XM-b7-hD3" id="VHS-MP-obg"/>
+                <outlet property="videoLength" destination="Ldk-F1-80G" id="3uF-4q-0Fz"/>
+                <outlet property="videoTitle" destination="tB2-Rg-eI9" id="PMR-Kl-28s"/>
+            </connections>
+            <point key="canvasLocation" x="138.93129770992365" y="166.90140845070422"/>
+        </collectionViewCell>
+    </objects>
+    <resources>
+        <image name="youtube" width="1760" height="1232"/>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>

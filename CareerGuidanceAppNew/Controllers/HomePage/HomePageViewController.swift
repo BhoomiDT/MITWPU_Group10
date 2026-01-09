@@ -11,6 +11,13 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
+        //added T
+        print(" Completed sections:",
+               OnboardingManager.shared.completedSectionIndexes)
+         print(" Onboarding completed:",
+               OnboardingManager.shared.isOnboardingCompleted)
+        
         collectionView.backgroundColor = .appBackground
         collectionView.reloadData()
         collectionView.collectionViewLayout.invalidateLayout()
@@ -19,7 +26,10 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+       
+
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -55,11 +65,29 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
     
     func numberOfSections(in collectionView: UICollectionView) -> Int { 6 }
-    
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 1 { return OnboardingManager.shared.isOnboardingFullyComplete() ? roadmapData.count : 1 }
+    //changed t
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        if section == 1 { return
+//
+//            OnboardingManager.shared.isOnboardingFullyComplete() ?
+//          
+//            roadmapData.count : 1 }
+//        return section == 5 ? trendingData.count : 1
+//    }
+    func collectionView(
+        _ collectionView: UICollectionView,
+        numberOfItemsInSection section: Int
+    ) -> Int {
+
+        if section == 1 {
+            return OnboardingManager.shared.isOnboardingCompleted
+                ? roadmapData.count
+                : 1
+        }
+
         return section == 5 ? trendingData.count : 1
     }
+
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         switch indexPath.section {
@@ -67,18 +95,48 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StatsCard", for: indexPath) as! StatsCard
             cell.configure(with: UserStats.demo)
             return cell
+            //changed T
+//        case 1:
+//            if OnboardingManager.shared.isOnboardingFullyComplete() {
+//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "roadmapScrollCollectionViewCell", for: indexPath) as! roadmapScrollCollectionViewCell
+//                let data = roadmapData[indexPath.row]
+//                cell.configure(title: data.title, subtitle: data.subtitle, percentage: data.percentage, milestone: data.milestone)
+//                return cell
+//            } else {
+//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "onboardingNotCompleted", for: indexPath) as! onboardingNotCompleted
+//                cell.progressBarOnboarding.progress = OnboardingManager.shared.getProgress()
+//                cell.continuePersonalisationButton.addTarget(self, action: #selector(continueOnboarding), for: .touchUpInside)
+//                return cell
+//            }
         case 1:
-            if OnboardingManager.shared.isOnboardingFullyComplete() {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "roadmapScrollCollectionViewCell", for: indexPath) as! roadmapScrollCollectionViewCell
+            if OnboardingManager.shared.isOnboardingCompleted {
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "roadmapScrollCollectionViewCell",
+                    for: indexPath
+                ) as! roadmapScrollCollectionViewCell
                 let data = roadmapData[indexPath.row]
-                cell.configure(title: data.title, subtitle: data.subtitle, percentage: data.percentage, milestone: data.milestone)
+                cell.configure(
+                    title: data.title,
+                    subtitle: data.subtitle,
+                    percentage: data.percentage,
+                    milestone: data.milestone
+                )
                 return cell
             } else {
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "onboardingNotCompleted", for: indexPath) as! onboardingNotCompleted
-                cell.progressBarOnboarding.progress = OnboardingManager.shared.getProgress()
-                cell.continuePersonalisationButton.addTarget(self, action: #selector(continueOnboarding), for: .touchUpInside)
+                let cell = collectionView.dequeueReusableCell(
+                    withReuseIdentifier: "onboardingNotCompleted",
+                    for: indexPath
+                ) as! onboardingNotCompleted
+                cell.progressBarOnboarding.progress =
+                    OnboardingManager.shared.getProgress()
+                cell.continuePersonalisationButton.addTarget(
+                    self,
+                    action: #selector(continueOnboarding),
+                    for: .touchUpInside
+                )
                 return cell
             }
+
         case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homepageMyJourney", for: indexPath) as! homepageMyJourney
             cell.configure(days: journeyData.days, quizzes: journeyData.quizzes, quests: journeyData.quests)
@@ -141,7 +199,10 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
         header.titleLabel.text = [
             "",
-            OnboardingManager.shared.isOnboardingFullyComplete() ? "My Roadmaps" : "Finish Setup",
+            //changed t
+            /*OnboardingManager.shared.isOnboardingFullyComplete()*/
+            OnboardingManager.shared.isOnboardingCompleted ?
+            "My Roadmaps" : "Finish Setup",
             "My Journey",
             "",
             "",
@@ -169,7 +230,10 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     func createLayout() -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { index, env in
             let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(40)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-            let isDone = OnboardingManager.shared.isOnboardingFullyComplete()
+            //CHANGED T
+            /*let isDone = OnboardingManager.shared.isOnboardingFullyComplete()*/
+            let isDone = OnboardingManager.shared.isOnboardingCompleted
+
             
             if index == 1 { return self.layoutSection(height: isDone ? 165 : 170, scroll: isDone ? .groupPaging : .none, header: header, width: isDone ? 0.85 : 1.0) }
             if index == 5 {
