@@ -33,7 +33,7 @@ struct Roadmap {
 
 
 // Describes a quiz for a lesson (NO user state here)
-struct Quiz {
+struct Quiz: Codable {
     let lessonId: String          // Links quiz to Lesson.id
     let lessonName: String
     let durationMinutes: Int
@@ -42,7 +42,7 @@ struct Quiz {
 }
 
 // Describes a single question (immutable)
-struct QuizQuestion {
+struct QuizQuestion: Codable {
     let question: String
     let options: [String]
     let correctIndex: Int

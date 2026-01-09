@@ -8,7 +8,7 @@
 import UIKit
 
 protocol StartTestModalDelegate: AnyObject {
-    func didTapStartTest(quiz: Quiz)
+    func didTapStartTest(quiz: Quiz, lesson: Lesson)
 }
 
 class StartTestModalViewController: UIViewController {
@@ -106,7 +106,7 @@ class StartTestModalViewController: UIViewController {
 
         dismiss(animated: true) {
             print("Modal dismissed, calling delegate")
-            self.delegate?.didTapStartTest(quiz: self.quiz)
+            self.delegate?.didTapStartTest(quiz: self.quiz, lesson: self.lesson)
         }
     }
 

@@ -46,13 +46,34 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
             }
         }
 
+//    private func openResults(for lesson: Lesson) {
+//        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+//        guard let resultsVC = storyboard.instantiateViewController(withIdentifier: "TestResultsVC") as? TestResultsViewController else {
+//            print("TestResultsViewController not found")
+//            return
+//        }
+//        resultsVC.lesson = lesson
+//        navigationController?.pushViewController(resultsVC, animated: true)
+//    }
     private func openResults(for lesson: Lesson) {
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-        guard let resultsVC = storyboard.instantiateViewController(withIdentifier: "TestResultsVC") as? TestResultsViewController else {
+
+        guard let resultsVC = storyboard.instantiateViewController(
+            withIdentifier: "TestResultsVC"
+        ) as? TestResultsViewController else {
             print("TestResultsViewController not found")
             return
         }
-        resultsVC.lesson = lesson
+
+        guard let completedQuiz =
+            QuizHistoryManager.shared
+                .quizzes(for: lesson.id)
+                .last else {
+            print("No completed quiz found for lesson:", lesson.name)
+            return
+        }
+
+        resultsVC.completedQuiz = completedQuiz
         navigationController?.pushViewController(resultsVC, animated: true)
     }
     private func openTest(for lesson: Lesson) {
@@ -178,7 +199,7 @@ extension RoadmapDetailViewController {
     }
 extension RoadmapDetailViewController: StartTestModalDelegate {
 
-    func didTapStartTest(quiz: Quiz) {
+    func didTapStartTest(quiz: Quiz, lesson: Lesson) {
         let sb = UIStoryboard(name: "Roadmaps", bundle: nil)
 
         guard let quizVC = sb.instantiateViewController(
@@ -189,6 +210,7 @@ extension RoadmapDetailViewController: StartTestModalDelegate {
         }
 
         quizVC.quiz = quiz
+        quizVC.lesson = lesson
         print("Entered QuizVC \(quiz.lessonName)")
         print(quiz.questions.count)
         

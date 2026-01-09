@@ -9,10 +9,10 @@
 
 import UIKit
 
-var questions: [QuestionAnswer] = userAnswersData
+//var questions: [QuestionAnswer] = userAnswersData
 
 class YourAnswersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
+    var completedQuiz: CompletedQuiz!
     let cellReuseIdentifier = "AnswerStatusCell"
     
     @IBOutlet weak var answersTableView: UITableView!
@@ -31,31 +31,56 @@ class YourAnswersViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return questions.count
+        //return questions.count
+        completedQuiz.questionResults.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as? AnswerStatusCell else {
-            fatalError("Could not dequeue AnswerStatusCell.")
-        }
-        
-        let question = questions[indexPath.row]
-        
-        cell.configure(with: question)
-        
-//        cell.accessoryType = .disclosureIndicator
-        
-        return cell
+//        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as? AnswerStatusCell else {
+//            fatalError("Could not dequeue AnswerStatusCell.")
+//        }
+//        
+//        let question = questions[indexPath.row]
+//        
+//        cell.configure(with: question)
+//        
+////        cell.accessoryType = .disclosureIndicator
+//        
+//        return cell
+        let cell = tableView.dequeueReusableCell(
+                withIdentifier: "AnswerStatusCell",
+                for: indexPath
+            ) as! AnswerStatusCell
+
+            let result = completedQuiz.questionResults[indexPath.row]
+            cell.configure(with: result)
+            cell.accessoryType = .disclosureIndicator
+
+            return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 56.0
     }
     
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        
+//        print("Row tapped: \(questions[indexPath.row].questionText)")
+//    }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        print("Row tapped: \(questions[indexPath.row].questionText)")
+
+        let storyboard = UIStoryboard(name: "Answers", bundle: nil)
+        let vc = storyboard.instantiateViewController(
+            withIdentifier: "QuestionDetailVC"
+        ) as! QuestionDetailViewController
+
+        let result = completedQuiz.questionResults[indexPath.row]
+        vc.questionResult = result
+        vc.allOptions = result.options
+
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

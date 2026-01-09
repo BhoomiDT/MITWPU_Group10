@@ -23,10 +23,21 @@ class AnswerStatusCell: UITableViewCell {
     
     @IBAction func chevronTapped(_ sender: Any) {
     }
-    func configure(with question: QuestionAnswer) {
-        questionLabel.text = question.questionText
-        statusBackgroundView.backgroundColor = question.isCorrect ? UIColor(hex: "c6ece8") : UIColor(hex: "fde9e6")
-        statusImageView.image = UIImage(systemName: question.isCorrect ? "checkmark" : "xmark")
-        statusImageView.tintColor = question.isCorrect ? UIColor(hex: "1fa5a1") : UIColor(hex: "e1736c")
+//    func configure(with question: QuestionAnswer) {
+//        questionLabel.text = question.questionText
+//        statusBackgroundView.backgroundColor = question.isCorrect ? UIColor(hex: "c6ece8") : UIColor(hex: "fde9e6")
+//        statusImageView.image = UIImage(systemName: question.isCorrect ? "checkmark" : "xmark")
+//        statusImageView.tintColor = question.isCorrect ? UIColor(hex: "1fa5a1") : UIColor(hex: "e1736c")
+//    }
+    func configure(with result: QuestionResult) {
+        questionLabel.text = result.questionText
+
+        if result.isCorrect {
+            statusImageView.image = UIImage(systemName: "checkmark")
+            statusImageView.tintColor = .systemGreen
+        } else {
+            statusImageView.image = UIImage(systemName: "xmark")
+            statusImageView.tintColor = .systemRed
+        }
     }
 }

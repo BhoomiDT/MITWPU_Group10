@@ -42,6 +42,7 @@ class QuizViewController: UIViewController {
             )
         loadQuestion()
     }
+    
     @IBAction func optionTapped(_ sender: UIButton) {
         print("Tapped index:", sender.tag)
         let selectedIndex = sender.tag
@@ -92,8 +93,8 @@ class QuizViewController: UIViewController {
     @IBAction func nextButtonTapped(_ sender: UIButton) {
         guard let quiz = quiz else { return }
         print("Next Button tapped")
-//        guard let selectedIndex = selectedOptionIndices[currentQuestionIndex] else { return }
-//        selectedOptionIndices[currentQuestionIndex] = selectedIndex
+        guard let selectedIndex = selectedOptionIndices[currentQuestionIndex] else { return }
+        selectedOptionIndices[currentQuestionIndex] = selectedIndex
         guard isCurrentQuestionAnswered() else {
             showAlert(
                 title: "Select an option",
@@ -131,8 +132,11 @@ class QuizViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
         alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
-            let result = self.generateTestResult()
-            self.navigateToResults(result: result)
+//            let result = self.generateTestResult()
+//            self.navigateToResults(result: result)
+            let completedQuiz = self.generateCompletedQuiz()
+            QuizHistoryManager.shared.save(completedQuiz)
+            self.navigateToResults(completedQuiz: completedQuiz)
         })
 
         present(alert, animated: true)
@@ -179,52 +183,93 @@ class QuizViewController: UIViewController {
             (Double(correct) / Double(quiz.questions.count)) * 100
         )
     }
-    private func generateTestResult() -> TestResult {
-        guard let quiz = quiz else {
-            return TestResult(
-                score: 0,
-                strengths: [],
-                improvements: [],
-                lessonName: ""
+//    private func generateTestResult() -> TestResult {
+//        guard let quiz = quiz else {
+//            return TestResult(
+//                score: 0,
+//                strengths: [],
+//                improvements: [],
+//                lessonName: ""
+//            )
+//        }
+//
+//        let finalScore: Int
+//
+//        if lesson?.status == .seeResults {
+//            finalScore = 80
+//        } else {
+//            finalScore = calculateScore()
+//        }
+//
+//        let strengths: [StrengthItem] = [
+//            StrengthItem(title: "User Interface Design"),
+//            StrengthItem(title: "Prototyping"),
+//            StrengthItem(title: "Basic Compliance")
+//        ]
+//
+//        let improvements: [ImprovementItem] = [
+//            ImprovementItem(title: "User Research"),
+//            ImprovementItem(title: "Accessibility Standards"),
+//            ImprovementItem(title: "Usability")
+//        ]
+//
+//        return TestResult(
+//            score: finalScore,
+//            strengths: strengths,
+//            improvements: improvements,
+//            lessonName: quiz.lessonName
+//        )
+//    }
+    private func generateCompletedQuiz() -> CompletedQuiz {
+        guard let quiz = quiz,
+              let lesson = lesson else {
+            fatalError("Quiz or Lesson missing")
+        }
+
+        var results: [QuestionResult] = []
+
+        for (index, question) in quiz.questions.enumerated() {
+//            let result = QuestionResult(
+//                questionText: question.question,
+//                userSelectedIndex: selectedOptionIndices[index],
+//                correctIndex: question.correctIndex
+//            )
+            let result = QuestionResult(
+                questionText: question.question,
+                options: question.options,
+                userSelectedIndex: selectedOptionIndices[index],
+                correctIndex: question.correctIndex
             )
+            results.append(result)
         }
 
-        let finalScore: Int
-
-        if lesson?.status == .seeResults {
-            finalScore = 80
-        } else {
-            finalScore = calculateScore()
-        }
-
-        let strengths: [StrengthItem] = [
-            StrengthItem(title: "User Interface Design"),
-            StrengthItem(title: "Prototyping"),
-            StrengthItem(title: "Basic Compliance")
-        ]
-
-        let improvements: [ImprovementItem] = [
-            ImprovementItem(title: "User Research"),
-            ImprovementItem(title: "Accessibility Standards"),
-            ImprovementItem(title: "Usability")
-        ]
-
-        return TestResult(
-            score: finalScore,
-            strengths: strengths,
-            improvements: improvements,
-            lessonName: quiz.lessonName
+        return CompletedQuiz(
+            domainTitle: "Data Analytics", // 🔹 pass dynamically later
+            moduleTitle: "Module 1: Foundations of Data",
+            lessonId: lesson.id,
+            lessonName: lesson.name,
+            completedAt: Date(),
+            questionResults: results
         )
     }
-    private func navigateToResults(result: TestResult) {
+//    private func navigateToResults(result: TestResult) {
+//        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+//        let vc = storyboard.instantiateViewController(
+//            withIdentifier: "TestResultsVC"
+//        ) as! TestResultsViewController
+//        
+//        vc.lesson = self.lesson
+//        vc.testResult = result
+//        
+//        self.navigationController?.pushViewController(vc, animated: true)
+//    }
+    private func navigateToResults(completedQuiz: CompletedQuiz) {
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
         let vc = storyboard.instantiateViewController(
             withIdentifier: "TestResultsVC"
         ) as! TestResultsViewController
 
-        vc.lesson = self.lesson
-        vc.testResult = result
-
+        vc.completedQuiz = completedQuiz
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

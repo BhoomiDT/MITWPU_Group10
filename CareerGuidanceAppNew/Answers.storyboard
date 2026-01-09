@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zVk-6W-p9u">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="zVk-6W-p9u">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -122,10 +122,10 @@
             </objects>
             <point key="canvasLocation" x="139.69465648854961" y="91.549295774647888"/>
         </scene>
-        <!--Selected Answers View Controller-->
+        <!--Question Detail View Controller-->
         <scene sceneID="GMn-fV-P1b">
             <objects>
-                <viewController id="saG-IM-v0E" customClass="SelectedAnswersViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="QuestionDetailVC" id="saG-IM-v0E" customClass="QuestionDetailViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="kgl-U8-lCd">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -209,12 +209,8 @@
                     </view>
                     <navigationItem key="navigationItem" id="fSX-TB-bBQ"/>
                     <connections>
-                        <outlet property="optionButton1" destination="LBf-2y-qFZ" id="VxP-UN-nf7"/>
-                        <outlet property="optionButton2" destination="4rb-Zw-kgy" id="quU-yJ-fpC"/>
-                        <outlet property="optionButton3" destination="O2b-Nm-aQA" id="HK2-PL-x8V"/>
-                        <outlet property="optionButton4" destination="FCE-ek-WqZ" id="Nag-cP-Eod"/>
-                        <outlet property="questionNoLabel" destination="jrK-k2-dvQ" id="l0h-IA-wTa"/>
-                        <outlet property="questionTextLabel" destination="eeG-76-elo" id="hgK-VT-uVm"/>
+                        <outlet property="questionLabel" destination="eeG-76-elo" id="P3E-td-F81"/>
+                        <outlet property="stackView" destination="2Ln-8K-KDc" id="JxA-Js-gtX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lxe-2g-kXj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

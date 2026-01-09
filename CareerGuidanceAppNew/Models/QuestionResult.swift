@@ -9,22 +9,35 @@ import Foundation
 
 // 1. Structure to hold the user's specific answer and status for one question.
 // This is the model that directly feeds the rows of your "Your Answers" table.
+//struct QuestionResult {
+//    
+//    let questionText: String
+//    
+//    // The actual index the user selected (e.g., 0, 1, 2, or 3)
+//    let userSelectedIndex: Int?
+//    
+//    // The correct index from the original QuizQuestion
+//    let correctIndex: Int
+//    
+//    // Derived property used to determine the checkmark/Xmark status
+//    var isCorrect: Bool {
+//        // If userSelectedIndex is nil (unanswered), it is incorrect.
+//        guard let selected = userSelectedIndex else {
+//            return false
+//        }
+//        return selected == correctIndex
+//    }
+//}
 struct QuestionResult {
-    
+
     let questionText: String
-    
-    // The actual index the user selected (e.g., 0, 1, 2, or 3)
+    let options: [String]
+
     let userSelectedIndex: Int?
-    
-    // The correct index from the original QuizQuestion
     let correctIndex: Int
-    
-    // Derived property used to determine the checkmark/Xmark status
+
     var isCorrect: Bool {
-        // If userSelectedIndex is nil (unanswered), it is incorrect.
-        guard let selected = userSelectedIndex else {
-            return false
-        }
+        guard let selected = userSelectedIndex else { return false }
         return selected == correctIndex
     }
 }
