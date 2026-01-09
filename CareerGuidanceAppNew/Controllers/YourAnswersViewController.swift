@@ -54,7 +54,7 @@ class YourAnswersViewController: UIViewController, UITableViewDataSource, UITabl
             ) as! AnswerStatusCell
 
             let result = completedQuiz.questionResults[indexPath.row]
-            cell.configure(with: result)
+            cell.configure(with: result, index: indexPath.row)
             cell.accessoryType = .disclosureIndicator
 
             return cell
@@ -79,6 +79,7 @@ class YourAnswersViewController: UIViewController, UITableViewDataSource, UITabl
 
         let result = completedQuiz.questionResults[indexPath.row]
         vc.questionResult = result
+        vc.questionIndex = indexPath.row
         vc.allOptions = result.options
 
         navigationController?.pushViewController(vc, animated: true)

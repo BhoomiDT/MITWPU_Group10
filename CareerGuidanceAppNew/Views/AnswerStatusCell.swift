@@ -29,15 +29,19 @@ class AnswerStatusCell: UITableViewCell {
 //        statusImageView.image = UIImage(systemName: question.isCorrect ? "checkmark" : "xmark")
 //        statusImageView.tintColor = question.isCorrect ? UIColor(hex: "1fa5a1") : UIColor(hex: "e1736c")
 //    }
-    func configure(with result: QuestionResult) {
-        questionLabel.text = result.questionText
-
+    func configure(with result: QuestionResult, index: Int) {
+        questionLabel.text = "Question \(index + 1)"
+        
         if result.isCorrect {
-            statusImageView.image = UIImage(systemName: "checkmark")
-            statusImageView.tintColor = .systemGreen
-        } else {
-            statusImageView.image = UIImage(systemName: "xmark")
-            statusImageView.tintColor = .systemRed
-        }
+                statusImageView.image = UIImage(systemName: "checkmark")
+                statusImageView.tintColor = UIColor(hex: "1FA5A1")
+                statusBackgroundView.backgroundColor =
+                    UIColor(hex: "1FA5A1").withAlphaComponent(0.15)
+            } else {
+                statusImageView.image = UIImage(systemName: "xmark")
+                statusImageView.tintColor = .systemRed
+                statusBackgroundView.backgroundColor =
+                    UIColor.systemRed.withAlphaComponent(0.15)
+            }
     }
 }

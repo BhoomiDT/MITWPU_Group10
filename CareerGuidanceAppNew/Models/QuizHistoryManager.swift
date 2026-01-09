@@ -20,4 +20,8 @@ class QuizHistoryManager {
     func quizzes(for lessonId: String) -> [CompletedQuiz] {
         completedQuizzes.filter { $0.lessonId == lessonId }
     }
+    
+    func hasCompletedQuiz(for lessonId: String) -> Bool {
+        completedQuizzes.contains { $0.lessonId == lessonId }
+    }
 }

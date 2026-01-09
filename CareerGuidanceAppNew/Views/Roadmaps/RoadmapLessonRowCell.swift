@@ -61,20 +61,46 @@ class RoadmapLessonRowCell: UITableViewCell {
         statusButton.setTitle("", for: .normal)
     }
 
+//    func configure(with lesson: Lesson) {
+//        self.lesson = lesson
+//        lessonTitleLabel.text = lesson.name
+//
+//        statusButton.setTitle(lesson.status.rawValue, for: .normal)
+//
+//        switch lesson.status {
+//        case .seeResults:
+//            statusButton.backgroundColor = UIColor(hex: "1FA5A1")
+//            statusButton.setTitleColor(.white, for: .normal)
+//        case .startTest:
+//            statusButton.backgroundColor = .systemGray5
+//            statusButton.setTitleColor(.darkGray, for: .normal)
+//        }
+//    }
+    
     func configure(with lesson: Lesson) {
         self.lesson = lesson
         lessonTitleLabel.text = lesson.name
 
-        statusButton.setTitle(lesson.status.rawValue, for: .normal)
+        let hasResult =
+            QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
 
-        switch lesson.status {
-        case .seeResults:
-            statusButton.backgroundColor = UIColor(hex: "1FA5A1")
-            statusButton.setTitleColor(.white, for: .normal)
-        case .startTest:
-            statusButton.backgroundColor = .systemGray5
-            statusButton.setTitleColor(.darkGray, for: .normal)
+        let title: String
+        let bgColor: UIColor
+        let textColor: UIColor
+
+        if hasResult {
+            title = LessonStatus.seeResults.rawValue
+            bgColor = UIColor(hex: "1FA5A1")
+            textColor = .white
+        } else {
+            title = LessonStatus.startTest.rawValue
+            bgColor = .systemGray5
+            textColor = .darkGray
         }
+
+        statusButton.setTitle(title, for: .normal)
+        statusButton.backgroundColor = bgColor
+        statusButton.setTitleColor(textColor, for: .normal)
     }
 
     @objc private func statusButtonTapped(_ sender: UIButton) {

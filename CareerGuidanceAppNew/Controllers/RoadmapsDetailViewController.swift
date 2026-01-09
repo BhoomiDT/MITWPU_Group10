@@ -19,6 +19,11 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
             self.title = selectedRoadmap.title
             setupTableView()
         }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
 
         private func setupTableView() {
             let headerNib = UINib(nibName: "RoadmapSectionHeaderCell", bundle: nil)
@@ -38,12 +43,20 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
         }
     
     func roadmapLessonRowCell(_ cell: RoadmapLessonRowCell, didTapStatusFor lesson: Lesson) {
-            switch lesson.status {
-            case .seeResults:
-                openResults(for: lesson)
-            case .startTest:
-                openTest(for: lesson)
-            }
+//            switch lesson.status {
+//            case .seeResults:
+//                openResults(for: lesson)
+//            case .startTest:
+//                openTest(for: lesson)
+//            }
+        let hasResult =
+            QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
+
+        if hasResult {
+            openResults(for: lesson)
+        } else {
+            openTest(for: lesson)
+        }
         }
 
 //    private func openResults(for lesson: Lesson) {
