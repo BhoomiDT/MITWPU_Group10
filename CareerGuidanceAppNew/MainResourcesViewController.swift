@@ -47,6 +47,16 @@ class MainResourcesViewController: UIViewController {
             withReuseIdentifier: "ResourcesSectionHeaderView"
         )
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        let buttonHeight: CGFloat = 48
+        let spacing: CGFloat = 16
+
+        collectionView.contentInset.bottom = buttonHeight + spacing
+        collectionView.verticalScrollIndicatorInsets.bottom = buttonHeight + spacing
+    }
 }
 
 extension MainResourcesViewController: UICollectionViewDataSource {
