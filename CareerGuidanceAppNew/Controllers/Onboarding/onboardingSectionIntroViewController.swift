@@ -1,7 +1,7 @@
 import UIKit
 
 class onboardingSectionIntroViewController: UIViewController {
-
+    
     // MARK: - Outlets
     @IBOutlet weak var iconBackgroundView: UIView!
     @IBOutlet weak var imageView: UIImageView!
@@ -11,7 +11,7 @@ class onboardingSectionIntroViewController: UIViewController {
     @IBOutlet weak var btnSkip: UIButton!
     
     var questionnaire: Questionnaire?
-
+    
     // MARK: - Properties
     var sectionIndex: Int = 0
     
@@ -26,34 +26,34 @@ class onboardingSectionIntroViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-       
+        
         iconBackgroundView.layer.cornerRadius = iconBackgroundView.frame.height / 2
         iconBackgroundView.layer.masksToBounds = true
     }
     private var hasShownWelcomeModal = false
-
-        override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Only trigger on Section 0 and only if not already shown
+        if sectionIndex == 0 && !hasShownWelcomeModal {
+            presentWelcomePage()
+        }
+    }
+    
+    private func presentWelcomePage() {
+        let storyboard = UIStoryboard(name: "WelcomePage", bundle: nil)
+        if let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
             
-            // Only trigger on Section 0 and only if not already shown
-            if sectionIndex == 0 && !hasShownWelcomeModal {
-                presentWelcomePage()
-            }
+            // Set the style to pageSheet so your 85% custom height works
+            welcomeVC.modalPresentationStyle = .pageSheet
+            
+            // Set flag to true before presenting
+            hasShownWelcomeModal = true
+            
+            self.present(welcomeVC, animated: true, completion: nil)
         }
-
-        private func presentWelcomePage() {
-            let storyboard = UIStoryboard(name: "WelcomePage", bundle: nil)
-            if let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
-                
-                // Set the style to pageSheet so your 85% custom height works
-                welcomeVC.modalPresentationStyle = .pageSheet
-                
-                // Set flag to true before presenting
-                hasShownWelcomeModal = true
-                
-                self.present(welcomeVC, animated: true, completion: nil)
-            }
-        }
+    }
     
     func configureContent() {
         let sections = OnboardingManager.shared.questionnaire.sections
@@ -70,11 +70,17 @@ class onboardingSectionIntroViewController: UIViewController {
         
         btnSkip.isHidden = (sectionIndex == 0)
     }
-
+    
     // MARK: - Navigation Logic
     @IBAction func continueButtonTapped(_ sender: UIButton) {
+        //added T
+        OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+        
+        
+        
         if sectionIndex == 0 {
-            OnboardingManager.shared.markSectionCompleted(index: 0)
+            //change commented this
+            //            OnboardingManager.shared.markSectionCompleted(index: 0)
             if let nextIntro = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
                 nextIntro.sectionIndex = 1
                 navigationController?.pushViewController(nextIntro, animated: true)
@@ -87,21 +93,40 @@ class onboardingSectionIntroViewController: UIViewController {
         }
         else {
             if let questionVC = storyboard?.instantiateViewController(withIdentifier: "QuestionVC") as? onboardingQuestionViewController {
-                        
                 
-                        questionVC.questionnaire = OnboardingManager.shared.questionnaire
-                        
-                        questionVC.sectionIndex = self.sectionIndex
-                        navigationController?.pushViewController(questionVC, animated: true)
-                    }
+                
+                questionVC.questionnaire = OnboardingManager.shared.questionnaire
+                
+                questionVC.sectionIndex = self.sectionIndex
+                navigationController?.pushViewController(questionVC, animated: true)
+            }
         }
     }
-
+    
     @IBAction func skipButtonTapped(_ sender: UIButton) {
+        //changed T
+        //        let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
+        //
+        //        if let homeVC = homeStoryboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
+        //            navigationController?.setViewControllers([homeVC], animated: true)
+        //        }
+        
+        // ✅ Save where user stopped
+        OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+        
         let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
         
-        if let homeVC = homeStoryboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
+        if let homeVC = homeStoryboard.instantiateViewController(
+            withIdentifier: "HomePageViewController"
+        ) as? HomePageViewController {
+            
             navigationController?.setViewControllers([homeVC], animated: true)
         }
+        
+        
     }
 }
+   
+
+    
+
