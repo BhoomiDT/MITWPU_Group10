@@ -5,7 +5,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     @IBOutlet weak var floatingButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    let roadmapData = RoadmapModel.sampleData
+    let roadmapData = staticRoadmaps
+
     let trendingData = TrendingModel.sampleData
     let journeyData = JourneyModel.sampleData
 
@@ -28,7 +29,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     override func viewDidLoad() {
         
         super.viewDidLoad()
-       
+        navigationController!.navigationBar.prefersLargeTitles = true
 
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -119,8 +120,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                     title: data.title,
                     subtitle: data.subtitle,
                     percentage: data.percentage,
-                    milestone: data.milestone
+                    milestone: data.milestones.first?.title ?? "Start Learning"
                 )
+
                 return cell
             } else {
                 let cell = collectionView.dequeueReusableCell(
@@ -167,6 +169,21 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if indexPath.section == 1 && OnboardingManager.shared.isOnboardingCompleted {
+
+                let selectedRoadmap = roadmapData[indexPath.row]
+
+                let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+                let vc = storyboard.instantiateViewController(
+                    withIdentifier: "StaticVC"
+                ) as! StaticRoadmapViewViewController
+
+                vc.roadmap = selectedRoadmap   
+
+                navigationController?.pushViewController(vc, animated: true)
+                return
+            }
+        
         if indexPath.section == 4 {
             let vc = UIStoryboard(name: "Badges", bundle: nil).instantiateViewController(withIdentifier: "badgesMainPage")
             navigationController?.pushViewController(vc, animated: true)

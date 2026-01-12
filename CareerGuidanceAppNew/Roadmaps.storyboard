@@ -391,7 +391,7 @@
             </objects>
             <point key="canvasLocation" x="8012.9770992366412" y="180.98591549295776"/>
         </scene>
-        <!--Web Development-->
+        <!--Static Roadmap View View Controller-->
         <scene sceneID="BDx-HL-ZBw">
             <objects>
                 <viewController storyboardIdentifier="StaticVC" id="zLC-fX-qnS" customClass="StaticRoadmapViewViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
@@ -414,7 +414,7 @@
                             <constraint firstItem="jgw-8j-gA9" firstAttribute="bottom" secondItem="dmW-Qd-yhq" secondAttribute="bottom" id="ZxM-RV-tq2"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Web Development" id="5cm-8l-hr2"/>
+                    <navigationItem key="navigationItem" id="5cm-8l-hr2"/>
                     <connections>
                         <outlet property="tableView" destination="dmW-Qd-yhq" id="PiB-lc-t87"/>
                     </connections>

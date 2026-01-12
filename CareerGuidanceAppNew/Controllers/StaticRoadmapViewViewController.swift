@@ -13,9 +13,14 @@ class StaticRoadmapViewViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var roadmap: StaticRoadmap?
     var milestoneList: [Milestone] = []
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         print("VIEW DID LOAD WORKED")
+        self.title = roadmap?.title
+        navigationController?.navigationBar.prefersLargeTitles = true
         loadRoadmapData()
         setupTable()
         setupHeader()
@@ -57,12 +62,13 @@ class StaticRoadmapViewViewController: UIViewController {
     }
     
     func loadRoadmapData() {
-        guard let selectedRoadmap = staticRoadmaps.first else { return }
-
-        self.roadmap = selectedRoadmap
-        self.milestoneList = selectedRoadmap.milestones
+        guard let roadmap = roadmap else {
+            print("Roadmap not injected")
+            return
+        }
+        self.milestoneList = roadmap.milestones
     }
-    
+
     func setupTable() {
         print("setupTable CALLED")
         tableView.delegate = self
