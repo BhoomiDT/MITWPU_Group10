@@ -26,7 +26,7 @@
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" ambiguous="YES" text="..." textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qQm-tV-rwa">
                             <rect key="frame" x="16" y="45.666666666666657" width="326" height="20.333333333333343"/>
                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                            <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            <color key="textColor" systemColor="secondaryLabelColor"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tVk-bk-NSm">
@@ -35,6 +35,9 @@
                             <buttonConfiguration key="configuration" style="filled" title="Start Roadmap">
                                 <color key="baseBackgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                             </buttonConfiguration>
+                            <connections>
+                                <action selector="startButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="iKa-IM-NK8"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -71,6 +74,9 @@
         </view>
     </objects>
     <resources>
+        <systemColor name="secondaryLabelColor">
+            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

@@ -21,7 +21,7 @@ class RoadmapsViewController: UIViewController {
     }
     
     private func loadRoadmapData() {
-        self.roadmapsData = allRoadmaps
+        self.roadmapsData = allRoadmapsData
     }
     
     private func registerRoadmapCells() {

@@ -8,14 +8,23 @@
 import UIKit
 
 class StaticRoadmapViewViewController: UIViewController {
-
+    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+    
     
     @IBOutlet weak var tableView: UITableView!
-    var roadmap: StaticRoadmap?
+    var roadmap: Roadmap?
     var milestoneList: [Milestone] = []
+    
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
         print("VIEW DID LOAD WORKED")
+        self.title = roadmap?.title
+        navigationController?.navigationBar.prefersLargeTitles = true
         loadRoadmapData()
         setupTable()
         setupHeader()
@@ -50,19 +59,43 @@ class StaticRoadmapViewViewController: UIViewController {
 
         guard let roadmap = roadmap else { return }
 
+        header.titleLabel.text = roadmap.title
         header.bodyLabel.text = roadmap.description
 
-        header.layoutIfNeeded()
+        // 🔥 VIEW → VC COMMUNICATION
+        header.onStartTapped = { [weak self] in
+            self?.openModulesPage()
+        }
+
         tableView.tableHeaderView = header.sizedForTableHeader()
     }
-    
-    func loadRoadmapData() {
-        guard let selectedRoadmap = staticRoadmaps.first else { return }
+    private func openModulesPage() {
+        guard let roadmap = roadmap else { return }
 
-        self.roadmap = selectedRoadmap
-        self.milestoneList = selectedRoadmap.milestones
+        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+
+        guard let vc = storyboard.instantiateViewController(
+            withIdentifier: "RoadmapDetailVC"
+        ) as? RoadmapDetailViewController else {
+            print("❌ RoadmapDetailVC not found")
+            return
+        }
+
+        // 🔑 PASS DOMAIN CONTEXT
+        vc.selectedRoadmap = roadmap
+
+        navigationController?.pushViewController(vc, animated: true)
     }
-    
+
+
+    func loadRoadmapData() {
+        guard let roadmap = roadmap else {
+            print("Roadmap not injected")
+            return
+        }
+        self.milestoneList = roadmap.milestones
+    }
+
     func setupTable() {
         print("setupTable CALLED")
         tableView.delegate = self
