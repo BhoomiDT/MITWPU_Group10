@@ -44,7 +44,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         super.viewDidLoad()
         navigationController!.navigationBar.prefersLargeTitles = true
-
+        navigationItem.hidesBackButton = true
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -307,8 +307,25 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             /*let isDone = OnboardingManager.shared.isOnboardingFullyComplete()*/
             let isDone = OnboardingManager.shared.isOnboardingCompleted
 
+//            added T
+//            if index == 1 { return self.layoutSection(height: isDone ? 165 : 170, scroll: isDone ? .groupPaging : .none, header: header, width: isDone ? 0.85 : 1.0) }
+            if index == 1 {
+
+                let roadmapCount = OnboardingManager.shared.isOnboardingCompleted
+                    ? self.visibleRoadmaps.count
+                    : 1
+
+                let shouldFillWidth = roadmapCount == 1
+
+                return self.layoutSection(
+                    height: isDone ? 165 : 170,
+                    scroll: shouldFillWidth ? .none : .groupPaging,
+                    header: header,
+                    width: shouldFillWidth ? 1.0 : 0.85
+                )
+            }
+
             
-            if index == 1 { return self.layoutSection(height: isDone ? 165 : 170, scroll: isDone ? .groupPaging : .none, header: header, width: isDone ? 0.85 : 1.0) }
             if index == 5 {
                 let s = self.layoutSection(height: 220, scroll: .continuousGroupLeadingBoundary, header: header, width: 0.85)
                 if isDone { s.visibleItemsInvalidationHandler = { items, off, env in
