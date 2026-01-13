@@ -35,6 +35,9 @@
                             <buttonConfiguration key="configuration" style="filled" title="Start Roadmap">
                                 <color key="baseBackgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                             </buttonConfiguration>
+                            <connections>
+                                <action selector="startButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="iKa-IM-NK8"/>
+                            </connections>
                         </button>
                     </subviews>
                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>

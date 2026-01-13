@@ -5,8 +5,22 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     @IBOutlet weak var floatingButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     
-    let roadmapData = staticRoadmaps
+    var allRoadmaps: [Roadmap] {
+        RoadmapStore.shared.roadmaps
+    }
+    
+    let personalisedRoadmap = allRoadmapsData.first
+    
+    var visibleRoadmaps: [Roadmap] {
+        guard let personalised = allRoadmaps.first else { return [] }
 
+        let startedRoadmaps = allRoadmaps
+            .dropFirst()
+            .filter { $0.isStarted }
+
+        return [personalised] + startedRoadmaps
+    }
+    
     let trendingData = TrendingModel.sampleData
     let journeyData = JourneyModel.sampleData
 
@@ -82,9 +96,10 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
         if section == 1 {
             return OnboardingManager.shared.isOnboardingCompleted
-                ? roadmapData.count
+                ? visibleRoadmaps.count
                 : 1
         }
+
 
         return section == 5 ? trendingData.count : 1
     }
@@ -115,7 +130,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                     withReuseIdentifier: "roadmapScrollCollectionViewCell",
                     for: indexPath
                 ) as! roadmapScrollCollectionViewCell
-                let data = roadmapData[indexPath.row]
+                let data = visibleRoadmaps[indexPath.row]
+
                 cell.configure(
                     title: data.title,
                     subtitle: data.subtitle,
@@ -168,27 +184,67 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
     
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        if indexPath.section == 1 && OnboardingManager.shared.isOnboardingCompleted {
+//
+//            let selectedRoadmap = visibleRoadmaps[indexPath.row]
+//
+//            guard let roadmapIndex = allRoadmaps.firstIndex(
+//                where: { $0.title == selectedRoadmap.title }
+//            ) else { return }
+//
+//            let vc = storyboard!.instantiateViewController(
+//                withIdentifier: "RoadmapDetailVC"
+//            ) as! RoadmapDetailViewController
+//            
+//            //let vc = UIStoryboard(name: "Roadmaps", bundle: nil).instantiateViewController(withIdentifier: "RoadmapDetailVC")
+//
+//            vc.selectedRoadmap = selectedRoadmap
+//
+//            // 🔥 SOURCE OF TRUTH UPDATE
+//            vc.onRoadmapStarted = { [weak self] in
+//                guard let self else { return }
+//
+//                //self.allRoadmaps[roadmapIndex].isStarted = true
+//                print("✅ Roadmap started:", self.allRoadmaps[roadmapIndex].title)
+//
+//                self.collectionView.reloadData()
+//            }
+//
+//            navigationController?.pushViewController(vc, animated: true)
+//
+//                return
+//            }
+//        
+//        if indexPath.section == 4 {
+//            let vc = UIStoryboard(name: "Badges", bundle: nil).instantiateViewController(withIdentifier: "badgesMainPage")
+//            navigationController?.pushViewController(vc, animated: true)
+//        }
+//    }
+    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if indexPath.section == 1 && OnboardingManager.shared.isOnboardingCompleted {
 
-                let selectedRoadmap = roadmapData[indexPath.row]
+        guard indexPath.section == 1,
+              OnboardingManager.shared.isOnboardingCompleted else { return }
 
-                let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-                let vc = storyboard.instantiateViewController(
-                    withIdentifier: "StaticVC"
-                ) as! StaticRoadmapViewViewController
+        let selectedRoadmap = visibleRoadmaps[indexPath.row]
 
-                vc.roadmap = selectedRoadmap   
+        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+        print(UIStoryboard(name: "Roadmaps", bundle: nil))
 
-                navigationController?.pushViewController(vc, animated: true)
-                return
-            }
-        
-        if indexPath.section == 4 {
-            let vc = UIStoryboard(name: "Badges", bundle: nil).instantiateViewController(withIdentifier: "badgesMainPage")
-            navigationController?.pushViewController(vc, animated: true)
+        guard let vc = storyboard.instantiateViewController(
+            withIdentifier: "StaticVC"
+        ) as? StaticRoadmapViewViewController else {
+            print(" StaticRoadmapVC not found")
+            return
         }
+
+        vc.roadmap = selectedRoadmap
+
+        navigationController?.pushViewController(vc, animated: true)
     }
+
+
     
     @objc func continueOnboarding() {
         if let nextVC = OnboardingManager.shared.getNextViewController() { navigationController?.pushViewController(nextVC, animated: true) }

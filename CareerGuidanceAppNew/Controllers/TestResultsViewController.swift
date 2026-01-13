@@ -20,7 +20,18 @@ class TestResultsViewController: UIViewController {
     var completedQuiz: CompletedQuiz!
     override func viewDidLoad() {
         super.viewDidLoad()
+        navigationItem.hidesBackButton = true
+        let backButton = UIButton(type: .system)
+           backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+           backButton.tintColor = .label
+           backButton.addTarget(
+               self,
+               action: #selector(backChevronTapped),
+               for: .touchUpInside
+           )
 
+           let barButton = UIBarButtonItem(customView: backButton)
+           navigationItem.leftBarButtonItem = barButton
 //        if testResult == nil && lesson?.status == .seeResults {
 //            testResult = makeViewOnlyResult()
 //        }
@@ -56,7 +67,19 @@ class TestResultsViewController: UIViewController {
             tableView.backgroundColor = .clear
             setupTableView()
     }
-    
+    @objc func backChevronTapped() {
+        guard let navigationController = navigationController else { return }
+
+        for vc in navigationController.viewControllers {
+            if vc is RoadmapDetailViewController {
+                navigationController.popToViewController(vc, animated: true)
+                return
+            }
+        }
+
+        navigationController.popViewController(animated: true)
+    }
+
     @IBAction func viewYourAnswersTapped(_ sender: Any) {
 //        let storyboard = UIStoryboard(name: "Answers", bundle: nil)
 //        guard let resultsVC = storyboard.instantiateViewController(withIdentifier: "YourAnswersVC") as? YourAnswersViewController else {

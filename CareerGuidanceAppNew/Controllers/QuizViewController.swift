@@ -10,6 +10,8 @@ import UIKit
 class QuizViewController: UIViewController {
     var lesson: Lesson?
     var quiz: Quiz?
+    var onRoadmapStarted: (() -> Void)?
+    var roadmapStatus: Roadmap?
 
     @IBOutlet weak var QuestionNumberLabel: UILabel!
     @IBOutlet weak var QuestionTextLabel: UILabel!
@@ -136,6 +138,10 @@ class QuizViewController: UIViewController {
 //            self.navigateToResults(result: result)
             let completedQuiz = self.generateCompletedQuiz()
             QuizHistoryManager.shared.save(completedQuiz)
+            if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
+                self.onRoadmapStarted?()
+            }
+
             self.navigateToResults(completedQuiz: completedQuiz)
         })
 

@@ -13,7 +13,9 @@ class RoadmapDetailViewController: UIViewController, RoadmapLessonRowCellDelegat
     
     @IBOutlet weak var tableView: UITableView!
     var selectedRoadmap: Roadmap!
-    
+    var roadmap: Roadmap!
+    var onRoadmapStarted: (() -> Void)?
+
     override func viewDidLoad() {
             super.viewDidLoad()
             self.title = selectedRoadmap.title
@@ -210,6 +212,27 @@ extension RoadmapDetailViewController {
             tableView.deselectRow(at: indexPath, animated: true)
         }
     }
+//extension RoadmapDetailViewController: StartTestModalDelegate {
+//
+//    func didTapStartTest(quiz: Quiz, lesson: Lesson) {
+//            let sb = UIStoryboard(name: "Roadmaps", bundle: nil)
+//
+//            guard let quizVC = sb.instantiateViewController(
+//                withIdentifier: "QuestionVC"
+//            ) as? QuizViewController else {
+//                print("QuestionVC not found")
+//                return
+//            }
+//
+//            quizVC.quiz = quiz
+//            quizVC.lesson = lesson
+//            print("Entered QuizVC \(quiz.lessonName)")
+//            print(quiz.questions.count)
+//            
+//            navigationController?.pushViewController(quizVC, animated: true)
+//        }
+//
+//}
 extension RoadmapDetailViewController: StartTestModalDelegate {
 
     func didTapStartTest(quiz: Quiz, lesson: Lesson) {
@@ -224,9 +247,22 @@ extension RoadmapDetailViewController: StartTestModalDelegate {
 
         quizVC.quiz = quiz
         quizVC.lesson = lesson
-        print("Entered QuizVC \(quiz.lessonName)")
-        print(quiz.questions.count)
-        
+
+        // ✅ PASS ROADMAP CONTEXT
+        quizVC.roadmapStatus = selectedRoadmap
+
+        // ✅ MARK ROADMAP AS STARTED AFTER SUBMIT
+        quizVC.onRoadmapStarted = { [weak self] in
+            guard let self else { return }
+
+            RoadmapStore.shared.markRoadmapStarted(
+                title: self.selectedRoadmap.title
+            )
+
+            print("✅ Roadmap marked as started:", self.selectedRoadmap.title)
+        }
+
         navigationController?.pushViewController(quizVC, animated: true)
     }
 }
+

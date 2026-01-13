@@ -8,10 +8,14 @@
 import UIKit
 
 class StaticRoadmapViewViewController: UIViewController {
-
+    
+//    required init?(coder: NSCoder) {
+//        fatalError("init(coder:) has not been implemented")
+//    }
+    
     
     @IBOutlet weak var tableView: UITableView!
-    var roadmap: StaticRoadmap?
+    var roadmap: Roadmap?
     var milestoneList: [Milestone] = []
     
     override func viewDidLoad() {
@@ -55,12 +59,35 @@ class StaticRoadmapViewViewController: UIViewController {
 
         guard let roadmap = roadmap else { return }
 
+        header.titleLabel.text = roadmap.title
         header.bodyLabel.text = roadmap.description
 
-        header.layoutIfNeeded()
+        // 🔥 VIEW → VC COMMUNICATION
+        header.onStartTapped = { [weak self] in
+            self?.openModulesPage()
+        }
+
         tableView.tableHeaderView = header.sizedForTableHeader()
     }
-    
+    private func openModulesPage() {
+        guard let roadmap = roadmap else { return }
+
+        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+
+        guard let vc = storyboard.instantiateViewController(
+            withIdentifier: "RoadmapDetailVC"
+        ) as? RoadmapDetailViewController else {
+            print("❌ RoadmapDetailVC not found")
+            return
+        }
+
+        // 🔑 PASS DOMAIN CONTEXT
+        vc.selectedRoadmap = roadmap
+
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+
     func loadRoadmapData() {
         guard let roadmap = roadmap else {
             print("Roadmap not injected")
