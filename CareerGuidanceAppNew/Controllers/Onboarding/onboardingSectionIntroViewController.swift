@@ -14,12 +14,14 @@ class onboardingSectionIntroViewController: UIViewController {
     
     // MARK: - Properties
     var sectionIndex: Int = 0
-    
+    var questionIndex: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureContent()
-        self.navigationItem.hidesBackButton = true
+        //setupBackChevron()
+        navigationItem.hidesBackButton = true
+        
     }
     
     // MARK: - UI Layout Fix
@@ -40,7 +42,16 @@ class onboardingSectionIntroViewController: UIViewController {
             presentWelcomePage()
         }
     }
-    
+//    func setupBackChevron() {
+//        let backButton = UIBarButtonItem(
+//            image: UIImage(systemName: "chevron.left"),
+//            style: .plain,
+//            target: self,
+//            action: #selector(backChevronTapped)
+//        )
+//        navigationItem.leftBarButtonItem = backButton
+//    }
+//
     private func presentWelcomePage() {
         let storyboard = UIStoryboard(name: "WelcomePage", bundle: nil)
         if let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
@@ -70,7 +81,47 @@ class onboardingSectionIntroViewController: UIViewController {
         
         btnSkip.isHidden = (sectionIndex == 0)
     }
-    
+//    @objc func backChevronTapped() {
+//
+//        if questionIndex > 0 {
+//            navigationController?.popViewController(animated: true)
+//            return
+//        }
+//
+//        let alert = UIAlertController(
+//            title: "Go Back?",
+//            message: "If you go back now, this section won’t be completed.",
+//            preferredStyle: .alert
+//        )
+//
+//        alert.addAction(UIAlertAction(title: "Stay", style: .cancel))
+//
+//        alert.addAction(UIAlertAction(title: "Go Back", style: .destructive) { _ in
+//            self.navigateBackToSectionIntro()
+//        })
+//
+//        present(alert, animated: true)
+//    }
+//    func navigateBackToSectionIntro() {
+//
+//        // Maintain last visited section
+//        OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+//
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//
+//        guard let introVC = storyboard.instantiateViewController(
+//            withIdentifier: "introVC"
+//        ) as? onboardingSectionIntroViewController else {
+//            return
+//        }
+//
+//        introVC.sectionIndex = sectionIndex
+//
+//        navigationController?.popToRootViewController(animated: false)
+//        navigationController?.pushViewController(introVC, animated: true)
+//    }
+
+
     // MARK: - Navigation Logic
     @IBAction func continueButtonTapped(_ sender: UIButton) {
         //added T

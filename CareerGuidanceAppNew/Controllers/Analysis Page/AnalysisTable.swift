@@ -6,7 +6,8 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationItem.hidesBackButton = true
+        navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .appBackground
         tableViewAnalysis.backgroundColor = .appBackground
         

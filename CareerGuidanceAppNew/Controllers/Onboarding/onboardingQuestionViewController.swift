@@ -25,8 +25,68 @@ class onboardingQuestionViewController: UIViewController {
         //aded t
         nextButton.isEnabled = false
         configureUI()
+        setupBackChevron()
     }
-    
+        func setupBackChevron() {
+            let backButton = UIBarButtonItem(
+                image: UIImage(systemName: "chevron.left"),
+                style: .plain,
+                target: self,
+                action: #selector(backChevronTapped)
+            )
+            navigationItem.leftBarButtonItem = backButton
+        }
+    @objc func backChevronTapped() {
+
+        // If NOT first question → normal back
+        if questionIndex > 0 {
+            navigationController?.popViewController(animated: true)
+            return
+        }
+
+        // FIRST question → ask confirmation
+        let alert = UIAlertController(
+            title: "Go Back?",
+            message: "If you go back now, this section won’t be completed.",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Stay", style: .cancel))
+
+        alert.addAction(UIAlertAction(title: "Go Back", style: .destructive) { _ in
+            self.goToCurrentSectionIntro()
+        })
+
+        present(alert, animated: true)
+    }
+
+    private func goToCurrentSectionIntro() {
+
+        OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+
+        // Look for existing intro VC for this section in stack
+        if let nav = navigationController {
+            for vc in nav.viewControllers {
+                if let introVC = vc as? onboardingSectionIntroViewController,
+                   introVC.sectionIndex == sectionIndex {
+                    
+                    nav.popToViewController(introVC, animated: true)
+                    return
+                }
+            }
+        }
+
+        // Fallback (should rarely happen)
+        guard let introVC = storyboard?.instantiateViewController(
+            withIdentifier: "introVC"
+        ) as? onboardingSectionIntroViewController else {
+            return
+        }
+
+        introVC.sectionIndex = sectionIndex
+        navigationController?.popViewController(animated: true)
+    }
+
     private func configureUI() {
         let section = questionnaire.sections[sectionIndex]
         let question = section.questions[questionIndex]
