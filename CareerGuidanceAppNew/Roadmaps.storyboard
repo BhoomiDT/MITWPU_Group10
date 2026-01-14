@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--My Roadmaps-->
+        <!--Trending Domains-->
         <scene sceneID="ziO-Vm-SZR">
             <objects>
                 <viewController storyboardIdentifier="TrendingVC" id="z4H-9D-K6a" customClass="RoadmapsViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
@@ -60,7 +60,7 @@
                             <constraint firstItem="gzX-dB-2yT" firstAttribute="bottom" secondItem="drk-f4-nVS" secondAttribute="bottom" id="aDL-of-BTh"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="My Roadmaps" id="xlA-na-qCb"/>
+                    <navigationItem key="navigationItem" title="Trending Domains" id="xlA-na-qCb"/>
                     <connections>
                         <outlet property="collectionView" destination="drk-f4-nVS" id="Loh-3j-BqP"/>
                         <outlet property="searchBar" destination="pPU-vd-WbL" id="9p0-0a-tuv"/>
