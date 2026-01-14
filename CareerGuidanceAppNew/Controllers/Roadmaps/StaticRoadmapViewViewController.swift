@@ -62,7 +62,6 @@ class StaticRoadmapViewViewController: UIViewController {
         header.titleLabel.text = roadmap.title
         header.bodyLabel.text = roadmap.description
 
-        // 🔥 VIEW → VC COMMUNICATION
         header.onStartTapped = { [weak self] in
             self?.openModulesPage()
         }
@@ -77,11 +76,10 @@ class StaticRoadmapViewViewController: UIViewController {
         guard let vc = storyboard.instantiateViewController(
             withIdentifier: "RoadmapDetailVC"
         ) as? RoadmapDetailViewController else {
-            print("❌ RoadmapDetailVC not found")
+            print("RoadmapDetailVC not found")
             return
         }
 
-        // 🔑 PASS DOMAIN CONTEXT
         vc.selectedRoadmap = roadmap
 
         navigationController?.pushViewController(vc, animated: true)

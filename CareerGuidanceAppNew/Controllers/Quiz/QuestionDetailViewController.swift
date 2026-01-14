@@ -53,7 +53,6 @@ class QuestionDetailViewController: UIViewController {
         questionNumber.text = "Question \(questionIndex + 1)"
         questionLabel.text = questionResult.questionText
 
-        // 🔥 Remove storyboard-added arranged subviews
         optionsStackView.arrangedSubviews.forEach {
             optionsStackView.removeArrangedSubview($0)
             $0.removeFromSuperview()
@@ -73,17 +72,14 @@ class QuestionDetailViewController: UIViewController {
         index: Int
     ) -> UIView {
 
-        // 🔹 Card container
         let container = UIView()
         container.backgroundColor = .white
         container.layer.cornerRadius = 16
         container.layer.borderWidth = 2
         container.translatesAutoresizingMaskIntoConstraints = false
 
-        // 🔹 Enforce height like quiz options
         container.heightAnchor.constraint(greaterThanOrEqualToConstant: 70).isActive = true
 
-        // 🔹 Label
         let label = UILabel()
         label.text = text
         label.numberOfLines = 0
@@ -94,7 +90,6 @@ class QuestionDetailViewController: UIViewController {
 
         container.addSubview(label)
 
-        // 🔹 Padding (this creates the card feel)
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: container.topAnchor, constant: 16),
             label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -16),
@@ -102,7 +97,6 @@ class QuestionDetailViewController: UIViewController {
             label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -20)
         ])
 
-        // 🔹 Border logic
         if index == questionResult.correctIndex {
             container.layer.borderColor = UIColor(hex: "1fa5a1").cgColor
         } else if index == questionResult.userSelectedIndex {

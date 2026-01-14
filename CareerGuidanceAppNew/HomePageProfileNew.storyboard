@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="oSy-qV-V6T">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="r6U-k1-rdo">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
@@ -173,7 +173,7 @@
             </objects>
             <point key="canvasLocation" x="6947.3282442748086" y="147.88732394366198"/>
         </scene>
-        <!--Assistant View Controller-->
+        <!--AI Assistant-->
         <scene sceneID="eEq-sW-XEH">
             <objects>
                 <viewController storyboardIdentifier="AssistantVC" id="oSy-qV-V6T" customClass="AssistantViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
@@ -193,7 +193,7 @@
                                 </connections>
                             </searchBar>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="ADI-ie-h2i">
-                                <rect key="frame" x="0.0" y="118" width="393" height="625"/>
+                                <rect key="frame" x="0.0" y="172" width="393" height="571"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="sEF-6h-GNz" customClass="TableViewCell" customModule="CareerGuidanceAppNew" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="50" width="393" height="52"/>
@@ -230,7 +230,7 @@
                             <outletCollection property="gestureRecognizers" destination="bKa-la-npv" appends="YES" id="wZA-Cn-khK"/>
                         </connections>
                     </view>
-                    <navigationItem key="navigationItem" largeTitleDisplayMode="never" id="4bc-xB-kUz"/>
+                    <navigationItem key="navigationItem" title="AI Assistant" largeTitleDisplayMode="never" id="4bc-xB-kUz"/>
                     <connections>
                         <outlet property="bottomConstraint" destination="8Ls-B7-f2u" id="Eyt-Jn-r2W"/>
                         <outlet property="searchBar" destination="LNm-NW-giT" id="8hE-wF-Dc3"/>
@@ -244,7 +244,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="8651.1450381679388" y="147.88732394366198"/>
+            <point key="canvasLocation" x="9577.8625954198469" y="147.88732394366198"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="fZJ-IT-K5W">
@@ -263,6 +263,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OJP-aN-Vj0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5223.6641221374048" y="131.69014084507043"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="yhS-Nh-QO2">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="r6U-k1-rdo" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="iSi-y4-Caa">
+                        <rect key="frame" x="0.0" y="118" width="393" height="106"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="oSy-qV-V6T" kind="relationship" relationship="rootViewController" id="NPb-mo-h3g"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5rc-Gb-4xa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="8651.1450381679388" y="147.88732394366198"/>
         </scene>
     </scenes>
     <resources>
