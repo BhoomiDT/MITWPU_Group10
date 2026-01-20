@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bBM-DM-HEw">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Resources-->
+        <scene sceneID="xOy-hz-Dwh">
+            <objects>
+                <viewController id="NNS-ap-4E6" customClass="MainResourcesViewController" customModule="CareerGuidanceAppNew" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="tdg-3D-iQR">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="wRl-qB-vC3">
+                                <rect key="frame" x="0.0" y="172" width="393" height="612"/>
+                                <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="mub-vG-ahd">
+                                    <size key="itemSize" width="203" height="210"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="IGf-Lh-LMJ">
+                                        <rect key="frame" x="95" y="0.0" width="203" height="210"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="hLR-74-Yka">
+                                            <rect key="frame" x="0.0" y="0.0" width="203" height="210"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                        <size key="customSize" width="203" height="210"/>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LAy-pt-5US">
+                                <rect key="frame" x="12" y="728" width="369" height="48"/>
+                                <color key="backgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="QRD-rq-odz"/>
+                                </constraints>
+                                <color key="tintColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="filled" title="Continue">
+                                    <color key="baseBackgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                                </buttonConfiguration>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="YHR-oU-m9n"/>
+                        <color key="backgroundColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="wRl-qB-vC3" firstAttribute="leading" secondItem="YHR-oU-m9n" secondAttribute="leading" id="4If-z0-xAZ"/>
+                            <constraint firstItem="YHR-oU-m9n" firstAttribute="trailing" secondItem="wRl-qB-vC3" secondAttribute="trailing" id="IeY-WK-QAQ"/>
+                            <constraint firstItem="wRl-qB-vC3" firstAttribute="top" secondItem="YHR-oU-m9n" secondAttribute="top" id="Tg5-kK-nYc"/>
+                            <constraint firstItem="YHR-oU-m9n" firstAttribute="bottom" secondItem="wRl-qB-vC3" secondAttribute="bottom" id="XG5-4u-HyR"/>
+                            <constraint firstItem="LAy-pt-5US" firstAttribute="leading" secondItem="YHR-oU-m9n" secondAttribute="leading" constant="12" id="dxW-cE-nJb"/>
+                            <constraint firstItem="YHR-oU-m9n" firstAttribute="bottom" secondItem="LAy-pt-5US" secondAttribute="bottom" constant="8" id="eeo-kh-dZg"/>
+                            <constraint firstItem="YHR-oU-m9n" firstAttribute="trailing" secondItem="LAy-pt-5US" secondAttribute="trailing" constant="12" id="xh8-C8-Sav"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Resources" largeTitleDisplayMode="always" id="f2x-gF-sxI"/>
+                    <connections>
+                        <outlet property="collectionView" destination="wRl-qB-vC3" id="JMu-Jx-brU"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mOw-9X-XFF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4608.3969465648852" y="52.816901408450704"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="73x-uW-bHR">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bBM-DM-HEw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="B8a-BT-b0L">
+                        <rect key="frame" x="0.0" y="118" width="393" height="106"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="NNS-ap-4E6" kind="relationship" relationship="rootViewController" id="62A-Gk-w6a"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jbN-hI-xXy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3681.679389312977" y="52.816901408450704"/>
+        </scene>
+    </scenes>
+</document>

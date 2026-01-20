@@ -11,7 +11,7 @@
         <!--Onboarding Section Intro View Controller-->
         <scene sceneID="sgE-jK-7Pr">
             <objects>
-                <viewController storyboardIdentifier="IntroVC" id="zB6-hb-G8e" customClass="onboardingSectionIntroViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="introVC" id="zB6-hb-G8e" customClass="onboardingSectionIntroViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="i1z-KE-qqs">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -36,7 +36,7 @@
                                     <color key="baseBackgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <action selector="continueTapped:" destination="zB6-hb-G8e" eventType="touchUpInside" id="acV-GF-BAk"/>
+                                    <action selector="continueButtonTapped:" destination="zB6-hb-G8e" eventType="touchUpInside" id="j1k-Tw-B9N"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Rkr-Po-qoh">
@@ -47,7 +47,7 @@
                                     <color key="baseForegroundColor" red="0.12156862745098039" green="0.6470588235294118" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </buttonConfiguration>
                                 <connections>
-                                    <action selector="skipTapped:" destination="zB6-hb-G8e" eventType="touchUpInside" id="aVf-vn-Ejj"/>
+                                    <action selector="skipButtonTapped:" destination="zB6-hb-G8e" eventType="touchUpInside" id="q79-4O-FE2"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3hU-AM-xhG">
@@ -101,10 +101,10 @@
                     </view>
                     <navigationItem key="navigationItem" id="Kbe-jK-EEC"/>
                     <connections>
-                        <outlet property="continueButton" destination="McH-Un-ZQO" id="w8x-oL-PN4"/>
+                        <outlet property="btnContinue" destination="McH-Un-ZQO" id="Bwd-zj-kbH"/>
+                        <outlet property="btnSkip" destination="Rkr-Po-qoh" id="HFG-AD-arY"/>
                         <outlet property="iconBackgroundView" destination="byQ-Fm-rH0" id="8qo-03-aCU"/>
-                        <outlet property="iconImageView" destination="9kI-cQ-6S5" id="RET-oV-0vH"/>
-                        <outlet property="skipButton" destination="Rkr-Po-qoh" id="kNi-ek-AK9"/>
+                        <outlet property="imageView" destination="9kI-cQ-6S5" id="xdU-xE-aW2"/>
                         <outlet property="subtitleLabel" destination="3hU-AM-xhG" id="s8w-g0-G1r"/>
                         <outlet property="titleLabel" destination="8eG-TJ-3CQ" id="qfo-GV-nTO"/>
                     </connections>
@@ -250,7 +250,7 @@
         <!--Technical Skills-->
         <scene sceneID="OuN-Sq-YU9">
             <objects>
-                <viewController id="Gh3-KK-iRP" customClass="SkillsViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="technicalSkills" id="Gh3-KK-iRP" customClass="SkillsViewController" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oXd-fJ-PuU">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -383,6 +383,9 @@
                     <navigationItem key="navigationItem" title="Technical Skills" id="9tl-Ew-6c3">
                         <barButtonItem key="rightBarButtonItem" style="done" systemItem="done" id="TuN-bk-8eK">
                             <color key="tintColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
+                            <connections>
+                                <action selector="continueButtonTapped:" destination="Gh3-KK-iRP" id="qDJ-gb-1C1"/>
+                            </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
@@ -427,6 +430,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="fTR-4Y-6aG"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pqx-xB-hBc">
                                         <rect key="frame" x="0.0" y="73.666666666666657" width="345" height="61.666666666666657"/>
@@ -437,6 +443,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="yxx-iU-GvG"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gEB-Fz-Rir">
                                         <rect key="frame" x="0.0" y="147.33333333333334" width="345" height="61.666666666666657"/>
@@ -447,6 +456,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="zlX-pG-Fy7"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WUI-aQ-Tcs">
                                         <rect key="frame" x="0.0" y="221.00000000000003" width="345" height="61.666666666666657"/>
@@ -457,6 +469,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="QJ3-tM-JmZ"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XjS-EU-gXV">
                                         <rect key="frame" x="0.0" y="294.66666666666674" width="345" height="61.666666666666686"/>
@@ -467,6 +482,9 @@
                                             </backgroundConfiguration>
                                             <color key="baseForegroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         </buttonConfiguration>
+                                        <connections>
+                                            <action selector="optionTapped:" destination="oXc-tY-aIH" eventType="touchUpInside" id="6fZ-eY-z3z"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                             </stackView>
@@ -517,7 +535,7 @@
                         <outlet property="optionButton2" destination="pqx-xB-hBc" id="pgV-5i-ZjK"/>
                         <outlet property="optionButton3" destination="gEB-Fz-Rir" id="mgQ-29-EKV"/>
                         <outlet property="optionButton4" destination="WUI-aQ-Tcs" id="o2r-Gx-pPT"/>
-                        <outlet property="optionButton5" destination="XjS-EU-gXV" id="Jh0-a0-CFg"/>
+                        <outlet property="optionButton5" destination="XjS-EU-gXV" id="6su-lQ-bqa"/>
                         <outlet property="progressView" destination="mtD-U2-0We" id="Iu0-g2-afv"/>
                         <outlet property="questionLabel" destination="XDd-Ng-Aff" id="T2k-Pz-ohH"/>
                         <outlet property="subtitleLabel" destination="YTk-eu-Nfc" id="dDe-yc-dKQ"/>
@@ -548,7 +566,7 @@
         <!--Recommended Path-->
         <scene sceneID="6dL-lM-Vd4">
             <objects>
-                <viewController id="mJL-fc-yhT" customClass="AnalysisTable" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="path" id="mJL-fc-yhT" customClass="AnalysisTable" customModule="CareerGuidanceAppNew" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="MRZ-NE-Bp3">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -640,10 +658,10 @@
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemBlueColor">
-            <color red="0.0" green="0.53333333333333333" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemGray2Color">
-            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

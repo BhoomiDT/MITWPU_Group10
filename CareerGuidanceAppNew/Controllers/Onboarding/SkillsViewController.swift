@@ -45,9 +45,6 @@ class SkillsViewController: UIViewController {
         tableView.delegate = self
         searchBar.delegate = self
         
-        // Register nibs if you created separate xib or rely on storyboard prototype cells (skip registration).
-        // tableView.register(UINib(nibName: "SelectedSkillCell", bundle: nil), forCellReuseIdentifier: "SelectedSkillCell")
-        // tableView.register(UINib(nibName: "SuggestionSkillCell", bundle: nil), forCellReuseIdentifier: "SuggestionSkillCell")
 
         tableView.estimatedRowHeight = 56
         tableView.rowHeight = UITableView.automaticDimension
@@ -61,7 +58,6 @@ class SkillsViewController: UIViewController {
                 tableView.sectionHeaderTopPadding = 0
             }
 
-        // round floating search container and add shadow
         searchContainerView.layer.cornerRadius = 28
         searchContainerView.layer.masksToBounds = false
         searchContainerView.layer.shadowColor = UIColor.black.cgColor
@@ -69,7 +65,6 @@ class SkillsViewController: UIViewController {
         searchContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
         searchContainerView.layer.shadowRadius = 8
         
-        // make container a shadow host only (no visible fill)
             searchContainerView.backgroundColor = .clear
             searchContainerView.layer.masksToBounds = false
             searchContainerView.layer.shadowColor = UIColor.black.cgColor
@@ -77,21 +72,32 @@ class SkillsViewController: UIViewController {
             searchContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
             searchContainerView.layer.shadowRadius = 8
 
-            // remove default search bar chrome so it doesn't draw that rectangle
-        searchBar.backgroundImage = UIImage()       // removes bar background
+            
+        searchBar.backgroundImage = UIImage()
         searchBar.barTintColor = .clear
         searchBar.backgroundColor = .clear
 
-        // ensure rows can scroll above the pill
         view.layoutIfNeeded()
         tableView.contentInset.bottom = searchContainerView.frame.height + 12
     }
+    
 
     private func suggestionsArray() -> [String] {
         return isFiltering ? filteredSuggestions : suggestions
     }
-
-    // helper to index path of a given cell's skill
+    @IBAction func continueButtonTapped(_ sender: Any) {
+      
+       
+            OnboardingManager.shared.saveTechSkills(self.selected)
+            
+           
+            if let nextIntro = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
+                nextIntro.sectionIndex = 2
+                navigationController?.pushViewController(nextIntro, animated: true)
+            }
+        
+    }
+    
     private func indexPath(forSelectedCell cell: SelectedSkillCell) -> IndexPath? {
         if let text = cell.titleLabel.text, let row = selected.firstIndex(of: text) {
             return IndexPath(row: row, section: 0)
@@ -110,7 +116,7 @@ class SkillsViewController: UIViewController {
 
 // MARK: - Data Source
 extension SkillsViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int { 2 } // Selected, Suggestions
+    func numberOfSections(in tableView: UITableView) -> Int { 2 }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return section == 0 ? selected.count : suggestionsArray().count
@@ -129,7 +135,7 @@ extension SkillsViewController: UITableViewDataSource {
             }
             cell.titleLabel.text = selected[indexPath.row]
             cell.delegate = self
-            // left button style done in cell awakeFromNib
+          
             cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
             cell.backgroundColor = .systemBackground
             return cell
@@ -164,10 +170,9 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
 
     func suggestionCellDidTapAdd(_ cell: SuggestionSkillCell) {
         guard let ip = indexPath(forSuggestionCell: cell) else { return }
-        // get item (from filtered or base)
+        
         let item = suggestionsArray()[ip.row]
 
-        // remove from base suggestions (find real index)
         if let realIndex = suggestions.firstIndex(of: item) {
             suggestions.remove(at: realIndex)
         }

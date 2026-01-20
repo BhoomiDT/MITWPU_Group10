@@ -7,6 +7,7 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
         setupSheetPresentation()
     }
 
@@ -22,7 +23,7 @@ class WelcomeViewController: UIViewController {
             sheet.detents = [customDetent]
             
             
-            sheet.prefersGrabberVisible = true
+            sheet.prefersGrabberVisible = false
             sheet.preferredCornerRadius = 24
         }
     }

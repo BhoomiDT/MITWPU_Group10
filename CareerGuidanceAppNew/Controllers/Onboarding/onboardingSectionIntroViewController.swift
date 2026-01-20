@@ -1,97 +1,183 @@
 import UIKit
 
 class onboardingSectionIntroViewController: UIViewController {
-
-    // MARK: - Model
-    var questionnaire: Questionnaire!   // injected / created
-    var sectionIndex: Int = 0           // which section intro is this?
-
-    // MARK: - Outlets (hook these to storyboard)
-
-    @IBOutlet weak var iconImageView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel! 
-    @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var continueButton: UIButton!
-    @IBOutlet weak var skipButton: UIButton!
     
+    // MARK: - Outlets
     @IBOutlet weak var iconBackgroundView: UIView!
+    @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var btnContinue: UIButton!
+    @IBOutlet weak var btnSkip: UIButton!
+    
+    var questionnaire: Questionnaire?
+    
+    // MARK: - Properties
+    var sectionIndex: Int = 0
+    var questionIndex: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // First intro creates the model
-        if questionnaire == nil {
-            questionnaire = Questionnaire()
-        }
-
-        configureUI()
-        styleCircle()
-    }
-    private var hasShownWelcomeInThisSession = false
-
-        override func viewDidAppear(_ animated: Bool) {
-            super.viewDidAppear(animated)
-
-            // If it's section 0 and we haven't shown the modal since this
-            // specific screen loaded, show it.
-            if sectionIndex == 0 && !hasShownWelcomeInThisSession {
-                showWelcomeModal()
-            }
-        }
-
-        private func showWelcomeModal() {
-            let sb = UIStoryboard(name: "WelcomePage", bundle: nil)
-            
-            if let welcomeVC = sb.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
-                welcomeVC.modalPresentationStyle = .pageSheet
-                
-                // Set the flag to true so when the modal is dismissed,
-                // viewDidAppear doesn't run this again.
-                hasShownWelcomeInThisSession = true
-                
-                self.present(welcomeVC, animated: true)
-            }
-        }
-    private func configureUI() {
-        let section = questionnaire.sections[sectionIndex]
-        iconImageView.image = UIImage(systemName: section.symbolName)
-        titleLabel.text = section.title
-        subtitleLabel.text = section.subtitle
+        configureContent()
+        //setupBackChevron()
+        navigationItem.hidesBackButton = true
+        
     }
     
-    private func styleCircle() {
-        iconBackgroundView.layer.cornerRadius = iconBackgroundView.bounds.height/2
-        iconBackgroundView.clipsToBounds = true
+    // MARK: - UI Layout Fix
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        
+        iconBackgroundView.layer.cornerRadius = iconBackgroundView.frame.height / 2
+        iconBackgroundView.layer.masksToBounds = true
     }
-
-    @IBAction func continueTapped(_ sender: UIButton) {
-        // Go to first question in this section
-        guard let vc = storyboard?.instantiateViewController(
-            withIdentifier: "QuestionVC"
-        ) as? onboardingQuestionViewController else { return }
-
-        vc.questionnaire = questionnaire
-        vc.sectionIndex = sectionIndex
-        vc.questionIndex = 0
-
-        navigationController?.pushViewController(vc, animated: true)
-    }
-
-    @IBAction func skipTapped(_ sender: UIButton) {
-        // Skip this section → next section intro
-        let nextSectionIndex = sectionIndex + 1
-
-        guard nextSectionIndex < questionnaire.sections.count,
-              let nextIntro = storyboard?.instantiateViewController(
-                withIdentifier: "IntroVC"
-              ) as? onboardingSectionIntroViewController else {
-
-            // no more sections → finish flow however you want
-            navigationController?.popToRootViewController(animated: true)
-            return
+    private var hasShownWelcomeModal = false
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // Only trigger on Section 0 and only if not already shown
+        if sectionIndex == 0 && !hasShownWelcomeModal {
+            presentWelcomePage()
         }
+    }
+//    func setupBackChevron() {
+//        let backButton = UIBarButtonItem(
+//            image: UIImage(systemName: "chevron.left"),
+//            style: .plain,
+//            target: self,
+//            action: #selector(backChevronTapped)
+//        )
+//        navigationItem.leftBarButtonItem = backButton
+//    }
+//
+    private func presentWelcomePage() {
+        let storyboard = UIStoryboard(name: "WelcomePage", bundle: nil)
+        if let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
+            
+            // Set the style to pageSheet so your 85% custom height works
+            welcomeVC.modalPresentationStyle = .pageSheet
+            
+            // Set flag to true before presenting
+            hasShownWelcomeModal = true
+            
+            self.present(welcomeVC, animated: true, completion: nil)
+        }
+    }
+    
+    func configureContent() {
+        let sections = OnboardingManager.shared.questionnaire.sections
+        guard sectionIndex < sections.count else { return }
+        let sectionData = sections[sectionIndex]
+        
+        titleLabel.text = sectionData.title
+        subtitleLabel.text = sectionData.subtitle
+        
+        if let image = UIImage(systemName: sectionData.symbolName) {
+            imageView.image = image
+            imageView.tintColor = .appTeal
+        }
+        
+        btnSkip.isHidden = (sectionIndex == 0)
+    }
+//    @objc func backChevronTapped() {
+//
+//        if questionIndex > 0 {
+//            navigationController?.popViewController(animated: true)
+//            return
+//        }
+//
+//        let alert = UIAlertController(
+//            title: "Go Back?",
+//            message: "If you go back now, this section won’t be completed.",
+//            preferredStyle: .alert
+//        )
+//
+//        alert.addAction(UIAlertAction(title: "Stay", style: .cancel))
+//
+//        alert.addAction(UIAlertAction(title: "Go Back", style: .destructive) { _ in
+//            self.navigateBackToSectionIntro()
+//        })
+//
+//        present(alert, animated: true)
+//    }
+//    func navigateBackToSectionIntro() {
+//
+//        // Maintain last visited section
+//        OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+//
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//
+//        guard let introVC = storyboard.instantiateViewController(
+//            withIdentifier: "introVC"
+//        ) as? onboardingSectionIntroViewController else {
+//            return
+//        }
+//
+//        introVC.sectionIndex = sectionIndex
+//
+//        navigationController?.popToRootViewController(animated: false)
+//        navigationController?.pushViewController(introVC, animated: true)
+//    }
 
-        nextIntro.questionnaire = questionnaire
-        nextIntro.sectionIndex = nextSectionIndex
-        navigationController?.pushViewController(nextIntro, animated: true)
+
+    // MARK: - Navigation Logic
+    @IBAction func continueButtonTapped(_ sender: UIButton) {
+        //added T
+        OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+        
+        
+        
+        if sectionIndex == 0 {
+            //change commented this
+            //            OnboardingManager.shared.markSectionCompleted(index: 0)
+            if let nextIntro = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
+                nextIntro.sectionIndex = 1
+                navigationController?.pushViewController(nextIntro, animated: true)
+            }
+        }
+        else if sectionIndex == 1 {
+            if let techVC = storyboard?.instantiateViewController(withIdentifier: "technicalSkills") as? SkillsViewController {
+                navigationController?.pushViewController(techVC, animated: true)
+            }
+        }
+        else {
+            if let questionVC = storyboard?.instantiateViewController(withIdentifier: "QuestionVC") as? onboardingQuestionViewController {
+                
+                
+                questionVC.questionnaire = OnboardingManager.shared.questionnaire
+                
+                questionVC.sectionIndex = self.sectionIndex
+                navigationController?.pushViewController(questionVC, animated: true)
+            }
+        }
+    }
+    
+    @IBAction func skipButtonTapped(_ sender: UIButton) {
+        //changed T
+        //        let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
+        //
+        //        if let homeVC = homeStoryboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
+        //            navigationController?.setViewControllers([homeVC], animated: true)
+        //        }
+        
+        //  Save where user stopped
+        OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+        
+        let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
+        
+        if let homeVC = homeStoryboard.instantiateViewController(
+            withIdentifier: "HomePageViewController"
+        ) as? HomePageViewController {
+            
+            navigationController?.setViewControllers([homeVC], animated: true)
+        }
+        
+        
     }
 }
+   
+
+    
+
