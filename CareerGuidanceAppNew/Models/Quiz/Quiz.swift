@@ -20,7 +20,7 @@ struct Lesson {
     let status: LessonStatus
 }
 
-struct Module {
+struct ModuleNew {
     let title: String
     let lessons: [Lesson]
 }
@@ -31,7 +31,7 @@ struct Roadmap {
     let description: String
     let imageName: String
     let percentage: Int
-    let modules: [Module]
+    let modules: [ModuleNew]
     let milestones: [Milestone]
     var isStarted: Bool
 }
@@ -166,7 +166,7 @@ var allRoadmapsData: [Roadmap] = [
         modules: [
 
             // MARK: - Module 1
-            Module(
+            ModuleNew(
                 title: "Module 1: Data Foundations",
                 lessons: [
                     Lesson(
@@ -191,7 +191,7 @@ var allRoadmapsData: [Roadmap] = [
             ),
 
             // MARK: - Module 2
-            Module(
+            ModuleNew(
                 title: "Module 2: Analytics Tools & Techniques",
                 lessons: [
                     Lesson(
@@ -216,7 +216,7 @@ var allRoadmapsData: [Roadmap] = [
             ),
 
             // MARK: - Module 3
-            Module(
+            ModuleNew(
                 title: "Module 3: Exploratory Analysis",
                 lessons: [
                     Lesson(
@@ -241,7 +241,7 @@ var allRoadmapsData: [Roadmap] = [
             ),
 
             // MARK: - Module 4
-            Module(
+            ModuleNew(
                 title: "Module 4: Visualization & Reporting",
                 lessons: [
                     Lesson(
@@ -320,7 +320,7 @@ var allRoadmapsData: [Roadmap] = [
         percentage: 40,
         modules: [
 
-            Module(
+            ModuleNew(
                 title: "Module 1: ML Foundations",
                 lessons: [
                     Lesson(id: "ml_intro", name: "Introduction to Machine Learning", dueDate: "Jan 5", status: .startTest),
@@ -329,7 +329,7 @@ var allRoadmapsData: [Roadmap] = [
                 ]
             ),
 
-            Module(
+            ModuleNew(
                 title: "Module 2: Supervised & Unsupervised Learning",
                 lessons: [
                     Lesson(id: "regression_models", name: "Regression Models", dueDate: "Jan 10", status: .startTest),
@@ -338,7 +338,7 @@ var allRoadmapsData: [Roadmap] = [
                 ]
             ),
 
-            Module(
+            ModuleNew(
                 title: "Module 3: Deep Learning & AI",
                 lessons: [
                     Lesson(id: "neural_networks", name: "Neural Networks Basics", dueDate: "Jan 15", status: .startTest),
@@ -391,7 +391,7 @@ var allRoadmapsData: [Roadmap] = [
         percentage: 65,
         modules: [
 
-            Module(
+            ModuleNew(
                 title: "Module 1: Programming Basics",
                 lessons: [
                     Lesson(id: "programming_basics", name: "Programming Fundamentals", dueDate: "Jan 3", status: .seeResults),
@@ -400,7 +400,7 @@ var allRoadmapsData: [Roadmap] = [
                 ]
             ),
 
-            Module(
+            ModuleNew(
                 title: "Module 2: Frontend Development",
                 lessons: [
                     Lesson(id: "ui_design", name: "UI Design Principles", dueDate: "Jan 8", status: .startTest),
@@ -409,7 +409,7 @@ var allRoadmapsData: [Roadmap] = [
                 ]
             ),
 
-            Module(
+            ModuleNew(
                 title: "Module 3: Backend & Deployment",
                 lessons: [
                     Lesson(id: "api_development", name: "API Development", dueDate: "Jan 14", status: .startTest),
@@ -462,7 +462,7 @@ var allRoadmapsData: [Roadmap] = [
         percentage: 20,
         modules: [
 
-            Module(
+            ModuleNew(
                 title: "Module 1: Security Fundamentals",
                 lessons: [
                     Lesson(id: "security_basics", name: "Cyber Security Basics", dueDate: "Jan 6", status: .startTest),
@@ -471,7 +471,7 @@ var allRoadmapsData: [Roadmap] = [
                 ]
             ),
 
-            Module(
+            ModuleNew(
                 title: "Module 2: Ethical Hacking",
                 lessons: [
                     Lesson(id: "linux_security", name: "Linux Security", dueDate: "Jan 12", status: .startTest),
@@ -480,7 +480,7 @@ var allRoadmapsData: [Roadmap] = [
                 ]
             ),
 
-            Module(
+            ModuleNew(
                 title: "Module 3: Security Operations",
                 lessons: [
                     Lesson(id: "incident_response", name: "Incident Response", dueDate: "Jan 18", status: .startTest),
