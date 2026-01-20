@@ -10,8 +10,8 @@ class EditTechSkillsViewController: UIViewController {
 
     
     private let estimatedRowHeight: CGFloat = 56.0
-    private let topTableMaxHeight: CGFloat = 360.0    // adjust to taste
-    private let topTableMinHeight: CGFloat = 0.0      // when no selected items -> hide
+    private let topTableMaxHeight: CGFloat = 360.0
+    private let topTableMinHeight: CGFloat = 0.0
     // Data
     var selectedSkills: [String] = []
     var allSkills: [String] = [
@@ -21,37 +21,31 @@ class EditTechSkillsViewController: UIViewController {
         "PLSQL", "PyTorch", "PySpark"
     ]
 
-    // filtered suggestions shown in bottom table (respecting search)
     var filteredSkills: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Remove any already selected items from suggestions
         allSkills.removeAll { selectedSkills.contains($0) }
         allSkills.sort()
         filteredSkills = allSkills
-
-        // delegates & data sources
         topTableView.dataSource = self
         topTableView.delegate = self
         bottomTableView.dataSource = self
         bottomTableView.delegate = self
         searchBar.delegate = self
 
-        // automatic height
         topTableView.rowHeight = UITableView.automaticDimension
         bottomTableView.rowHeight = UITableView.automaticDimension
         topTableView.estimatedRowHeight = 56
         bottomTableView.estimatedRowHeight = 56
 
-        // Optional: remove extra separators
         topTableView.tableFooterView = UIView()
         bottomTableView.tableFooterView = UIView()
         
         topTableView.rowHeight = UITableView.automaticDimension
             topTableView.estimatedRowHeight = estimatedRowHeight
-            // initial sizing
+            
             updateTopTableHeight(animated: false)
     }
 
@@ -71,52 +65,42 @@ class EditTechSkillsViewController: UIViewController {
         guard filteredIndex >= 0 && filteredIndex < filteredSkills.count else { return }
         let skill = filteredSkills[filteredIndex]
 
-        // Remove from allSkills (master) and filtered list
         if let masterIndex = allSkills.firstIndex(of: skill) {
             allSkills.remove(at: masterIndex)
         }
-        // Remove from filteredSkills too (updateFiltering will refresh)
-        // Add to selected
+      
         selectedSkills.append(skill)
 
-        // Update filtered list and tables with animation
         updateFiltering(text: searchBar.text ?? "")
         let newIndexPath = IndexPath(row: selectedSkills.count - 1, section: 0)
         topTableView.insertRows(at: [newIndexPath], with: .automatic)
         
-        //adjusting height
         self.updateTopTableHeight()
     }
 
     func removeSkillFromSelected(at index: Int) {
         guard index >= 0 && index < selectedSkills.count else { return }
         let removed = selectedSkills.remove(at: index)
-        // Add back to suggestions, keep sorted
-        allSkills.append(removed)
+                allSkills.append(removed)
         allSkills.sort()
         updateFiltering(text: searchBar.text ?? "")
 
-        // animate deletion in selected table
         let indexPath = IndexPath(row: index, section: 0)
         topTableView.deleteRows(at: [indexPath], with: .automatic)
         
-        //adjusting height
         self.updateTopTableHeight()
     }
     
     func updateTopTableHeight(animated: Bool = true) {
-        // Force layout to ensure contentSize is updated
+      
         topTableView.layoutIfNeeded()
 
-        // Calculate target height from contentSize
         let contentHeight = topTableView.contentSize.height
-        // optionally add small padding for separators / safe area
+     
         let targetHeight = min(max(contentHeight, topTableMinHeight), topTableMaxHeight)
 
-        // Enable scrolling on the top table if content exceeds max
         topTableView.isScrollEnabled = contentHeight > topTableMaxHeight
 
-        // If height hasn't changed, skip
         guard abs(topTableHeightConstraint.constant - targetHeight) > 0.5 else { return }
 
         topTableHeightConstraint.constant = targetHeight
@@ -184,7 +168,6 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
         }
     }
 
-    // Allow tapping the row to behave like pressing the button
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if tableView == bottomTableView {
             addSkillFromSuggestions(at: indexPath.row)
@@ -193,7 +176,6 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
         }
     }
 
-    // Optional: swipe-to-delete for top table
     func tableView(_ tableView: UITableView,
                    commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
@@ -202,7 +184,6 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
         }
     }
 
-    // section headers
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return tableView == topTableView ? "Selected" : "Suggestions"
     }

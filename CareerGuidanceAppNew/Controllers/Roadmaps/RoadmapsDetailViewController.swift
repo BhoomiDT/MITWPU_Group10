@@ -248,10 +248,8 @@ extension RoadmapDetailViewController: StartTestModalDelegate {
         quizVC.quiz = quiz
         quizVC.lesson = lesson
 
-        // ✅ PASS ROADMAP CONTEXT
         quizVC.roadmapStatus = selectedRoadmap
 
-        // ✅ MARK ROADMAP AS STARTED AFTER SUBMIT
         quizVC.onRoadmapStarted = { [weak self] in
             guard let self else { return }
 
@@ -259,7 +257,7 @@ extension RoadmapDetailViewController: StartTestModalDelegate {
                 title: self.selectedRoadmap.title
             )
 
-            print("✅ Roadmap marked as started:", self.selectedRoadmap.title)
+            print("Roadmap marked as started:", self.selectedRoadmap.title)
         }
 
         navigationController?.pushViewController(quizVC, animated: true)

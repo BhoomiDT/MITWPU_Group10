@@ -41,7 +41,6 @@ class LeaderboardViewController: UIViewController {
         
         updateUI()
         configureSegmentedControlAppearance()
-        // Do any additional setup after loading the view.
     }
     
     func updateUI() {
@@ -116,13 +115,13 @@ class LeaderboardViewController: UIViewController {
 
         switch entry.rank {
         case 1:
-            borderColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0) // Bright Gold/Yellow
+            borderColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0) 
             borderWidth = 6.0
         case 2:
-            borderColor = UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0) // Gray/Silver
+            borderColor = UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
             borderWidth = 5.0
         case 3:
-            borderColor = UIColor(red: 0.8, green: 0.5, blue: 0.2, alpha: 1.0) // Brown/Bronze
+            borderColor = UIColor(red: 0.8, green: 0.5, blue: 0.2, alpha: 1.0)
             borderWidth = 4.0
         default:
             borderColor = nil

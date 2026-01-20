@@ -162,7 +162,7 @@ class onboardingSectionIntroViewController: UIViewController {
         //            navigationController?.setViewControllers([homeVC], animated: true)
         //        }
         
-        // ✅ Save where user stopped
+        //  Save where user stopped
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
         
         let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)

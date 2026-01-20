@@ -1,5 +1,5 @@
 //import UIKit
-////enum ResourceSection: Int, CaseIterable {
+///enum ResourceSection: Int, CaseIterable {
 ////    case videos
 ////    case documents
 ////

@@ -201,12 +201,11 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 //
 //            vc.selectedRoadmap = selectedRoadmap
 //
-//            // 🔥 SOURCE OF TRUTH UPDATE
 //            vc.onRoadmapStarted = { [weak self] in
 //                guard let self else { return }
 //
 //                //self.allRoadmaps[roadmapIndex].isStarted = true
-//                print("✅ Roadmap started:", self.allRoadmaps[roadmapIndex].title)
+//                print(" Roadmap started:", self.allRoadmaps[roadmapIndex].title)
 //
 //                self.collectionView.reloadData()
 //            }

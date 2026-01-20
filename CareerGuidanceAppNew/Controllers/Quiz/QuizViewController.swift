@@ -250,7 +250,7 @@ class QuizViewController: UIViewController {
         }
 
         return CompletedQuiz(
-            domainTitle: "Data Analytics", // 🔹 pass dynamically later
+            domainTitle: "Data Analytics", 
             moduleTitle: "Module 1: Foundations of Data",
             lessonId: lesson.id,
             lessonName: lesson.name,

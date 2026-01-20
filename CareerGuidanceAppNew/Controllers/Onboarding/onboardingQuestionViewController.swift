@@ -3,11 +3,11 @@ import UIKit
 class onboardingQuestionViewController: UIViewController {
     
     var questionnaire: Questionnaire!
-    var sectionIndex: Int = 0      // which section
-    var questionIndex: Int = 0     // which question in section
+    var sectionIndex: Int = 0
+    var questionIndex: Int = 0
     
     // MARK: - Outlets (hook to storyboard)
-    //@IBOutlet weak var titleLabel: UILabel!
+ 
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
     
@@ -76,7 +76,6 @@ class onboardingQuestionViewController: UIViewController {
             }
         }
 
-        // Fallback (should rarely happen)
         guard let introVC = storyboard?.instantiateViewController(
             withIdentifier: "introVC"
         ) as? onboardingSectionIntroViewController else {
@@ -91,7 +90,6 @@ class onboardingQuestionViewController: UIViewController {
         let section = questionnaire.sections[sectionIndex]
         let question = section.questions[questionIndex]
         
-        //titleLabel.text = section.title
         subtitleLabel.text = String("Question \(questionIndex+1)")
         questionLabel.text = String(question.qText)
         
@@ -154,7 +152,7 @@ class onboardingQuestionViewController: UIViewController {
         let nextSectionIndex = sectionIndex + 1
         let lastSectionIndex = questionnaire.sections.count - 1
 
-        // ✅ LAST SECTION → GO TO ANALYSIS
+        // LAST SECTION → GO TO ANALYSIS
         if sectionIndex == lastSectionIndex {
 
             OnboardingManager.shared.isOnboardingCompleted = true
@@ -169,7 +167,7 @@ class onboardingQuestionViewController: UIViewController {
             return
         }
 
-        // ➡️ OTHERWISE → NEXT INTRO
+        // OTHERWISE → NEXT INTRO
         if let introVC = storyboard?.instantiateViewController(
             withIdentifier: "introVC"
         ) as? onboardingSectionIntroViewController {

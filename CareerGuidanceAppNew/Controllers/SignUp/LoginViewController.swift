@@ -35,10 +35,7 @@ class LoginViewController: UIViewController {
     func setUpPasswordToggle() {
         eyeButton.setImage(UIImage(systemName: "eye.slash.fill"), for: .normal)
             eyeButton.setImage(UIImage(systemName: "eye.fill"), for: .selected)
-        // 2. Set the target action
-            eyeButton.addTarget(self, action: #selector(togglePasswordVisibility(_:)), for: .touchUpInside)
-            
-            // 3. Assign the button to the RIGHT VIEW of the text field
+            eyeButton.addTarget(self, action:#selector(togglePasswordVisibility(_:)), for: .touchUpInside)
             passwordTextField.rightView = eyeButton
             passwordTextField.rightViewMode = .always
         
