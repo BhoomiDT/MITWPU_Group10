@@ -21,7 +21,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         return [personalised] + startedRoadmaps
     }
     
-    let trendingData = TrendingModel.sampleData
+    var trendingData: [Roadmap] {
+            RoadmapStore.shared.roadmaps
+        }
     let journeyData = JourneyModel.sampleData
 
     override func viewWillAppear(_ animated: Bool) {
@@ -185,29 +187,37 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        guard indexPath.section == 1,
-              OnboardingManager.shared.isOnboardingCompleted else { return }
-
-        let selectedRoadmap = visibleRoadmaps[indexPath.row]
-
+        
+        let selectedRoadmap: Roadmap
+        
+        // Check which section was tapped to pull from the correct data array
+        if indexPath.section == 1 {
+            // Section 1: My Personalised Roadmaps
+            guard OnboardingManager.shared.isOnboardingCompleted else { return }
+            selectedRoadmap = visibleRoadmaps[indexPath.row]
+        } else if indexPath.section == 5 {
+            // Section 5: Trending Domains
+            selectedRoadmap = trendingData[indexPath.row]
+        } else {
+            // Other sections (Stats, Journey, etc.) are not handled here
+            return
+        }
+        
+        // Perform Navigation
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-        print(UIStoryboard(name: "Roadmaps", bundle: nil))
-
+        
         guard let vc = storyboard.instantiateViewController(
             withIdentifier: "StaticVC"
         ) as? StaticRoadmapViewViewController else {
-            print(" StaticRoadmapVC not found")
+            print("StaticRoadmapVC not found in Roadmaps.storyboard")
             return
         }
-
+        
+        // Pass the Roadmap object (e.g., Data Analytics, App Development)
         vc.roadmap = selectedRoadmap
-
+        
         navigationController?.pushViewController(vc, animated: true)
     }
-
-
-    
     @objc func continueOnboarding() {
         if let nextVC = OnboardingManager.shared.getNextViewController() { navigationController?.pushViewController(nextVC, animated: true) }
     }

@@ -56,8 +56,6 @@ class SkillsViewController: UIViewController {
         if #available(iOS 15.0, *) {
                 tableView.sectionHeaderTopPadding = 10
             }
-
-        // round floating search container and add shadow
         searchContainerView.layer.cornerRadius = 28
         searchContainerView.layer.masksToBounds = false
         searchContainerView.layer.shadowColor = UIColor.black.cgColor
@@ -65,7 +63,6 @@ class SkillsViewController: UIViewController {
         searchContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
         searchContainerView.layer.shadowRadius = 8
         
-        // make container a shadow host only (no visible fill)
             searchContainerView.backgroundColor = .clear
             searchContainerView.layer.masksToBounds = false
             searchContainerView.layer.shadowColor = UIColor.black.cgColor
@@ -73,12 +70,10 @@ class SkillsViewController: UIViewController {
             searchContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
             searchContainerView.layer.shadowRadius = 8
 
-            // remove default search bar chrome so it doesn't draw that rectangle
-        searchBar.backgroundImage = UIImage()       // removes bar background
+        searchBar.backgroundImage = UIImage()// removes bar background
         searchBar.barTintColor = .clear
         searchBar.backgroundColor = .clear
 
-        // ensure rows can scroll above the pill
         view.layoutIfNeeded()
         tableView.contentInset.bottom = searchContainerView.frame.height + 12
     }
@@ -97,7 +92,6 @@ class SkillsViewController: UIViewController {
         
     }
     
-    // helper to index path of a given cell's skill
     private func indexPath(forSelectedCell cell: SelectedSkillCell) -> IndexPath? {
         if let text = cell.titleLabel.text, let row = selected.firstIndex(of: text) {
             return IndexPath(row: row, section: 0)
@@ -153,7 +147,6 @@ extension SkillsViewController: UITableViewDataSource {
 extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDelegate {
     func selectedCellDidTapRemove(_ cell: SelectedSkillCell) {
         guard let ip = indexPath(forSelectedCell: cell) else { return }
-        // move from selected -> suggestions
         let item = selected.remove(at: ip.row)
         suggestions.insert(item, at: 0)
 
@@ -167,14 +160,10 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
 
     func suggestionCellDidTapAdd(_ cell: SuggestionSkillCell) {
         guard let ip = indexPath(forSuggestionCell: cell) else { return }
-        // get item
         let item = suggestionsArray()[ip.row]
-
-        // remove from base suggestions
         if let realIndex = suggestions.firstIndex(of: item) {
             suggestions.remove(at: realIndex)
         }
-        // add to selected top
         selected.insert(item, at: 0)
 
         tableView.beginUpdates()
@@ -189,9 +178,7 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
 extension SkillsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            // same as pressing remove
             let item = selected[indexPath.row]
-            // move
             selected.remove(at: indexPath.row)
             suggestions.insert(item, at: 0)
             tableView.beginUpdates()
@@ -200,7 +187,6 @@ extension SkillsViewController: UITableViewDelegate {
             tableView.endUpdates()
             if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
         } else {
-            // add
             let item = suggestionsArray()[indexPath.row]
             if let real = suggestions.firstIndex(of: item) { suggestions.remove(at: real) }
             selected.insert(item, at: 0)

@@ -4,19 +4,19 @@
 //
 //  Created by SDC-USER on 08/12/25.
 //
-import UIKit // Needed for UIColor
+import UIKit
 
-// 1. Structure for a single Badge item
+
 struct Badge {
     let id: Int
-    let title: String          // e.g., "Active Starter"
-    let subtitle: String?      // Subtitle used in the modal view
-    let iconName: String       // SF Symbol name, e.g., "crown.fill"
-    let color: UIColor?         // Color for the background circle/hexagon
-    let isUnlocked: Bool       // Status (affects appearance)
+    let title: String
+    let subtitle: String?
+    let iconName: String
+    let color: UIColor?
+    let isUnlocked: Bool
 }
 
-// 2. Structure for a Section (e.g., "Featured")
+
 struct BadgeSection {
     let title: String
     let badges: [Badge]
@@ -24,10 +24,8 @@ struct BadgeSection {
 
 let customTeal = UIColor(hex: "#f2f2f7")
 
-// Array containing all sections and their badge data
 let allBadgeSections: [BadgeSection] = [
-    
-    // --- Featured Section (Section 0) ---
+ 
     BadgeSection(title: "Featured", badges: [
         
         Badge(id: 1, title: "Active Starter", subtitle: "You conquered your first badge!",

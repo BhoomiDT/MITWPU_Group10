@@ -3,10 +3,9 @@ import UIKit
 class onboardingQuestionViewController: UIViewController {
     
     var questionnaire: Questionnaire!
-    var sectionIndex: Int = 0      // section
-    var questionIndex: Int = 0     // which question in section
+    var sectionIndex: Int = 0
+    var questionIndex: Int = 0
     
-    //@IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
     
@@ -21,7 +20,6 @@ class onboardingQuestionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //aded t
         nextButton.isEnabled = false
         configureUI()
         setupBackChevron()
@@ -36,14 +34,10 @@ class onboardingQuestionViewController: UIViewController {
             navigationItem.leftBarButtonItem = backButton
         }
     @objc func backChevronTapped() {
-
-        // If NOT first question → normal back
         if questionIndex > 0 {
             navigationController?.popViewController(animated: true)
             return
         }
-
-        // FIRST question → ask confirmation
         let alert = UIAlertController(
             title: "Go Back?",
             message: "If you go back now, this section won’t be completed.",
@@ -62,8 +56,6 @@ class onboardingQuestionViewController: UIViewController {
     private func goToCurrentSectionIntro() {
 
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
-
-        // Look for existing intro VC for this section in stack
         if let nav = navigationController {
             for vc in nav.viewControllers {
                 if let introVC = vc as? onboardingSectionIntroViewController,
@@ -75,7 +67,6 @@ class onboardingQuestionViewController: UIViewController {
             }
         }
 
-        // Fallback
         guard let introVC = storyboard?.instantiateViewController(
             withIdentifier: "introVC"
         ) as? onboardingSectionIntroViewController else {

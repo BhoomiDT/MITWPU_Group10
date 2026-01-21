@@ -85,13 +85,13 @@ extension RoadmapsViewController: UICollectionViewDelegate {
         let selectedRoadmap = roadmapsData[indexPath.row]
         print("Tapped on roadmap: \(selectedRoadmap.title)")
         guard let detailVC = storyboard?.instantiateViewController(
-                    withIdentifier: "RoadmapDetailVC"
-                ) as? RoadmapDetailViewController else {
+                    withIdentifier: "StaticVC"
+                ) as? StaticRoadmapViewViewController else {
                     print("Error: Could not instantiate RoadmapDetailVC")
                     return
                 }
 
-                detailVC.selectedRoadmap = selectedRoadmap
+        detailVC.roadmap = selectedRoadmap
 
                 navigationController?.pushViewController(detailVC, animated: true)
     }

@@ -31,7 +31,6 @@ let dailyLeaderboard: [LeaderboardEntry] = [
     LeaderboardEntry(rank: 13, name: "Julia", xp: 360, imageName: nil),
     LeaderboardEntry(rank: 14, name: "Patrick", xp: 360, imageName: nil),
     LeaderboardEntry(rank: 15, name: "Hamza", xp: 360, imageName: nil),
-    // ... more data
 ]
 
 let weeklyLeaderboard: [LeaderboardEntry] = [    // Ranks 1-3 (for Top 3 section)
@@ -51,7 +50,6 @@ let weeklyLeaderboard: [LeaderboardEntry] = [    // Ranks 1-3 (for Top 3 section
     LeaderboardEntry(rank: 13, name: "Anushka", xp: 360, imageName: nil),
     LeaderboardEntry(rank: 14, name: "Yash", xp: 360, imageName: nil),
     LeaderboardEntry(rank: 15, name: "Levis", xp: 360, imageName: nil),
-    // ... more data
 ]
 
 let monthlyLeaderboard: [LeaderboardEntry] = [    // Ranks 1-3 (for Top 3 section)

@@ -33,8 +33,6 @@ class onboardingSectionIntroViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        // Only trigger on Section 0 and only if not already shown
         if sectionIndex == 0 && !hasShownWelcomeModal {
             presentWelcomePage()
         }
@@ -43,11 +41,7 @@ class onboardingSectionIntroViewController: UIViewController {
     private func presentWelcomePage() {
         let storyboard = UIStoryboard(name: "WelcomePage", bundle: nil)
         if let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
-            
-            // Set the style to pageSheet so your 85% custom height works
             welcomeVC.modalPresentationStyle = .pageSheet
-            
-            // Set flag to true before presenting
             hasShownWelcomeModal = true
             
             self.present(welcomeVC, animated: true, completion: nil)

@@ -4,17 +4,11 @@ import SafariServices
 class MainResourcesViewController: UIViewController, StartTestModalDelegate {
     func didTapStartTest(quiz: Quiz, lesson: Lesson) {
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-                
-                // Replace "ActiveQuizViewController" with the actual class name of your test screen
                 guard let quizVC = storyboard.instantiateViewController(withIdentifier: "QuestionVC") as? QuizViewController else {
                     print("Quiz screen not found")
                     return
                 }
-                
-                // Inject the quiz data
                 quizVC.quiz = quiz
-                
-                // Navigate
                 self.navigationController?.pushViewController(quizVC, animated: true)
     }
     
@@ -42,8 +36,8 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
             guard let modalVC = storyboard.instantiateViewController(withIdentifier: "StartTestModalVC") as? StartTestModalViewController else { return }
             
             modalVC.lesson = lesson
-            modalVC.delegate = self // The controller will handle the transition to the actual quiz
-//            modalVC.modalPresentationStyle = .overFullScreen // Makes it look like a popup
+            modalVC.delegate = self
+//            modalVC.modalPresentationStyle = .overFullScreen
 //            modalVC.modalTransitionStyle = .crossDissolve
 //            
 //            present(modalVC, animated: true)
@@ -74,19 +68,16 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
                       layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16)
                   }
 
-            // Video Cell
             collectionView.register(
                 UINib(nibName: "VideoCollectionViewCell", bundle: nil),
                 forCellWithReuseIdentifier: "VideoCell"
             )
 
-            // Doc Cell
             collectionView.register(
                 UINib(nibName: "DocCollectionViewCell", bundle: nil),
                 forCellWithReuseIdentifier: "DocCell"
             )
 
-            // Section Header
             collectionView.register(
                 UINib(nibName: "ResourcesSectionHeaderView", bundle: nil),
                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
@@ -113,16 +104,13 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
 
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
                 if section == Section.videos.rawValue {
-                    // Access nested videos
                     return selectedLesson?.videos?.count ?? 0
                 } else {
-                    // Access nested documents
                     return selectedLesson?.documents?.count ?? 0
                 }
             }
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
                 if indexPath.section == Section.videos.rawValue {
-                    // Safely get the video resource
                     guard let video = selectedLesson?.videos?[indexPath.item] else { return UICollectionViewCell() }
 
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCell", for: indexPath) as! VideoCollectionViewCell
@@ -133,7 +121,6 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
                     )
                     return cell
                 } else {
-                    // Safely get the doc resource
                     guard let doc = selectedLesson?.documents?[indexPath.item] else { return UICollectionViewCell() }
 
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DocCell", for: indexPath) as! DocCollectionViewCell
@@ -193,7 +180,6 @@ extension MainResourcesViewController: UICollectionViewDelegate {
     }
 }
 
-// Ensure the header titles are correct
 extension MainResourcesViewController {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "ResourcesSectionHeaderView", for: indexPath) as! ResourcesSectionHeaderView

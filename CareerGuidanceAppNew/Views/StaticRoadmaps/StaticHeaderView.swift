@@ -25,8 +25,6 @@ class StaticHeaderView: UIView {
         cardContainer.clipsToBounds = true
         startButton.layer.cornerRadius = 28
         startButton.clipsToBounds = true
-        
-        bodyLabel.text = "Master core web languages, specialize in front- or back-end, then learn architecture and deployment."
     }
     
     @IBAction func startButtonTapped(_ sender: UIButton) {
@@ -36,9 +34,9 @@ class StaticHeaderView: UIView {
 
 extension UIView {
     func sizedForTableHeader() -> UIView {
-        let targetSize = CGSize(width: UIScreen.main.bounds.width,
-                                height: UIView.layoutFittingCompressedSize.height)
-
+        let screenWidth = self.window?.windowScene?.screen.bounds.width ?? UIScreen.main.bounds.width
+        let targetSize = CGSize(width: screenWidth,
+                                        height: UIView.layoutFittingCompressedSize.height)
         let height = systemLayoutSizeFitting(
             targetSize,
             withHorizontalFittingPriority: .required,

@@ -2,32 +2,41 @@ import UIKit
 
 class NewModuleScreen: UIViewController, StartTestModalDelegate {
     func didTapStartTest(quiz: Quiz, lesson: Lesson) {
-            let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-            
-            // Ensure "ActiveQuizViewController" is the Storyboard ID of your test screen
-            guard let quizVC = storyboard.instantiateViewController(withIdentifier: "QuestionVC") as? QuizViewController else {
-                print("ActiveQuizViewController not found")
-                return
-            }
-            
-            quizVC.quiz = quiz
+        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+        
+        guard let quizVC = storyboard.instantiateViewController(withIdentifier: "QuestionVC") as? QuizViewController else { return }
+        
+        quizVC.quiz = quiz
         quizVC.lesson = lesson
-            // If you need to pass the lesson object as well:
-            // quizVC.lesson = lesson
-        quizVC.onQuizCompleted = { [weak self] in
-                DispatchQueue.main.async {
-                    // This re-triggers cellForItemAt, which re-runs cell.configure()
-                    self?.collectionNewModules.reloadData()
-                }
-            }
-            
-            self.navigationController?.pushViewController(quizVC, animated: true)
+        
+        // Notify the Store that this roadmap has started
+        if let roadmapTitle = parentRoadmap?.title {
+            // Option A: Start immediately when the test modal is opened
+            RoadmapStore.shared.markRoadmapStarted(title: roadmapTitle)
+            print("Roadmap \(roadmapTitle) marked as started!")
         }
-    
 
+        quizVC.onQuizCompleted = { [weak self] in
+            DispatchQueue.main.async {
+                self?.collectionNewModules.reloadData()
+            }
+        }
+        
+        self.navigationController?.pushViewController(quizVC, animated: true)
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if let index = initialScrollIndex {
+            let indexPath = IndexPath(item: index, section: 0)
+            collectionNewModules.scrollToItem(at: indexPath, at: .centeredVertically, animated: true)
+            initialScrollIndex = nil // Clear it so it doesn't jump again
+        }
+    }
     @IBOutlet weak var collectionNewModules: UICollectionView!
-
+    var initialScrollIndex: Int?
     var milestone: Milestone?
+    var parentRoadmap: Roadmap?
     private var lessons: [Lesson] = []
 
     override func viewDidLoad() {
@@ -96,6 +105,37 @@ extension NewModuleScreen: UICollectionViewDelegate,
 //        return cell
 //    }
     
+//    func collectionView(_ collectionView: UICollectionView,
+//                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        
+//        let cell = collectionView.dequeueReusableCell(
+//            withReuseIdentifier: "ViewCell",
+//            for: indexPath
+//        ) as! ModuleCardCellCollectionViewCell
+//        
+//        let lesson = lessons[indexPath.item]
+//        cell.configure(with: lesson)
+//        
+//        cell.onSeeResourcesTapped = { [weak self] in
+//            self?.navigateToResources(for: lesson)
+//        }
+//
+//        cell.onTestTapped = { [weak self] in
+//            // Check if quiz is already completed
+//            let hasResult = QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
+//            
+//            if hasResult {
+//                // If completed, go straight to results
+//                self?.openResults(for: lesson)
+//            } else {
+//                // If not completed, show the "Start Test" modal
+//                self?.showStartTestModal(for: lesson)
+//            }
+//        }
+//        
+//        return cell
+//    }
+    
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -105,27 +145,50 @@ extension NewModuleScreen: UICollectionViewDelegate,
         ) as! ModuleCardCellCollectionViewCell
         
         let lesson = lessons[indexPath.item]
-        cell.configure(with: lesson)
+        
+        // 1. Find the index of the first incomplete lesson
+        let firstIncompleteIndex = lessons.firstIndex(where: {
+            !QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+        }) ?? lessons.count
+        
+        // 2. Determine states
+        let isCompleted = QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
+        let isCurrentActive = (indexPath.item == firstIncompleteIndex)
+        let isLocked = indexPath.item > firstIncompleteIndex
+        
+        // 3. Configure the cell with these new states
+        cell.configure(with: lesson, isCompleted: isCompleted, isCurrentActive: isCurrentActive, isLocked: isLocked)
         
         cell.onSeeResourcesTapped = { [weak self] in
             self?.navigateToResources(for: lesson)
         }
 
         cell.onTestTapped = { [weak self] in
-            // Check if quiz is already completed
-            let hasResult = QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
-            
-            if hasResult {
-                // If completed, go straight to results
+            if isCompleted {
                 self?.openResults(for: lesson)
-            } else {
-                // If not completed, show the "Start Test" modal
+            } else if isCurrentActive {
                 self?.showStartTestModal(for: lesson)
+            } else {
+                // Handle tapped locked state if necessary (e.g., show an alert)
+                print("!!")
+                let alert = UIAlertController(
+                                title: "Lesson Locked",
+                                message: "Please complete the previous lessons and tests to unlock this one.",
+                                preferredStyle: .alert
+                            )
+                            alert.addAction(UIAlertAction(title: "OK", style: .default))
+                            
+                            // Optional: Add haptic feedback for a native feel
+                            let generator = UINotificationFeedbackGenerator()
+                            generator.notificationOccurred(.warning)
+                            
+                self?.present(alert, animated: true)
+                print("Done!!!")
             }
         }
-        
         return cell
     }
+    
     // Add this inside NewModuleScreen or its extension
     private func showStartTestModal(for lesson: Lesson) {
         // Ensure "Roadmaps" matches the actual name of your Storyboard file
@@ -217,3 +280,4 @@ extension NewModuleScreen: UICollectionViewDelegate,
     }
     
 }
+
