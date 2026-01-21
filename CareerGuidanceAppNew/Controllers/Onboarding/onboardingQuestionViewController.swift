@@ -6,8 +6,7 @@ class onboardingQuestionViewController: UIViewController {
     var sectionIndex: Int = 0
     var questionIndex: Int = 0
     
-    // MARK: - Outlets (hook to storyboard)
- 
+
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
     
@@ -22,7 +21,6 @@ class onboardingQuestionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //aded t
         nextButton.isEnabled = false
         configureUI()
         setupBackChevron()
@@ -37,14 +35,10 @@ class onboardingQuestionViewController: UIViewController {
             navigationItem.leftBarButtonItem = backButton
         }
     @objc func backChevronTapped() {
-
-        // If NOT first question → normal back
         if questionIndex > 0 {
             navigationController?.popViewController(animated: true)
             return
         }
-
-        // FIRST question → ask confirmation
         let alert = UIAlertController(
             title: "Go Back?",
             message: "If you go back now, this section won’t be completed.",
@@ -63,8 +57,6 @@ class onboardingQuestionViewController: UIViewController {
     private func goToCurrentSectionIntro() {
 
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
-
-        // Look for existing intro VC for this section in stack
         if let nav = navigationController {
             for vc in nav.viewControllers {
                 if let introVC = vc as? onboardingSectionIntroViewController,
@@ -110,7 +102,6 @@ class onboardingQuestionViewController: UIViewController {
         
         nextButton.setTitle(isLastQuestionInSection && isLastSection ? "Finish" : "Next", for: .normal)
         
-        // MARK: - Progress bar update
         let totalQuestions = section.questions.count
         let current = questionIndex + 1
         let progress = Float(current) / Float(totalQuestions)
@@ -152,7 +143,7 @@ class onboardingQuestionViewController: UIViewController {
         let nextSectionIndex = sectionIndex + 1
         let lastSectionIndex = questionnaire.sections.count - 1
 
-        // LAST SECTION → GO TO ANALYSIS
+
         if sectionIndex == lastSectionIndex {
 
             OnboardingManager.shared.isOnboardingCompleted = true
@@ -167,7 +158,7 @@ class onboardingQuestionViewController: UIViewController {
             return
         }
 
-        // OTHERWISE → NEXT INTRO
+
         if let introVC = storyboard?.instantiateViewController(
             withIdentifier: "introVC"
         ) as? onboardingSectionIntroViewController {
@@ -227,7 +218,6 @@ class onboardingQuestionViewController: UIViewController {
             
             let section = questionnaire.sections[sectionIndex]
             
-            // NOT last question → move forward
             if questionIndex < section.questions.count - 1 {
                 guard let vc = storyboard?.instantiateViewController(
                     withIdentifier: "QuestionVC"
@@ -243,7 +233,6 @@ class onboardingQuestionViewController: UIViewController {
                 return
             }
             
-            // LAST question → section finished
             finishSection()}
     }
 

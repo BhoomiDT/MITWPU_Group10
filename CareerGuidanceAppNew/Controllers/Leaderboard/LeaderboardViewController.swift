@@ -34,6 +34,8 @@ class LeaderboardViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationController?.navigationBar.prefersLargeTitles = true
+        
         tableView.dataSource = self
         tableView.layer.cornerRadius = 20
         tableView.clipsToBounds = true
@@ -63,12 +65,15 @@ class LeaderboardViewController: UIViewController {
 
         let shouldShowCrown = firstPlace != nil
         crownImageView.isHidden = !shouldShowCrown
+        // 5. Reload Table View
         tableView.reloadData()
     }
     
     func configureSegmentedControlAppearance() {
         let selectedAttributes: [NSAttributedString.Key: Any] = [
+            
             .foregroundColor: UIColor.white,
+            
             .font: UIFont.systemFont(ofSize: 15, weight: .semibold)
         ]
 
@@ -78,7 +83,9 @@ class LeaderboardViewController: UIViewController {
             .foregroundColor: UIColor.darkGray,
             .font: UIFont.systemFont(ofSize: 15, weight: .regular)
         ]
+
         segmentedControl.setTitleTextAttributes(normalAttributes, for: .normal)
+        
     }
     
     @IBAction func segmentdControlChanged(_ sender: UISegmentedControl) {
@@ -92,6 +99,7 @@ class LeaderboardViewController: UIViewController {
             default:
                 break
             }
+            
             updateUI()
     }
     
@@ -101,13 +109,12 @@ class LeaderboardViewController: UIViewController {
             imageView.layer.borderWidth = 0
             return
         }
-        
+
         if let imageName = entry.imageName, let image = UIImage(named: imageName) {
             imageView.image = image
         } else {
             imageView.image = UIImage(systemName: "person.circle.fill")
         }
-
         imageView.layer.masksToBounds = true
         
         var borderColor: UIColor? = nil
@@ -115,7 +122,7 @@ class LeaderboardViewController: UIViewController {
 
         switch entry.rank {
         case 1:
-            borderColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0) 
+            borderColor = UIColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1.0)
             borderWidth = 6.0
         case 2:
             borderColor = UIColor(red: 0.75, green: 0.75, blue: 0.75, alpha: 1.0)
@@ -139,11 +146,10 @@ class LeaderboardViewController: UIViewController {
 }
 
 extension LeaderboardViewController: UITableViewDataSource {
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return max(0, currentData.count - 3)
     }
-
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "LeaderboardCell", for: indexPath) as? LeaderboardCell else {
             return UITableViewCell()
@@ -155,8 +161,27 @@ extension LeaderboardViewController: UITableViewDataSource {
         }
         
         let entry = currentData[dataIndex]
-
+        
+        cell.contentView.backgroundColor = .clear
+            cell.nameLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+            cell.xpLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+            cell.rankLabel.textColor = .label
+            cell.contentView.layer.cornerRadius = 0
+        cell.nameLabel.textColor = .label
+        cell.xpLabel.textColor = .label
+        
         cell.rankLabel.text = "\(entry.rank)"
+        if entry.name == "You" {
+            cell.contentView.backgroundColor = UIColor(hex: "7FD3CF")
+                    cell.contentView.layer.cornerRadius = 12
+                    cell.contentView.layer.masksToBounds = true
+
+            cell.nameLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+            cell.xpLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+                    cell.rankLabel.textColor = .white
+            cell.nameLabel.textColor = .white
+            cell.xpLabel.textColor = .white
+        }
         cell.nameLabel.text = entry.name
         cell.xpLabel.text = "\(entry.xp) XP"
         

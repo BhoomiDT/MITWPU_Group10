@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bBM-DM-HEw">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="bBM-DM-HEw">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="collection view cell content view" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,7 +11,7 @@
         <!--Resources-->
         <scene sceneID="xOy-hz-Dwh">
             <objects>
-                <viewController id="NNS-ap-4E6" customClass="MainResourcesViewController" customModule="CareerGuidanceAppNew" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MainResourcesVC" id="NNS-ap-4E6" customClass="MainResourcesViewController" customModule="CareerGuidanceAppNew" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="tdg-3D-iQR">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -48,6 +48,9 @@
                                 <buttonConfiguration key="configuration" style="filled" title="Continue">
                                     <color key="baseBackgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                                 </buttonConfiguration>
+                                <connections>
+                                    <action selector="continueToTestTapped:" destination="NNS-ap-4E6" eventType="touchUpInside" id="Fg7-WH-cSB"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="YHR-oU-m9n"/>
@@ -64,7 +67,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Resources" largeTitleDisplayMode="always" id="f2x-gF-sxI"/>
                     <connections>
-                        <outlet property="collectionView" destination="wRl-qB-vC3" id="JMu-Jx-brU"/>
+                        <outlet property="collectionView" destination="wRl-qB-vC3" id="TSB-53-9lS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mOw-9X-XFF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

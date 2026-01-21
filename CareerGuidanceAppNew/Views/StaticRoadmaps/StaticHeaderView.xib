@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24412" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="24506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24405"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="24504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -32,11 +32,11 @@
                         <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tVk-bk-NSm">
                             <rect key="frame" x="16" y="86" width="326" height="58"/>
                             <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="filled" title="Start Roadmap">
+                            <buttonConfiguration key="configuration" style="filled" title="Continue">
                                 <color key="baseBackgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
                             </buttonConfiguration>
                             <connections>
-                                <action selector="startButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="iKa-IM-NK8"/>
+                                <action selector="startButtonTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="52p-qD-dtL"/>
                             </connections>
                         </button>
                     </subviews>
@@ -67,7 +67,7 @@
             <connections>
                 <outlet property="bodyLabel" destination="qQm-tV-rwa" id="9tW-8O-fkr"/>
                 <outlet property="cardContainer" destination="Jyl-cl-1jk" id="cg9-sp-ien"/>
-                <outlet property="startButton" destination="tVk-bk-NSm" id="Hk7-Qn-Yl1"/>
+                <outlet property="startButton" destination="tVk-bk-NSm" id="3ys-0y-cCM"/>
                 <outlet property="titleLabel" destination="zTt-7N-12d" id="l6a-tc-btD"/>
             </connections>
             <point key="canvasLocation" x="138.93129770992365" y="117.60563380281691"/>

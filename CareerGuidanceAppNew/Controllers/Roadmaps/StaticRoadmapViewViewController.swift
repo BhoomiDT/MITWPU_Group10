@@ -4,15 +4,10 @@
 //
 //  Created by SDC-USER on 08/12/25.
 //
-
+//changes
 import UIKit
 
 class StaticRoadmapViewViewController: UIViewController {
-    
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
     
     @IBOutlet weak var tableView: UITableView!
     var roadmap: Roadmap?
@@ -29,7 +24,23 @@ class StaticRoadmapViewViewController: UIViewController {
         setupTable()
         setupHeader()
     }
-    
+    private func updateHeaderUI() {
+        guard let header = tableView.tableHeaderView as? StaticHeaderView,
+              let roadmap = roadmap else { return }
+        
+        let hasStarted = roadmap.milestones.flatMap({ $0.lessons }).contains {
+            QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+        }
+        
+        header.startButton.setTitle(hasStarted ? "Continue Learning" : "Start Roadmap", for: .normal)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadRoadmapData()
+        updateHeaderUI()
+        tableView.reloadData()
+    }
+
     override func viewDidLayoutSubviews() {
            super.viewDidLayoutSubviews()
 
@@ -55,15 +66,19 @@ class StaticRoadmapViewViewController: UIViewController {
     
     func setupHeader() {
         let nib = UINib(nibName: "StaticHeaderView", bundle: nil)
-        let header = nib.instantiate(withOwner: nil, options: nil).first as! StaticHeaderView
+        guard let header = nib.instantiate(withOwner: nil, options: nil).first as? StaticHeaderView else { return }
 
         guard let roadmap = roadmap else { return }
-
-        header.titleLabel.text = roadmap.title
+        
+        let hasStarted = roadmap.milestones.flatMap({ $0.lessons }).contains {
+            QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+        }
+        
         header.bodyLabel.text = roadmap.description
+        header.startButton.setTitle(hasStarted ? "Continue Learning" : "Start Roadmap", for: .normal)
 
         header.onStartTapped = { [weak self] in
-            self?.openModulesPage()
+            self?.openCurrentModule()
         }
 
         tableView.tableHeaderView = header.sizedForTableHeader()
@@ -84,8 +99,68 @@ class StaticRoadmapViewViewController: UIViewController {
 
         navigationController?.pushViewController(vc, animated: true)
     }
+    
+    private func openCurrentModule() {
+        guard let roadmap = roadmap else { return }
+        var targetMilestone: Milestone?
+        var targetLessonIndex: Int = 0
 
+        for milestone in roadmap.milestones {
+            if let firstUncompletedIndex = milestone.lessons.firstIndex(where: {
+                !QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+            }) {
+                targetMilestone = milestone
+                targetLessonIndex = firstUncompletedIndex
+                break
+            }
+        }
 
+        let milestoneToOpen = targetMilestone ?? roadmap.milestones.first
+        
+        guard let finalMilestone = milestoneToOpen else { return }
+        let storyboard = UIStoryboard(name: "ResourcesDescription", bundle: nil)
+        if let modulesVC = storyboard.instantiateViewController(withIdentifier: "MilestoneDetailVC") as? NewModuleScreen {
+            
+            modulesVC.milestone = finalMilestone
+            
+            navigationController?.pushViewController(modulesVC, animated: true)
+            
+        }
+    }
+    
+//    private func getCurrentMilestoneIndex() -> Int {
+//        guard let roadmap = roadmap else { return 0 }
+//        
+//        // Find the index of the first milestone that has at least one uncompleted lesson
+//        for (index, milestone) in roadmap.milestones.enumerated() {
+//            let isMilestoneComplete = milestone.lessons.allSatisfy {
+//                QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+//            }
+//            if !isMilestoneComplete {
+//                return index
+//            }
+//        }
+//        return roadmap.milestones.count // All completed
+//    }
+    private func getUnlockedMilestoneIndex() -> Int {
+        guard let roadmap = roadmap else { return 0 }
+        
+        var lastCompletedIndex = -1
+        
+        for (index, milestone) in roadmap.milestones.enumerated() {
+            let isMilestoneComplete = milestone.lessons.allSatisfy {
+                QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+            }
+            
+            if isMilestoneComplete {
+                lastCompletedIndex = index
+            } else {
+                return index
+            }
+        }
+        
+        return roadmap.milestones.count - 1
+    }
     func loadRoadmapData() {
         guard let roadmap = roadmap else {
             print("Roadmap not injected")
@@ -116,18 +191,59 @@ extension StaticRoadmapViewViewController: UITableViewDelegate, UITableViewDataS
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        print("Identifier asked:", "MilestonesTableViewCell")
         let cell = tableView.dequeueReusableCell(withIdentifier: "MilestonesTableViewCell", for: indexPath) as! MilestonesTableViewCell
         let item = milestoneList[indexPath.row]
+        let unlockedIdx = getUnlockedMilestoneIndex()
+        
+        let isLocked = indexPath.row > unlockedIdx
+        _ = milestoneList[indexPath.row].lessons.allSatisfy {
+            QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+        }
+
+        var iconToUse = item.iconName
+        var iconColor = item.iconColor ?? .label
+        var bgColor = item.iconBackgroundColor ?? .systemGray5
+
+        if isLocked {
+            iconToUse = "lock.fill"
+            iconColor = .systemGray2
+            bgColor = .systemGray5
+        }
 
         cell.configure(
             title: item.title,
             subtitle: item.subtitle,
-            iconName: item.iconName,
-            iconColor: item.iconColor ?? .label,
-            bgColor: item.iconBackgroundColor ?? .systemGray5
+            iconName: iconToUse,
+            iconColor: iconColor,
+            bgColor: bgColor
         )
-
+        
+        cell.isUserInteractionEnabled = true
+        cell.selectionStyle = .none
         return cell
     }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let unlockedIdx = getUnlockedMilestoneIndex()
+        
+        if indexPath.row > unlockedIdx {
+            let alert = UIAlertController(
+                title: "Milestone Locked",
+                message: "Complete the previous milestone to unlock this section.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "Got it", style: .default))
+            let generator = UINotificationFeedbackGenerator()
+            generator.notificationOccurred(.error)
+            present(alert, animated: true)
+            return
+        }
+        let selectedMilestone = milestoneList[indexPath.row]
+        let storyboard = UIStoryboard(name: "ResourcesDescription", bundle: nil)
+        if let detailVC = storyboard.instantiateViewController(withIdentifier: "MilestoneDetailVC") as? NewModuleScreen {
+            detailVC.milestone = selectedMilestone
+            detailVC.parentRoadmap = self.roadmap
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
+    }
 }
+

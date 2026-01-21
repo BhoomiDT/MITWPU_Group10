@@ -21,7 +21,7 @@ class trendingHomePage: UICollectionViewCell {
 //        
     }
 
-    func configure(item: TrendingItem) {
+    func configure(item: Roadmap) {
         trendingLabel.text = item.title
         trendingDesc.text = item.description
         trendingIcon.image = UIImage(named: item.imageName)

@@ -6,11 +6,9 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
-
-
+    
     private var sections: [JourneySection] = JourneyData.milestones
 
-   
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGroupedBackground

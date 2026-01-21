@@ -2,7 +2,6 @@ import UIKit
 
 class EditTechSkillsViewController: UIViewController {
 
-    // connect these in storyboard
     @IBOutlet weak var topTableView: UITableView!
     @IBOutlet weak var bottomTableView: UITableView!
     @IBOutlet weak var searchBar: UISearchBar!
@@ -34,7 +33,6 @@ class EditTechSkillsViewController: UIViewController {
         bottomTableView.dataSource = self
         bottomTableView.delegate = self
         searchBar.delegate = self
-
         topTableView.rowHeight = UITableView.automaticDimension
         bottomTableView.rowHeight = UITableView.automaticDimension
         topTableView.estimatedRowHeight = 56
@@ -45,11 +43,9 @@ class EditTechSkillsViewController: UIViewController {
         
         topTableView.rowHeight = UITableView.automaticDimension
             topTableView.estimatedRowHeight = estimatedRowHeight
-            
+
             updateTopTableHeight(animated: false)
     }
-
-    // MARK: - Helpers
 
     func updateFiltering(text: String) {
         let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -68,41 +64,34 @@ class EditTechSkillsViewController: UIViewController {
         if let masterIndex = allSkills.firstIndex(of: skill) {
             allSkills.remove(at: masterIndex)
         }
-      
+
         selectedSkills.append(skill)
 
         updateFiltering(text: searchBar.text ?? "")
         let newIndexPath = IndexPath(row: selectedSkills.count - 1, section: 0)
         topTableView.insertRows(at: [newIndexPath], with: .automatic)
-        
+
         self.updateTopTableHeight()
     }
 
     func removeSkillFromSelected(at index: Int) {
         guard index >= 0 && index < selectedSkills.count else { return }
         let removed = selectedSkills.remove(at: index)
-                allSkills.append(removed)
+        allSkills.append(removed)
         allSkills.sort()
         updateFiltering(text: searchBar.text ?? "")
-
         let indexPath = IndexPath(row: index, section: 0)
         topTableView.deleteRows(at: [indexPath], with: .automatic)
-        
         self.updateTopTableHeight()
     }
     
     func updateTopTableHeight(animated: Bool = true) {
-      
         topTableView.layoutIfNeeded()
-
         let contentHeight = topTableView.contentSize.height
-     
         let targetHeight = min(max(contentHeight, topTableMinHeight), topTableMaxHeight)
-
         topTableView.isScrollEnabled = contentHeight > topTableMaxHeight
 
         guard abs(topTableHeightConstraint.constant - targetHeight) > 0.5 else { return }
-
         topTableHeightConstraint.constant = targetHeight
 
         if animated {
@@ -113,11 +102,8 @@ class EditTechSkillsViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    
-    
 }
 
-// MARK: - Table datasource & delegate
 extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -128,19 +114,14 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         if tableView == topTableView {
-            // Selected cell
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "selected_cell", for: indexPath) as? SelectedTableViewCell else {
                 fatalError("selected_cell identifier not set or class mismatch")
             }
             let skill = selectedSkills[indexPath.row]
             cell.skillLabel.text = skill
-
-            // Configure minus button
             let minusImage = UIImage(systemName: "minus.circle.fill")
             cell.minusButton.setImage(minusImage, for: .normal)
             cell.minusButton.tintColor = .systemRed
-
-            // tag to identify row and add target
             cell.minusButton.tag = indexPath.row
             cell.minusButton.addTarget(self, action: #selector(minusButtonTapped(_:)), for: .touchUpInside)
 
@@ -148,14 +129,11 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
             return cell
 
         } else {
-            // Suggested cell
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "suggested_cell", for: indexPath) as? SuggestedTableViewCell else {
                 fatalError("suggested_cell identifier not set or class mismatch")
             }
             let skill = filteredSkills[indexPath.row]
             cell.skillLabel.text = skill
-
-            // Configure plus button
             let plusImage = UIImage(systemName: "plus.circle.fill")
             cell.plusButton.setImage(plusImage, for: .normal)
             cell.plusButton.tintColor = .systemBlue
@@ -189,7 +167,6 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
     }
 }
 
-// MARK: - Button actions
 extension EditTechSkillsViewController {
     @objc func minusButtonTapped(_ sender: UIButton) {
         let row = sender.tag
@@ -202,7 +179,6 @@ extension EditTechSkillsViewController {
     }
 }
 
-// MARK: - SearchBar
 extension EditTechSkillsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         updateFiltering(text: searchText)

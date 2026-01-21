@@ -55,7 +55,7 @@ class SkillsViewController: UIViewController {
                 tableView.contentInsetAdjustmentBehavior = .automatic
             }
         if #available(iOS 15.0, *) {
-                tableView.sectionHeaderTopPadding = 0
+                tableView.sectionHeaderTopPadding = 10
             }
 
         searchContainerView.layer.cornerRadius = 28
@@ -72,7 +72,7 @@ class SkillsViewController: UIViewController {
             searchContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
             searchContainerView.layer.shadowRadius = 8
 
-            
+
         searchBar.backgroundImage = UIImage()
         searchBar.barTintColor = .clear
         searchBar.backgroundColor = .clear
@@ -80,17 +80,14 @@ class SkillsViewController: UIViewController {
         view.layoutIfNeeded()
         tableView.contentInset.bottom = searchContainerView.frame.height + 12
     }
-    
 
     private func suggestionsArray() -> [String] {
         return isFiltering ? filteredSuggestions : suggestions
     }
     @IBAction func continueButtonTapped(_ sender: Any) {
-      
        
             OnboardingManager.shared.saveTechSkills(self.selected)
-            
-           
+
             if let nextIntro = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
                 nextIntro.sectionIndex = 2
                 navigationController?.pushViewController(nextIntro, animated: true)
@@ -114,7 +111,6 @@ class SkillsViewController: UIViewController {
     }
 }
 
-// MARK: - Data Source
 extension SkillsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int { 2 }
 
@@ -135,7 +131,6 @@ extension SkillsViewController: UITableViewDataSource {
             }
             cell.titleLabel.text = selected[indexPath.row]
             cell.delegate = self
-          
             cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
             cell.backgroundColor = .systemBackground
             return cell
@@ -152,11 +147,9 @@ extension SkillsViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - Delegate: handle taps forwarded from cells
 extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDelegate {
     func selectedCellDidTapRemove(_ cell: SelectedSkillCell) {
         guard let ip = indexPath(forSelectedCell: cell) else { return }
-        // move from selected -> suggestions (insert at top)
         let item = selected.remove(at: ip.row)
         suggestions.insert(item, at: 0)
 
@@ -170,13 +163,10 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
 
     func suggestionCellDidTapAdd(_ cell: SuggestionSkillCell) {
         guard let ip = indexPath(forSuggestionCell: cell) else { return }
-        
         let item = suggestionsArray()[ip.row]
-
         if let realIndex = suggestions.firstIndex(of: item) {
             suggestions.remove(at: realIndex)
         }
-        // add to selected top
         selected.insert(item, at: 0)
 
         tableView.beginUpdates()
@@ -188,13 +178,10 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
     }
 }
 
-// MARK: - UITableViewDelegate (optional taps)
 extension SkillsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
-            // same as pressing remove
             let item = selected[indexPath.row]
-            // move
             selected.remove(at: indexPath.row)
             suggestions.insert(item, at: 0)
             tableView.beginUpdates()
@@ -203,7 +190,6 @@ extension SkillsViewController: UITableViewDelegate {
             tableView.endUpdates()
             if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
         } else {
-            // add
             let item = suggestionsArray()[indexPath.row]
             if let real = suggestions.firstIndex(of: item) { suggestions.remove(at: real) }
             selected.insert(item, at: 0)
@@ -216,7 +202,6 @@ extension SkillsViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - Search
 extension SkillsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterSuggestions(with: searchText)

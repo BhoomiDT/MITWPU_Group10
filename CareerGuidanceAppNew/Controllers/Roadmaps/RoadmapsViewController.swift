@@ -11,7 +11,7 @@ class RoadmapsViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
-
+    var allRoadmaps: [Roadmap] = []
     var roadmapsData: [Roadmap] = []
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +21,8 @@ class RoadmapsViewController: UIViewController {
     }
     
     private func loadRoadmapData() {
-        self.roadmapsData = allRoadmapsData
+        self.allRoadmaps = allRoadmapsData
+        self.roadmapsData = allRoadmaps
     }
     
     private func registerRoadmapCells() {
@@ -84,13 +85,13 @@ extension RoadmapsViewController: UICollectionViewDelegate {
         let selectedRoadmap = roadmapsData[indexPath.row]
         print("Tapped on roadmap: \(selectedRoadmap.title)")
         guard let detailVC = storyboard?.instantiateViewController(
-                    withIdentifier: "RoadmapDetailVC"
-                ) as? RoadmapDetailViewController else {
+                    withIdentifier: "StaticVC"
+                ) as? StaticRoadmapViewViewController else {
                     print("Error: Could not instantiate RoadmapDetailVC")
                     return
                 }
 
-                detailVC.selectedRoadmap = selectedRoadmap
+        detailVC.roadmap = selectedRoadmap
 
                 navigationController?.pushViewController(detailVC, animated: true)
     }
@@ -99,10 +100,28 @@ extension RoadmapsViewController: UICollectionViewDelegate {
 extension RoadmapsViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print("Search text changed: \(searchText)")
+        if searchText.isEmpty {
+            // If search text is empty, show all data
+            roadmapsData = allRoadmaps
+        } else {
+            // Filter the original 'allRoadmaps' list
+            roadmapsData = allRoadmaps.filter { roadmap in
+                let titleMatch = roadmap.title.lowercased().contains(searchText.lowercased())
+                return titleMatch
+            }
+        }
+        
+        collectionView.reloadData()
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.text = ""
+        roadmapsData = allRoadmaps
+        collectionView.reloadData()
         searchBar.resignFirstResponder()
     }
 }
