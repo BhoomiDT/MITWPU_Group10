@@ -148,14 +148,14 @@ extension RoadmapDetailViewController {
     extension RoadmapDetailViewController: UITableViewDataSource {
 
         func numberOfSections(in tableView: UITableView) -> Int {
-            return selectedRoadmap.modules.count
+            return selectedRoadmap.milestones.count
         }
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 1 + selectedRoadmap.modules[section].lessons.count
+            return 1 + selectedRoadmap.milestones[section].lessons.count
         }
         func tableView(_ tableView: UITableView,
                        cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let module = selectedRoadmap.modules[indexPath.section]
+        let module = selectedRoadmap.milestones[indexPath.section]
 
             if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(
@@ -205,7 +205,7 @@ extension RoadmapDetailViewController {
             if indexPath.row == 0 { return }
 
             let lessonIndex = indexPath.row - 1
-            let lesson = selectedRoadmap.modules[indexPath.section].lessons[lessonIndex]
+            let lesson = selectedRoadmap.milestones[indexPath.section].lessons[lessonIndex]
 
             print("Tapped on: \(lesson.name) → \(lesson.status.rawValue)")
 

@@ -96,7 +96,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
         // Instantiate the initial view controller from Extra.storyboard
-        let storyboard = UIStoryboard(name: "ResourcesDescription", bundle: nil) // "Extra" is the filename (case-sensitive)
+        let storyboard = UIStoryboard(name: "Main", bundle: nil) // "Extra" is the filename (case-sensitive)
         guard let initialVC = storyboard.instantiateInitialViewController() else {
             print("⚠️ ERROR: Could not instantiate initial VC from storyboard. Check 'Is Initial View Controller'.")
             return

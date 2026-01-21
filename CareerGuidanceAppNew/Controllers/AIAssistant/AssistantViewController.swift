@@ -10,7 +10,8 @@ class AssistantViewController: UIViewController, UITableViewDelegate, UITableVie
 
     override func viewDidLoad() {
         super.viewDidLoad()
-     
+        searchBar.delegate = self
+        searchBar.isUserInteractionEnabled = true
         searchBar.barTintColor = .appBackground
         tableView.backgroundColor = .appBackground
         tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
@@ -20,7 +21,10 @@ class AssistantViewController: UIViewController, UITableViewDelegate, UITableVie
         NotificationCenter.default.addObserver(self, selector: #selector(kbMove), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(kbHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchBar.becomeFirstResponder()
+    }
     func searchBarSearchButtonClicked(_ sb: UISearchBar) {
         guard let text = sb.text, !text.isEmpty else { return }
         sb.text = ""; sb.resignFirstResponder()
@@ -29,16 +33,28 @@ class AssistantViewController: UIViewController, UITableViewDelegate, UITableVie
             self.insert(ChatMessage(text: AssistantBrain.getAnswer(for: text), isUser: false))
         }
     }
-    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        print("Tap detected - Search bar is trying to open keyboard")
+        return true
+    }
     func insert(_ msg: ChatMessage) {
         messages.insert(msg, at: 0)
         tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
     }
 
     @objc func kbMove(_ n: NSNotification) {
-        let h = (n.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue.height ?? 0
-        bottomConstraint.constant = h - view.safeAreaInsets.bottom
-        UIView.animate(withDuration: 0.3) { self.view.layoutIfNeeded() }
+        guard let userInfo = n.userInfo,
+              let frame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        
+        let keyboardHeight = frame.cgRectValue.height
+        let safeAreaBottom = view.safeAreaInsets.bottom
+        
+        bottomConstraint.constant = keyboardHeight - safeAreaBottom
+        
+        let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0.3
+        UIView.animate(withDuration: duration) {
+            self.view.layoutIfNeeded()
+        }
     }
 
     @objc func kbHide() {

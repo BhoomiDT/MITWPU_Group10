@@ -3,10 +3,9 @@ import UIKit
 class onboardingQuestionViewController: UIViewController {
     
     var questionnaire: Questionnaire!
-    var sectionIndex: Int = 0      // which section
+    var sectionIndex: Int = 0      // section
     var questionIndex: Int = 0     // which question in section
     
-    // MARK: - Outlets (hook to storyboard)
     //@IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
@@ -76,7 +75,7 @@ class onboardingQuestionViewController: UIViewController {
             }
         }
 
-        // Fallback (should rarely happen)
+        // Fallback
         guard let introVC = storyboard?.instantiateViewController(
             withIdentifier: "introVC"
         ) as? onboardingSectionIntroViewController else {
@@ -91,7 +90,6 @@ class onboardingQuestionViewController: UIViewController {
         let section = questionnaire.sections[sectionIndex]
         let question = section.questions[questionIndex]
         
-        //titleLabel.text = section.title
         subtitleLabel.text = String("Question \(questionIndex+1)")
         questionLabel.text = String(question.qText)
         
@@ -112,7 +110,6 @@ class onboardingQuestionViewController: UIViewController {
         
         nextButton.setTitle(isLastQuestionInSection && isLastSection ? "Finish" : "Next", for: .normal)
         
-        // MARK: - Progress bar update
         let totalQuestions = section.questions.count
         let current = questionIndex + 1
         let progress = Float(current) / Float(totalQuestions)
@@ -154,7 +151,6 @@ class onboardingQuestionViewController: UIViewController {
         let nextSectionIndex = sectionIndex + 1
         let lastSectionIndex = questionnaire.sections.count - 1
 
-        // ✅ LAST SECTION → GO TO ANALYSIS
         if sectionIndex == lastSectionIndex {
 
             OnboardingManager.shared.isOnboardingCompleted = true
@@ -169,7 +165,6 @@ class onboardingQuestionViewController: UIViewController {
             return
         }
 
-        // ➡️ OTHERWISE → NEXT INTRO
         if let introVC = storyboard?.instantiateViewController(
             withIdentifier: "introVC"
         ) as? onboardingSectionIntroViewController {
@@ -229,7 +224,6 @@ class onboardingQuestionViewController: UIViewController {
             
             let section = questionnaire.sections[sectionIndex]
             
-            // NOT last question → move forward
             if questionIndex < section.questions.count - 1 {
                 guard let vc = storyboard?.instantiateViewController(
                     withIdentifier: "QuestionVC"
@@ -245,7 +239,6 @@ class onboardingQuestionViewController: UIViewController {
                 return
             }
             
-            // LAST question → section finished
             finishSection()}
     }
 

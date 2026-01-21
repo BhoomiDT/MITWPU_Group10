@@ -71,7 +71,7 @@ class TestResultsViewController: UIViewController {
         guard let navigationController = navigationController else { return }
 
         for vc in navigationController.viewControllers {
-            if vc is RoadmapDetailViewController {
+            if vc is NewModuleScreen {
                 navigationController.popToViewController(vc, animated: true)
                 return
             }

@@ -184,44 +184,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         }
     }
     
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        if indexPath.section == 1 && OnboardingManager.shared.isOnboardingCompleted {
-//
-//            let selectedRoadmap = visibleRoadmaps[indexPath.row]
-//
-//            guard let roadmapIndex = allRoadmaps.firstIndex(
-//                where: { $0.title == selectedRoadmap.title }
-//            ) else { return }
-//
-//            let vc = storyboard!.instantiateViewController(
-//                withIdentifier: "RoadmapDetailVC"
-//            ) as! RoadmapDetailViewController
-//            
-//            //let vc = UIStoryboard(name: "Roadmaps", bundle: nil).instantiateViewController(withIdentifier: "RoadmapDetailVC")
-//
-//            vc.selectedRoadmap = selectedRoadmap
-//
-//            // 🔥 SOURCE OF TRUTH UPDATE
-//            vc.onRoadmapStarted = { [weak self] in
-//                guard let self else { return }
-//
-//                //self.allRoadmaps[roadmapIndex].isStarted = true
-//                print("✅ Roadmap started:", self.allRoadmaps[roadmapIndex].title)
-//
-//                self.collectionView.reloadData()
-//            }
-//
-//            navigationController?.pushViewController(vc, animated: true)
-//
-//                return
-//            }
-//        
-//        if indexPath.section == 4 {
-//            let vc = UIStoryboard(name: "Badges", bundle: nil).instantiateViewController(withIdentifier: "badgesMainPage")
-//            navigationController?.pushViewController(vc, animated: true)
-//        }
-//    }
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         guard indexPath.section == 1,
@@ -249,14 +211,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     @objc func continueOnboarding() {
         if let nextVC = OnboardingManager.shared.getNextViewController() { navigationController?.pushViewController(nextVC, animated: true) }
     }
-    /*
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeaderView", for: indexPath) as! HomeSectionHeaderView
-        header.titleLabel.text = ["", OnboardingManager.shared.isOnboardingFullyComplete() ? "My Roadmaps" : "Finish Setup", "My Journey", "", "", "Trending Domains"][indexPath.section]
-        header.viewAllButton.isHidden = indexPath.section != 5
-        return header
-    }
-    */
     
     func collectionView(
         _ collectionView: UICollectionView,
@@ -273,7 +227,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         header.titleLabel.text = [
             "",
             //changed t
-            /*OnboardingManager.shared.isOnboardingFullyComplete()*/
+            //OnboardingManager.shared.isOnboardingFullyComplete()
             OnboardingManager.shared.isOnboardingCompleted ?
             "My Roadmaps" : "Finish Setup",
             "My Journey",
@@ -304,7 +258,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         UICollectionViewCompositionalLayout { index, env in
             let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(40)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
             //CHANGED T
-            /*let isDone = OnboardingManager.shared.isOnboardingFullyComplete()*/
+            //let isDone = OnboardingManager.shared.isOnboardingFullyComplete()
             let isDone = OnboardingManager.shared.isOnboardingCompleted
 
 //            added T

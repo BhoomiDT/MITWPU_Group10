@@ -10,8 +10,8 @@ class EditTechSkillsViewController: UIViewController {
 
     
     private let estimatedRowHeight: CGFloat = 56.0
-    private let topTableMaxHeight: CGFloat = 360.0    // adjust to taste
-    private let topTableMinHeight: CGFloat = 0.0      // when no selected items -> hide
+    private let topTableMaxHeight: CGFloat = 360.0
+    private let topTableMinHeight: CGFloat = 0.0      
     // Data
     var selectedSkills: [String] = []
     var allSkills: [String] = [
@@ -45,7 +45,7 @@ class EditTechSkillsViewController: UIViewController {
         topTableView.estimatedRowHeight = 56
         bottomTableView.estimatedRowHeight = 56
 
-        // Optional: remove extra separators
+        // remove extra separators
         topTableView.tableFooterView = UIView()
         bottomTableView.tableFooterView = UIView()
         
@@ -54,8 +54,6 @@ class EditTechSkillsViewController: UIViewController {
             // initial sizing
             updateTopTableHeight(animated: false)
     }
-
-    // MARK: - Helpers
 
     func updateFiltering(text: String) {
         let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -129,11 +127,8 @@ class EditTechSkillsViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-    
-    
 }
 
-// MARK: - Table datasource & delegate
 extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -193,7 +188,7 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
         }
     }
 
-    // Optional: swipe-to-delete for top table
+    // swipe-to-delete for top table
     func tableView(_ tableView: UITableView,
                    commit editingStyle: UITableViewCell.EditingStyle,
                    forRowAt indexPath: IndexPath) {
@@ -208,7 +203,6 @@ extension EditTechSkillsViewController: UITableViewDataSource, UITableViewDelega
     }
 }
 
-// MARK: - Button actions
 extension EditTechSkillsViewController {
     @objc func minusButtonTapped(_ sender: UIButton) {
         let row = sender.tag
@@ -221,7 +215,6 @@ extension EditTechSkillsViewController {
     }
 }
 
-// MARK: - SearchBar
 extension EditTechSkillsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         updateFiltering(text: searchText)

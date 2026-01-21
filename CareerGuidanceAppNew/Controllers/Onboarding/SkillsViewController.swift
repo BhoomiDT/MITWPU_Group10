@@ -45,10 +45,6 @@ class SkillsViewController: UIViewController {
         tableView.delegate = self
         searchBar.delegate = self
         
-        // Register nibs if you created separate xib or rely on storyboard prototype cells (skip registration).
-        // tableView.register(UINib(nibName: "SelectedSkillCell", bundle: nil), forCellReuseIdentifier: "SelectedSkillCell")
-        // tableView.register(UINib(nibName: "SuggestionSkillCell", bundle: nil), forCellReuseIdentifier: "SuggestionSkillCell")
-
         tableView.estimatedRowHeight = 56
         tableView.rowHeight = UITableView.automaticDimension
         tableView.tableFooterView = UIView()
@@ -58,7 +54,7 @@ class SkillsViewController: UIViewController {
                 tableView.contentInsetAdjustmentBehavior = .automatic
             }
         if #available(iOS 15.0, *) {
-                tableView.sectionHeaderTopPadding = 0
+                tableView.sectionHeaderTopPadding = 10
             }
 
         // round floating search container and add shadow
@@ -86,17 +82,14 @@ class SkillsViewController: UIViewController {
         view.layoutIfNeeded()
         tableView.contentInset.bottom = searchContainerView.frame.height + 12
     }
-    
 
     private func suggestionsArray() -> [String] {
         return isFiltering ? filteredSuggestions : suggestions
     }
     @IBAction func continueButtonTapped(_ sender: Any) {
-        // Inside SkillsViewController.swift
        
             OnboardingManager.shared.saveTechSkills(self.selected)
             
-            // After skills are saved, move to the next section intro (Section 2)
             if let nextIntro = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
                 nextIntro.sectionIndex = 2
                 navigationController?.pushViewController(nextIntro, animated: true)
@@ -121,7 +114,6 @@ class SkillsViewController: UIViewController {
     }
 }
 
-// MARK: - Data Source
 extension SkillsViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int { 2 } // Selected, Suggestions
 
@@ -142,7 +134,6 @@ extension SkillsViewController: UITableViewDataSource {
             }
             cell.titleLabel.text = selected[indexPath.row]
             cell.delegate = self
-            // left button style done in cell awakeFromNib
             cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
             cell.backgroundColor = .systemBackground
             return cell
@@ -159,11 +150,10 @@ extension SkillsViewController: UITableViewDataSource {
     }
 }
 
-// MARK: - Delegate: handle taps forwarded from cells
 extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDelegate {
     func selectedCellDidTapRemove(_ cell: SelectedSkillCell) {
         guard let ip = indexPath(forSelectedCell: cell) else { return }
-        // move from selected -> suggestions (insert at top)
+        // move from selected -> suggestions
         let item = selected.remove(at: ip.row)
         suggestions.insert(item, at: 0)
 
@@ -177,10 +167,10 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
 
     func suggestionCellDidTapAdd(_ cell: SuggestionSkillCell) {
         guard let ip = indexPath(forSuggestionCell: cell) else { return }
-        // get item (from filtered or base)
+        // get item
         let item = suggestionsArray()[ip.row]
 
-        // remove from base suggestions (find real index)
+        // remove from base suggestions
         if let realIndex = suggestions.firstIndex(of: item) {
             suggestions.remove(at: realIndex)
         }
@@ -196,7 +186,6 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
     }
 }
 
-// MARK: - UITableViewDelegate (optional taps)
 extension SkillsViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 {
@@ -224,7 +213,6 @@ extension SkillsViewController: UITableViewDelegate {
     }
 }
 
-// MARK: - Search
 extension SkillsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filterSuggestions(with: searchText)

@@ -9,11 +9,6 @@ import UIKit
 
 class StaticRoadmapViewViewController: UIViewController {
     
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-    
-    
     @IBOutlet weak var tableView: UITableView!
     var roadmap: Roadmap?
     var milestoneList: [Milestone] = []
@@ -129,5 +124,16 @@ extension StaticRoadmapViewViewController: UITableViewDelegate, UITableViewDataS
         )
 
         return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let selectedMilestone = milestoneList[indexPath.row]
+        
+        let storyboard = UIStoryboard(name: "ResourcesDescription", bundle: nil)
+        if let detailVC = storyboard.instantiateViewController(withIdentifier: "MilestoneDetailVC") as? NewModuleScreen {
+            
+            detailVC.milestone = selectedMilestone
+            
+            navigationController?.pushViewController(detailVC, animated: true)
+        }
     }
 }

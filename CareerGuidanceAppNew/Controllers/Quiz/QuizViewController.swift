@@ -12,7 +12,7 @@ class QuizViewController: UIViewController {
     var quiz: Quiz?
     var onRoadmapStarted: (() -> Void)?
     var roadmapStatus: Roadmap?
-
+    var onQuizCompleted: (() -> Void)?
     @IBOutlet weak var QuestionNumberLabel: UILabel!
     @IBOutlet weak var QuestionTextLabel: UILabel!
     
@@ -130,7 +130,7 @@ class QuizViewController: UIViewController {
             message: "Your test is being submitted.",
             preferredStyle: .alert
         )
-
+        self.onQuizCompleted?()
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
         alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
@@ -227,9 +227,12 @@ class QuizViewController: UIViewController {
 //        )
 //    }
     private func generateCompletedQuiz() -> CompletedQuiz {
-        guard let quiz = quiz,
-              let lesson = lesson else {
-            fatalError("Quiz or Lesson missing")
+        guard let quiz = quiz else {
+            fatalError("Quiz missing")
+        }
+        
+        guard let lesson = lesson else {
+            fatalError("Lesson missing")
         }
 
         var results: [QuestionResult] = []

@@ -7,6 +7,9 @@ class ModuleCardCellCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var resourceButton: UIButton!
     @IBOutlet weak var testButton: UIButton!
 
+    // Callback closure
+    var onSeeResourcesTapped: (() -> Void)?
+    var lesson: Lesson?
     override func awakeFromNib() {
         super.awakeFromNib()
         setupUI()
@@ -19,10 +22,71 @@ class ModuleCardCellCollectionViewCell: UICollectionViewCell {
 
         
     }
+    
+    var onTestTapped: (() -> Void)?
 
-    func configure(with module: LearningModule) {
-        titleLabel.text = module.title
-        subtitleLabel.text = module.description
+    @IBAction func testButtonTapped(_ sender: Any) {
+        onTestTapped?()
     }
+    
+    @IBAction func seeResourceButton(_ sender: Any) {
+        onSeeResourcesTapped?()
+    }
+    // Inside your Cell's configure method
+//    func configure(with lesson: Lesson) {
+//        titleLabel.text = lesson.name
+//        subtitleLabel.text = lesson.subtitle // Added this
+//        testButton.setTitle(lesson.status.rawValue, for: .normal)
+//    }
+    func configure(with lesson: Lesson) {
+        self.lesson = lesson
+        titleLabel.text = lesson.name
+        subtitleLabel.text = lesson.subtitle
+        let hasResult =
+            QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
+
+        let title: String
+        let bgColor: UIColor
+        let textColor: UIColor
+
+        if hasResult {
+            title = LessonStatus.seeResults.rawValue
+            bgColor = UIColor(hex: "1FA5A1")
+            textColor = .white
+        } else {
+            title = LessonStatus.startTest.rawValue
+            bgColor = .systemGray5
+            textColor = .darkGray
+        }
+
+        testButton.setTitle(title, for: .normal)
+        testButton.backgroundColor = bgColor
+        testButton.setTitleColor(textColor, for: .normal)
+        
+        if #available(iOS 15.0, *) {
+                var config = UIButton.Configuration.filled() // or .tinted()
+                
+                // Set the background color
+                config.baseBackgroundColor = bgColor
+                
+                // Set the text color and title
+                var titleAttr = AttributedString(title)
+                titleAttr.foregroundColor = textColor
+                titleAttr.font = .systemFont(ofSize: 14, weight: .bold)
+                config.attributedTitle = titleAttr
+                
+                // Corner radius
+                config.background.cornerRadius = 20
+                
+                testButton.configuration = config
+            } else {
+                // Fallback for older iOS versions
+                testButton.setTitle(title, for: .normal)
+                testButton.backgroundColor = bgColor
+                testButton.setTitleColor(textColor, for: .normal)
+                testButton.layer.cornerRadius = 20
+            }
+    }
+
 }
 
