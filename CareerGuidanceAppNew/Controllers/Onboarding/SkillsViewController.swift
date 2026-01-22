@@ -12,6 +12,7 @@ class SkillsViewController: UIViewController {
     @IBOutlet weak var searchContainerView: UIView!
     @IBOutlet weak var searchBar: UISearchBar!
 
+    @IBOutlet weak var continueButtonTapped: UIBarButtonItem!
     // MARK: - Data
     private var selected: [String] = [
         "Cloud Computing",
@@ -44,7 +45,6 @@ class SkillsViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         searchBar.delegate = self
-        
 
         tableView.estimatedRowHeight = 56
         tableView.rowHeight = UITableView.automaticDimension
@@ -80,7 +80,7 @@ class SkillsViewController: UIViewController {
         view.layoutIfNeeded()
         tableView.contentInset.bottom = searchContainerView.frame.height + 12
     }
-
+    
     private func suggestionsArray() -> [String] {
         return isFiltering ? filteredSuggestions : suggestions
     }

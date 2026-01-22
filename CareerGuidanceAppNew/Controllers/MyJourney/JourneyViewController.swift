@@ -3,7 +3,6 @@ import UIKit
 class JourneyViewController: UIViewController,UITableViewDelegate{
 
 
-    @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     
@@ -19,7 +18,6 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
 
   
     private func setupUI() {
-        titleLabel.text = "My Journey"
         if segmentedControl.numberOfSegments == 2 {
             segmentedControl.setTitle("Milestone History", forSegmentAt: 0)
             segmentedControl.setTitle("Learned Skills", forSegmentAt: 1)

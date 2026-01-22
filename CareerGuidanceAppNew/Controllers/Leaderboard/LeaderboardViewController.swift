@@ -177,10 +177,12 @@ extension LeaderboardViewController: UITableViewDataSource {
                     cell.contentView.layer.masksToBounds = true
 
             cell.nameLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
-            cell.xpLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-                    cell.rankLabel.textColor = .white
-            cell.nameLabel.textColor = .white
-            cell.xpLabel.textColor = .white
+            cell.xpLabel.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+            cell.rankLabel.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+
+                    cell.rankLabel.textColor = .black
+            cell.nameLabel.textColor = .black
+            cell.xpLabel.textColor = .black
         }
         cell.nameLabel.text = entry.name
         cell.xpLabel.text = "\(entry.xp) XP"

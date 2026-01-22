@@ -7,7 +7,6 @@ class onboardingQuestionViewController: UIViewController {
     var questionIndex: Int = 0
     
 
-    @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var questionLabel: UILabel!
     
     @IBOutlet weak var optionButton1: UIButton!
@@ -22,6 +21,8 @@ class onboardingQuestionViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         nextButton.isEnabled = false
+        self.title = String("Question \(questionIndex+1)")
+        navigationController?.navigationBar.prefersLargeTitles = true
         configureUI()
         setupBackChevron()
     }
@@ -82,7 +83,6 @@ class onboardingQuestionViewController: UIViewController {
         let section = questionnaire.sections[sectionIndex]
         let question = section.questions[questionIndex]
         
-        subtitleLabel.text = String("Question \(questionIndex+1)")
         questionLabel.text = String(question.qText)
         
         let options = question.options

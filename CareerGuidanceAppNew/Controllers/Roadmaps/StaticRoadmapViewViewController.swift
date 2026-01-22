@@ -83,22 +83,6 @@ class StaticRoadmapViewViewController: UIViewController {
 
         tableView.tableHeaderView = header.sizedForTableHeader()
     }
-    private func openModulesPage() {
-        guard let roadmap = roadmap else { return }
-
-        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-
-        guard let vc = storyboard.instantiateViewController(
-            withIdentifier: "RoadmapDetailVC"
-        ) as? RoadmapDetailViewController else {
-            print("RoadmapDetailVC not found")
-            return
-        }
-
-        vc.selectedRoadmap = roadmap
-
-        navigationController?.pushViewController(vc, animated: true)
-    }
     
     private func openCurrentModule() {
         guard let roadmap = roadmap else { return }
