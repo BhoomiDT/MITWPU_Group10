@@ -19,14 +19,15 @@ class YourAnswersViewController: UIViewController, UITableViewDataSource, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        navigationController!.navigationBar.prefersLargeTitles = true
+
         answersTableView.dataSource = self
         answersTableView.delegate = self
         
 //        let nib = UINib(nibName: cellReuseIdentifier, bundle: nil)
 //        answersTableView.register(nib, forCellReuseIdentifier: cellReuseIdentifier)
         
-        navigationItem.title = "Your Answers"
+        //navigationItem.title = "Your Answers"
         answersTableView.tableFooterView = UIView()
     }
     

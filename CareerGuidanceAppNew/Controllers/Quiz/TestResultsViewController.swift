@@ -16,11 +16,13 @@ class TestResultsViewController: UIViewController {
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
-    
     var completedQuiz: CompletedQuiz!
+    var testResult: TestResult!
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
+        navigationController!.navigationBar.prefersLargeTitles = true
+        self.testResult = makeTestResult(for: completedQuiz.lessonName)
         let backButton = UIButton(type: .system)
            backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
            backButton.tintColor = .label
@@ -152,103 +154,6 @@ extension TestResultsViewController: UITableViewDataSource {
             return 3
     }
 
-//    func tableView(_ tableView: UITableView,
-//                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//
-//        if indexPath.section == 0 {
-//            let cell = tableView.dequeueReusableCell(
-//                withIdentifier: "StrengthCell",
-//                for: indexPath
-//            ) as! StrengthCell
-//            
-//            let radius: CGFloat = 16
-//            cell.layer.cornerRadius = radius
-//            cell.layer.masksToBounds = true
-//
-//            let isFirst = indexPath.row == 0
-//            let isLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
-//
-//            if isFirst && isLast {
-//                // Only one cell (single-row section)
-//                cell.layer.maskedCorners = [
-//                    .layerMinXMinYCorner,
-//                    .layerMaxXMinYCorner,
-//                    .layerMinXMaxYCorner,
-//                    .layerMaxXMaxYCorner
-//                ]
-//            } else if isFirst {
-//                // First cell → top corners only
-//                cell.layer.maskedCorners = [
-//                    .layerMinXMinYCorner,
-//                    .layerMaxXMinYCorner
-//                ]
-//            } else if isLast {
-//                // Last cell → bottom corners only
-//                cell.layer.maskedCorners = [
-//                    .layerMinXMaxYCorner,
-//                    .layerMaxXMaxYCorner
-//                ]
-//                cell.separatorInset = UIEdgeInsets(
-//                        top: 0,
-//                        left: cell.bounds.width,
-//                        bottom: 0,
-//                        right: 0
-//                    )
-//            } else {
-//                // Middle cells → no rounding
-//                cell.layer.cornerRadius = 0
-//            }
-//            
-//            cell.configure(text: testResult.strengths[indexPath.row].title)
-//            return cell
-//        } else {
-//            let cell = tableView.dequeueReusableCell(
-//                withIdentifier: "WeaknessCell",
-//                for: indexPath
-//            ) as! WeaknessCell
-//            
-//            let radius: CGFloat = 16
-//            cell.layer.cornerRadius = radius
-//            cell.layer.masksToBounds = true
-//
-//            let isFirst = indexPath.row == 0
-//            let isLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
-//
-//            if isFirst && isLast {
-//                // Only one cell (single-row section)
-//                cell.layer.maskedCorners = [
-//                    .layerMinXMinYCorner,
-//                    .layerMaxXMinYCorner,
-//                    .layerMinXMaxYCorner,
-//                    .layerMaxXMaxYCorner
-//                ]
-//            } else if isFirst {
-//                // First cell → top corners only
-//                cell.layer.maskedCorners = [
-//                    .layerMinXMinYCorner,
-//                    .layerMaxXMinYCorner
-//                ]
-//            } else if isLast {
-//                // Last cell → bottom corners only
-//                cell.layer.maskedCorners = [
-//                    .layerMinXMaxYCorner,
-//                    .layerMaxXMaxYCorner
-//                ]
-//                cell.separatorInset = UIEdgeInsets(
-//                        top: 0,
-//                        left: cell.bounds.width,
-//                        bottom: 0,
-//                        right: 0
-//                    )
-//            } else {
-//                // Middle cells → no rounding
-//                cell.layer.cornerRadius = 0
-//            }
-//            
-//            cell.configure(text: testResult.improvements[indexPath.row].title)
-//            return cell
-//        }
-//    }
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
@@ -257,19 +162,116 @@ extension TestResultsViewController: UITableViewDataSource {
                 withIdentifier: "StrengthCell",
                 for: indexPath
             ) as! StrengthCell
+            
+            let radius: CGFloat = 16
+            cell.layer.cornerRadius = radius
+            cell.layer.masksToBounds = true
 
-            cell.configure(text: "Good conceptual understanding")
+            let isFirst = indexPath.row == 0
+            let isLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
+
+            if isFirst && isLast {
+                // Only one cell (single-row section)
+                cell.layer.maskedCorners = [
+                    .layerMinXMinYCorner,
+                    .layerMaxXMinYCorner,
+                    .layerMinXMaxYCorner,
+                    .layerMaxXMaxYCorner
+                ]
+            } else if isFirst {
+                // First cell → top corners only
+                cell.layer.maskedCorners = [
+                    .layerMinXMinYCorner,
+                    .layerMaxXMinYCorner
+                ]
+            } else if isLast {
+                // Last cell → bottom corners only
+                cell.layer.maskedCorners = [
+                    .layerMinXMaxYCorner,
+                    .layerMaxXMaxYCorner
+                ]
+                cell.separatorInset = UIEdgeInsets(
+                        top: 0,
+                        left: cell.bounds.width,
+                        bottom: 0,
+                        right: 0
+                    )
+            } else {
+                // Middle cells → no rounding
+                cell.layer.cornerRadius = 0
+            }
+            
+            cell.configure(text: testResult.strengths[indexPath.row].title)
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(
                 withIdentifier: "WeaknessCell",
                 for: indexPath
             ) as! WeaknessCell
+            
+            let radius: CGFloat = 16
+            cell.layer.cornerRadius = radius
+            cell.layer.masksToBounds = true
 
-            cell.configure(text: "Needs more practice")
+            let isFirst = indexPath.row == 0
+            let isLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
+
+            if isFirst && isLast {
+                // Only one cell (single-row section)
+                cell.layer.maskedCorners = [
+                    .layerMinXMinYCorner,
+                    .layerMaxXMinYCorner,
+                    .layerMinXMaxYCorner,
+                    .layerMaxXMaxYCorner
+                ]
+            } else if isFirst {
+                // First cell → top corners only
+                cell.layer.maskedCorners = [
+                    .layerMinXMinYCorner,
+                    .layerMaxXMinYCorner
+                ]
+            } else if isLast {
+                // Last cell → bottom corners only
+                cell.layer.maskedCorners = [
+                    .layerMinXMaxYCorner,
+                    .layerMaxXMaxYCorner
+                ]
+                cell.separatorInset = UIEdgeInsets(
+                        top: 0,
+                        left: cell.bounds.width,
+                        bottom: 0,
+                        right: 0
+                    )
+            } else {
+                // Middle cells → no rounding
+                cell.layer.cornerRadius = 0
+            }
+            
+            cell.configure(text: testResult.improvements[indexPath.row].title)
             return cell
         }
     }
+//    func tableView(_ tableView: UITableView,
+//                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//
+//        if indexPath.section == 0 {
+//            let cell = tableView.dequeueReusableCell(
+//                withIdentifier: "StrengthCell",
+//                for: indexPath
+//            ) as! StrengthCell
+//
+//            cell.configure(text: "Good conceptual understanding")
+//            return cell
+//        } else {
+//            let cell = tableView.dequeueReusableCell(
+//                withIdentifier: "WeaknessCell",
+//                for: indexPath
+//            ) as! WeaknessCell
+//
+//            cell.configure(text: "Needs more practice")
+//            return cell
+//        }
+//    }
     
 }
 
