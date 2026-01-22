@@ -41,8 +41,8 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
         tableView.separatorStyle = .none
-        tableView.backgroundColor = .systemGroupedBackground
-            view.backgroundColor = .systemGroupedBackground
+        //tableView.backgroundColor = .systemGroupedBackground
+         //   view.backgroundColor = .systemGroupedBackground
 
     }
 
@@ -64,29 +64,74 @@ extension JourneyViewController: UITableViewDataSource {
         return sections.count
     }
 
+//    func tableView(_ tableView: UITableView,
+//                   titleForHeaderInSection section: Int) -> String? {
+//        return sections[section].title
+//    }
+    
     func tableView(_ tableView: UITableView,
-                   titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title
+                   viewForHeaderInSection section: Int) -> UIView? {
+
+        let container = UIView()
+        container.backgroundColor = .clear
+
+        let label = UILabel()
+        label.text = sections[section].title
+        label.font = .systemFont(ofSize: 16, weight: .semibold)
+        label.textColor = .secondaryLabel
+
+        container.addSubview(label)
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -16),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -4),
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 8)
+        ])
+
+        return container
+    }
+
+    func tableView(_ tableView: UITableView,
+                   heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
     }
 
     func tableView(_ tableView: UITableView,
                    numberOfRowsInSection section: Int) -> Int {
-        return sections[section].items.count
+        sections[section].items.count
     }
 
     func tableView(_ tableView: UITableView,
                    cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        guard let cell = tableView.dequeueReusableCell(
+        let cell = tableView.dequeueReusableCell(
             withIdentifier: "JourneyTableViewCell",
             for: indexPath
-        ) as? JourneyTableViewCell else {
-            return UITableViewCell()
-        }
+        ) as! JourneyTableViewCell
 
         let item = sections[indexPath.section].items[indexPath.row]
         cell.configure(with: item)
+
+        let totalRows = sections[indexPath.section].items.count
+        let isFirst = indexPath.row == 0
+        let isLast = indexPath.row == totalRows - 1
+
+        cell.applyCorners(isFirst: isFirst, isLast: isLast)
+        cell.showSeparator(!isLast)
+
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   heightForFooterInSection section: Int) -> CGFloat {
+        return 20
+    }
+
+    func tableView(_ tableView: UITableView,
+                   viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
     }
 }
 
