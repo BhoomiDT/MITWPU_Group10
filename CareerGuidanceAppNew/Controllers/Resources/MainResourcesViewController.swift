@@ -26,11 +26,6 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
             setupCollectionView()
         }
 
-    @IBAction func continueToTestTapped(_ sender: UIButton) {
-            guard let lesson = selectedLesson else { return }
-            showStartTestModal(for: lesson)
-        }
-
         private func showStartTestModal(for lesson: Lesson) {
             let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil) // Ensure this matches your Storyboard name
             guard let modalVC = storyboard.instantiateViewController(withIdentifier: "StartTestModalVC") as? StartTestModalViewController else { return }
