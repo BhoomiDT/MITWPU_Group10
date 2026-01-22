@@ -1,16 +1,21 @@
 import Foundation
 
 struct JourneyStats {
-    let days: String
-    let quizzes: String
-    let quests: String
+    var days: Int
+    var quizzes: Int
+    var quests: Int
 }
 
 struct JourneyModel {
-    // These are the temporary values you requested
-    static let sampleData = JourneyStats(
-        days: "17",
-        quizzes: "5",
-        quests: "3"
+    static var shared = JourneyStats(
+        days: 17,
+        quizzes: 5,
+        quests: 3
     )
+    
+    static func incrementStatsAfterQuiz() {
+        shared.quizzes += 1
+        
+        
+    }
 }

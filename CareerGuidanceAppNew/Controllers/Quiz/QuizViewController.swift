@@ -124,20 +124,52 @@ class QuizViewController: UIViewController {
 
         present(alert, animated: true)
     }
+//    private func showSubmitConfirmation() {
+//        let alert = UIAlertController(
+//            title: "Submit Test?",
+//            message: "Your test is being submitted.",
+//            preferredStyle: .alert
+//        )
+//        self.onQuizCompleted?()
+//        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+//
+//        alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
+////  This is also comment            let result = self.generateTestResult()
+////  This is also comment          self.navigateToResults(result: result)
+//            let completedQuiz = self.generateCompletedQuiz()
+//            QuizHistoryManager.shared.save(completedQuiz)
+//            if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
+//                self.onRoadmapStarted?()
+//            }
+//
+//            self.navigateToResults(completedQuiz: completedQuiz)
+//        })
+//
+//        present(alert, animated: true)
+//    }
+    
     private func showSubmitConfirmation() {
         let alert = UIAlertController(
             title: "Submit Test?",
             message: "Your test is being submitted.",
             preferredStyle: .alert
         )
+        
         self.onQuizCompleted?()
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
         alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
-//            let result = self.generateTestResult()
-//            self.navigateToResults(result: result)
             let completedQuiz = self.generateCompletedQuiz()
+            
+            let correctAnswers = completedQuiz.correctCount
+            
+            let earnedXP = correctAnswers * 10
+            
+            UserStats.shared.addXP(earnedXP)
+            JourneyModel.incrementStatsAfterQuiz()
+            
             QuizHistoryManager.shared.save(completedQuiz)
+            
             if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
                 self.onRoadmapStarted?()
             }
@@ -147,6 +179,7 @@ class QuizViewController: UIViewController {
 
         present(alert, animated: true)
     }
+    
     private func updateSelectionUI(selectedIndex: Int) {
         let buttons = [optionButton1, optionButton2, optionButton3, optionButton4]
         let selectedColor = UIColor(hex: "#1FA5A1")
