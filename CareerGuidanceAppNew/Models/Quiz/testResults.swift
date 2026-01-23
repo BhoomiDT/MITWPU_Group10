@@ -18,12 +18,12 @@ struct TestResult {
     let score: Int
     let strengths: [StrengthItem]
     let improvements: [ImprovementItem]
-    let lessonName: String
+    let lessonId: String
 }
 struct ResultItem {
     let title: String
 }
-func makeTestResult(for lessonName: String) -> TestResult {
+func makeTestResult(for lessonId: String) -> TestResult {
     return TestResult(
         score: 80, // static or computed later
         strengths: [
@@ -36,6 +36,6 @@ func makeTestResult(for lessonName: String) -> TestResult {
             ImprovementItem(title: "Accessibility Standards"),
             ImprovementItem(title: "Usability")
         ],
-        lessonName: lessonName   // dynamic value passed by controller
+        lessonId: lessonId   // dynamic value passed by controller
     )
 }

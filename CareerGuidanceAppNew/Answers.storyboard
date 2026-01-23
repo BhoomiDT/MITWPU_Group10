@@ -113,14 +113,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Question" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jrK-k2-dvQ">
-                                <rect key="frame" x="24" y="136" width="345" height="31.333333333333343"/>
-                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="26"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Which of the following is NOT a visual design principle?" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eeG-76-elo">
-                                <rect key="frame" x="24" y="191.33333333333334" width="345" height="52.666666666666657"/>
+                                <rect key="frame" x="24" y="190" width="345" height="52.666666666666657"/>
                                 <fontDescription key="fontDescription" type="system" weight="medium" pointSize="22"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
@@ -132,12 +126,9 @@
                         <viewLayoutGuide key="safeArea" id="UzI-og-YoN"/>
                         <color key="backgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstItem="UzI-og-YoN" firstAttribute="trailing" secondItem="jrK-k2-dvQ" secondAttribute="trailing" constant="24" id="1Dm-4c-j3b"/>
-                            <constraint firstItem="jrK-k2-dvQ" firstAttribute="leading" secondItem="UzI-og-YoN" secondAttribute="leading" constant="24" id="439-sv-nv5"/>
                             <constraint firstItem="2Ln-8K-KDc" firstAttribute="top" secondItem="eeG-76-elo" secondAttribute="bottom" constant="24" id="Jco-Vs-Ql6"/>
                             <constraint firstItem="eeG-76-elo" firstAttribute="leading" secondItem="UzI-og-YoN" secondAttribute="leading" constant="24" id="LLK-dh-8Lf"/>
-                            <constraint firstItem="jrK-k2-dvQ" firstAttribute="top" secondItem="UzI-og-YoN" secondAttribute="top" constant="18" id="WW1-Ht-tqA"/>
-                            <constraint firstItem="eeG-76-elo" firstAttribute="top" secondItem="jrK-k2-dvQ" secondAttribute="bottom" constant="24" id="pzE-aO-v3Y"/>
+                            <constraint firstItem="eeG-76-elo" firstAttribute="top" secondItem="UzI-og-YoN" secondAttribute="top" constant="18" id="n8a-V0-BXU"/>
                             <constraint firstItem="UzI-og-YoN" firstAttribute="trailing" secondItem="2Ln-8K-KDc" secondAttribute="trailing" constant="24" id="rlb-Ug-bDJ"/>
                             <constraint firstItem="2Ln-8K-KDc" firstAttribute="leading" secondItem="UzI-og-YoN" secondAttribute="leading" constant="24" id="wJD-TD-UQ4"/>
                             <constraint firstItem="UzI-og-YoN" firstAttribute="trailing" secondItem="eeG-76-elo" secondAttribute="trailing" constant="24" id="yCZ-dl-YNN"/>
@@ -147,12 +138,29 @@
                     <connections>
                         <outlet property="optionsStackView" destination="2Ln-8K-KDc" id="JxA-Js-gtX"/>
                         <outlet property="questionLabel" destination="eeG-76-elo" id="P3E-td-F81"/>
-                        <outlet property="questionNumber" destination="jrK-k2-dvQ" id="xeR-u5-W34"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Lxe-2g-kXj" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1903" y="92"/>
+            <point key="canvasLocation" x="2828.2442748091603" y="91.549295774647888"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="hCJ-xh-64T">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="us2-Td-VRu" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="kD3-6V-hW4">
+                        <rect key="frame" x="0.0" y="118" width="393" height="54"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="saG-IM-v0E" kind="relationship" relationship="rootViewController" id="uOY-P5-dmT"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lUH-T8-e6t" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1901.5267175572519" y="91.549295774647888"/>
         </scene>
     </scenes>
     <resources>

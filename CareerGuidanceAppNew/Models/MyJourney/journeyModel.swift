@@ -141,61 +141,91 @@ enum JourneyData {
     static let skills: [JourneySection] = [
 
         JourneySection(
-            title: "Mastered Capabilities",
+            title: "Web Development",
             items: [
 
                 JourneyItem(
                     iconName: "globe",
-                    iconColor: UIColor(hex: "#0088FF"),
-                    iconBackgroundColor: UIColor(hex: "#C9E7F4"),
-                    title: "React",
-                    subtitle: "Web Development Roadmap"
+                    iconColor: UIColor(hex: "#2563EB"),
+                    iconBackgroundColor: UIColor(hex: "#DBEAFE"),
+                    title: "React.js",
+                    subtitle: "Component-based frontend development"
                 ),
 
                 JourneyItem(
-                    iconName: "swift",
-                    iconColor: UIColor(hex: "#E8771A"),
-                    iconBackgroundColor: UIColor(hex: "#FEEEE0"),
-                    title: "Swift Data",
-                    subtitle: "Basics mastered"
+                    iconName: "curlybraces",
+                    iconColor: UIColor(hex: "#0F766E"),
+                    iconBackgroundColor: UIColor(hex: "#CCFBF1"),
+                    title: "Tailwind CSS",
+                    subtitle: "Utility-first responsive styling"
                 ),
 
                 JourneyItem(
-                    iconName: "leaf",
-                    iconColor: UIColor(hex: "#3E9862"),
-                    iconBackgroundColor: UIColor(hex: "#D8FDEB"),
+                    iconName: "server.rack",
+                    iconColor: UIColor(hex: "#7C3AED"),
+                    iconBackgroundColor: UIColor(hex: "#EDE9FE"),
                     title: "MongoDB",
-                    subtitle: "Now proficient in basic data analysis"
+                    subtitle: "NoSQL database & CRUD operations"
                 )
             ]
         ),
 
         JourneySection(
-            title: "Data Analytics",
+            title: "iOS Development",
             items: [
 
                 JourneyItem(
-                    iconName: "curlybraces",
-                    iconColor: UIColor(hex: "#1950A2"),
-                    iconBackgroundColor: UIColor(hex: "#E0ECFC"),
-                    title: "Tailwind CSS",
-                    subtitle: "Easier way to write CSS"
+                    iconName: "swift",
+                    iconColor: UIColor(hex: "#F97316"),
+                    iconBackgroundColor: UIColor(hex: "#FFEDD5"),
+                    title: "Swift",
+                    subtitle: "Core language & fundamentals"
                 ),
 
                 JourneyItem(
+                    iconName: "square.stack.3d.up",
+                    iconColor: UIColor(hex: "#16A34A"),
+                    iconBackgroundColor: UIColor(hex: "#DCFCE7"),
+                    title: "SwiftData",
+                    subtitle: "Local data persistence"
+                ),
+
+                JourneyItem(
+                    iconName: "iphone",
+                    iconColor: UIColor(hex: "#1D4ED8"),
+                    iconBackgroundColor: UIColor(hex: "#DBEAFE"),
+                    title: "UIKit",
+                    subtitle: "Table views, layouts & navigation"
+                )
+            ]
+        ),
+
+        JourneySection(
+            title: "Data & Analytics",
+            items: [
+
+                JourneyItem(
                     iconName: "chart.bar.fill",
-                    iconColor: UIColor(hex: "#FBBF24") ,
-                    iconBackgroundColor: UIColor(hex: "#FEF3C7") ,
-                    title: "Basic Data Visualisation",
-                    subtitle: "Foundational charts and insights"
+                    iconColor: UIColor(hex: "#F59E0B"),
+                    iconBackgroundColor: UIColor(hex: "#FEF3C7"),
+                    title: "Data Visualization",
+                    subtitle: "Charts, trends & insights"
                 ),
 
                 JourneyItem(
                     iconName: "tablecells",
-                    iconColor: UIColor(hex: "#A856F7") ,
-                    iconBackgroundColor: UIColor(hex: "#F3E9FF"),
-                    title: "SQL Fundamentals",
-                    subtitle: "In progress"
+                    iconColor: UIColor(hex: "#9333EA"),
+                    iconBackgroundColor: UIColor(hex: "#F3E8FF"),
+                    title: "SQL",
+                    subtitle: "Queries, joins & filtering"
+                ),
+
+                JourneyItem(
+                    iconName: "chart.line.uptrend.xyaxis",
+                    iconColor: UIColor(hex: "#DC2626"),
+                    iconBackgroundColor: UIColor(hex: "#FEE2E2"),
+                    title: "Basic Analytics",
+                    subtitle: "Understanding patterns in data"
                 )
             ]
         )
