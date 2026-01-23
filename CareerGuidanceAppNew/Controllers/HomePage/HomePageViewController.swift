@@ -24,7 +24,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     var trendingData: [Roadmap] {
             RoadmapStore.shared.roadmaps
         }
-    let journeyData = JourneyModel.sampleData
+    
+        
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -111,7 +112,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         switch indexPath.section {
         case 0:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StatsCard", for: indexPath) as! StatsCard
-            cell.configure(with: UserStats.demo)
+            cell.configure(with: UserStats.shared)
             return cell
             //changed T
 //        case 1:
@@ -159,7 +160,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
         case 2:
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homepageMyJourney", for: indexPath) as! homepageMyJourney
-            cell.configure(days: journeyData.days, quizzes: journeyData.quizzes, quests: journeyData.quests)
+            let currentStats = JourneyModel.shared
+            cell.configure(
+                    days: "\(currentStats.days)",
+                    quizzes: "\(currentStats.quizzes)",
+                    quests: "\(currentStats.quests)"
+                )
             cell.onChevronTapped = {
                 let vc = UIStoryboard(name: "MyJourney", bundle: nil).instantiateViewController(withIdentifier: "MyJourneySbId")
                 self.navigationController?.pushViewController(vc, animated: true)
