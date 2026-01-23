@@ -33,7 +33,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rmm-y0-aCq">
-                                <rect key="frame" x="20" y="169.66666666666666" width="280" height="18"/>
+                                <rect key="frame" x="20" y="163.66666666666666" width="280" height="18"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <color key="textColor" systemColor="systemGrayColor"/>
                                 <nil key="highlightedColor"/>
@@ -41,7 +41,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="Rmm-y0-aCq" firstAttribute="top" secondItem="voa-n2-05L" secondAttribute="bottom" constant="10" id="471-mU-Tj8"/>
+                            <constraint firstItem="Rmm-y0-aCq" firstAttribute="top" secondItem="voa-n2-05L" secondAttribute="bottom" constant="4" id="471-mU-Tj8"/>
                             <constraint firstItem="OOg-Z4-7CF" firstAttribute="top" secondItem="fbf-55-QVG" secondAttribute="top" constant="8" id="6l8-b8-fqc"/>
                             <constraint firstItem="OOg-Z4-7CF" firstAttribute="leading" secondItem="fbf-55-QVG" secondAttribute="leading" constant="10" id="7py-Wo-RMd"/>
                             <constraint firstItem="Rmm-y0-aCq" firstAttribute="leading" secondItem="fbf-55-QVG" secondAttribute="leading" constant="20" id="I5g-uL-bfM"/>

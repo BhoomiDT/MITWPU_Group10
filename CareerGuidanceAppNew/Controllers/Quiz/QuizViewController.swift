@@ -13,7 +13,8 @@ class QuizViewController: UIViewController {
     var onRoadmapStarted: (() -> Void)?
     var roadmapStatus: Roadmap?
     var onQuizCompleted: (() -> Void)?
-    @IBOutlet weak var QuestionNumberLabel: UILabel!
+    var questionIndex: Int = 0
+
     @IBOutlet weak var QuestionTextLabel: UILabel!
     
     @IBOutlet weak var progressBar: UIProgressView!
@@ -29,7 +30,9 @@ class QuizViewController: UIViewController {
     private var currentQuestionIndex = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.largeTitleDisplayMode = .never
+        self.title = String("Question \(questionIndex+1)")
+
+        navigationController?.navigationBar.prefersLargeTitles = true
         nextButton.layer.cornerRadius = 20
         optionStack.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         optionButton1.tag = 0
@@ -43,6 +46,46 @@ class QuizViewController: UIViewController {
                 count: quiz.questions.count
             )
         loadQuestion()
+        setupBackChevron()
+    }
+    private func goToMilestoneScreen() {
+        if let nav = navigationController {
+            for vc in nav.viewControllers {
+                // Find the milestone screen (NewModuleScreen) in the stack
+                if let milestoneVC = vc as? NewModuleScreen {
+                    nav.popToViewController(milestoneVC, animated: true)
+                    return
+                }
+            }
+        }
+        
+        // Fallback: If for some reason the screen isn't found, just pop once
+        navigationController?.popViewController(animated: true)
+    }
+    func setupBackChevron() {
+        let backButton = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.left"),
+            style: .plain,
+            target: self,
+            action: #selector(backChevronTapped)
+        )
+        navigationItem.leftBarButtonItem = backButton
+    }
+    @objc func backChevronTapped() {
+        // If you want the alert to show regardless of question index to prevent accidental exit:
+        let alert = UIAlertController(
+            title: "Exit Quiz?",
+            message: "If you go back now, your progress in this test will be lost.",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Stay", style: .cancel, handler: nil))
+
+        alert.addAction(UIAlertAction(title: "Exit", style: .destructive) { _ in
+            self.goToMilestoneScreen()
+        })
+
+        present(alert, animated: true)
     }
     
     @IBAction func optionTapped(_ sender: UIButton) {
@@ -57,7 +100,6 @@ class QuizViewController: UIViewController {
 
         let question = quiz.questions[currentQuestionIndex]
 
-        QuestionNumberLabel.text = "Question \(currentQuestionIndex + 1)"
         QuestionTextLabel.text = question.question
 
         optionButton1.setTitle(question.options[0], for: .normal)
@@ -134,8 +176,7 @@ class QuizViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
         alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
-//            let result = self.generateTestResult()
-//            self.navigateToResults(result: result)
+
             let completedQuiz = self.generateCompletedQuiz()
             QuizHistoryManager.shared.save(completedQuiz)
             if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
@@ -189,43 +230,7 @@ class QuizViewController: UIViewController {
             (Double(correct) / Double(quiz.questions.count)) * 100
         )
     }
-//    private func generateTestResult() -> TestResult {
-//        guard let quiz = quiz else {
-//            return TestResult(
-//                score: 0,
-//                strengths: [],
-//                improvements: [],
-//                lessonName: ""
-//            )
-//        }
-//
-//        let finalScore: Int
-//
-//        if lesson?.status == .seeResults {
-//            finalScore = 80
-//        } else {
-//            finalScore = calculateScore()
-//        }
-//
-//        let strengths: [StrengthItem] = [
-//            StrengthItem(title: "User Interface Design"),
-//            StrengthItem(title: "Prototyping"),
-//            StrengthItem(title: "Basic Compliance")
-//        ]
-//
-//        let improvements: [ImprovementItem] = [
-//            ImprovementItem(title: "User Research"),
-//            ImprovementItem(title: "Accessibility Standards"),
-//            ImprovementItem(title: "Usability")
-//        ]
-//
-//        return TestResult(
-//            score: finalScore,
-//            strengths: strengths,
-//            improvements: improvements,
-//            lessonName: quiz.lessonName
-//        )
-//    }
+
     private func generateCompletedQuiz() -> CompletedQuiz {
         guard let quiz = quiz else {
             fatalError("Quiz missing")
@@ -238,11 +243,7 @@ class QuizViewController: UIViewController {
         var results: [QuestionResult] = []
 
         for (index, question) in quiz.questions.enumerated() {
-//            let result = QuestionResult(
-//                questionText: question.question,
-//                userSelectedIndex: selectedOptionIndices[index],
-//                correctIndex: question.correctIndex
-//            )
+
             let result = QuestionResult(
                 questionText: question.question,
                 options: question.options,
@@ -261,17 +262,7 @@ class QuizViewController: UIViewController {
             questionResults: results
         )
     }
-//    private func navigateToResults(result: TestResult) {
-//        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-//        let vc = storyboard.instantiateViewController(
-//            withIdentifier: "TestResultsVC"
-//        ) as! TestResultsViewController
-//        
-//        vc.lesson = self.lesson
-//        vc.testResult = result
-//        
-//        self.navigationController?.pushViewController(vc, animated: true)
-//    }
+
     private func navigateToResults(completedQuiz: CompletedQuiz) {
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
         let vc = storyboard.instantiateViewController(
