@@ -22,7 +22,7 @@ class TestResultsViewController: UIViewController {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
         navigationController!.navigationBar.prefersLargeTitles = true
-        self.testResult = makeTestResult(for: completedQuiz.lessonName)
+        self.testResult = makeTestResult(for: completedQuiz.lessonId)
         let backButton = UIButton(type: .system)
            backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
            backButton.tintColor = .label

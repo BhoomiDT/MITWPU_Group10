@@ -85,57 +85,6 @@ extension NewModuleScreen: UICollectionViewDelegate,
         return lessons.count
     }
     
-//    func collectionView(_ collectionView: UICollectionView,
-//                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        
-//        let cell = collectionView.dequeueReusableCell(
-//            withReuseIdentifier: "ViewCell",
-//            for: indexPath
-//        ) as! ModuleCardCellCollectionViewCell
-//        
-//        let lesson = lessons[indexPath.item]
-//        cell.configure(with: lesson)
-//        
-//        cell.onSeeResourcesTapped = { [weak self] in
-//            self?.navigateToResources(for: lesson)
-//        }
-//        cell.onTestTapped = { [weak self] in
-//            self?.showStartTestModal(for: lesson) // Reuse the same modal logic
-//        }
-//        return cell
-//    }
-    
-//    func collectionView(_ collectionView: UICollectionView,
-//                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        
-//        let cell = collectionView.dequeueReusableCell(
-//            withReuseIdentifier: "ViewCell",
-//            for: indexPath
-//        ) as! ModuleCardCellCollectionViewCell
-//        
-//        let lesson = lessons[indexPath.item]
-//        cell.configure(with: lesson)
-//        
-//        cell.onSeeResourcesTapped = { [weak self] in
-//            self?.navigateToResources(for: lesson)
-//        }
-//
-//        cell.onTestTapped = { [weak self] in
-//            // Check if quiz is already completed
-//            let hasResult = QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
-//            
-//            if hasResult {
-//                // If completed, go straight to results
-//                self?.openResults(for: lesson)
-//            } else {
-//                // If not completed, show the "Start Test" modal
-//                self?.showStartTestModal(for: lesson)
-//            }
-//        }
-//        
-//        return cell
-//    }
-    
     func collectionView(_ collectionView: UICollectionView,
                         cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
