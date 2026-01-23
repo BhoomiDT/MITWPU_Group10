@@ -28,26 +28,26 @@ enum JourneyData {
             items: [
                 JourneyItem(
                     iconName: "paperplane.fill",
-                    iconColor: UIColor(hex: "#1950A2"),
-                    iconBackgroundColor: UIColor(hex: "#E0ECFC"),
-                    title: "HTML & CSS Basics",
-                    subtitle: "Structure and style the web"
+                    iconColor: UIColor(hex: "#2563EB"),
+                    iconBackgroundColor: UIColor(hex: "#DBEAFE"),
+                    title: "Web Foundations",
+                    subtitle: "Strengthened HTML & CSS basics"
                 ),
 
                 JourneyItem(
                     iconName: "target",
-                    iconColor: UIColor(hex: "#D4A056"),
-                    iconBackgroundColor: UIColor(hex: "#FAF3E7"),
-                    title: "3 Goals Achieved!",
-                    subtitle: "Consistency in goal completion"
+                    iconColor: UIColor(hex: "#F59E0B"),
+                    iconBackgroundColor: UIColor(hex: "#FEF3C7"),
+                    title: "Goals Unlocked",
+                    subtitle: "Completed 3 planned milestones"
                 ),
 
                 JourneyItem(
                     iconName: "flag.2.crossed",
-                    iconColor: UIColor(hex: "#D53A6A"),
-                    iconBackgroundColor: UIColor(hex: "#FFD4DF"),
-                    title: "2 Quests Completed",
-                    subtitle: "Consistency in goal completion"
+                    iconColor: UIColor(hex: "#EC4899"),
+                    iconBackgroundColor: UIColor(hex: "#FCE7F3"),
+                    title: "Quest Progress",
+                    subtitle: "Finished 2 learning quests"
                 )
             ]
         ),
@@ -57,82 +57,84 @@ enum JourneyData {
             items: [
                 JourneyItem(
                     iconName: "chevron.left.slash.chevron.right",
-                    iconColor: UIColor(hex: "#A856F7"),
-                    iconBackgroundColor: UIColor(hex: "#F6EFFE"),
-                    title: "HTML & CSS Basics",
-                    subtitle: "Structure and style the web"
+                    iconColor: UIColor(hex: "#7C3AED"),
+                    iconBackgroundColor: UIColor(hex: "#EDE9FE"),
+                    title: "Code Beginnings",
+                    subtitle: "Started hands-on web coding"
                 ),
 
                 JourneyItem(
                     iconName: "flame.fill",
-                    iconColor: UIColor(hex: "#E8771A"),
-                    iconBackgroundColor: UIColor(hex: "#FFE7D4"),
-                    title: "First 30-Day Streak Achieved",
-                    subtitle: "Uninterrupted learning for a month"
+                    iconColor: UIColor(hex: "#F97316"),
+                    iconBackgroundColor: UIColor(hex: "#FFEDD5"),
+                    title: "30-Day Streak",
+                    subtitle: "One full month of consistency"
                 ),
 
                 JourneyItem(
                     iconName: "checkmark.seal.fill",
-                    iconColor: UIColor(hex: "#3E9862"),
-                    iconBackgroundColor: UIColor(hex: "#D8FDEB"),
-                    title: "Completed Core JavaScript",
-                    subtitle: "Part of Web Dev Roadmap"
+                    iconColor: UIColor(hex: "#16A34A"),
+                    iconBackgroundColor: UIColor(hex: "#DCFCE7"),
+                    title: "JavaScript Core",
+                    subtitle: "Completed core JS concepts"
                 )
             ]
         ),
+
         JourneySection(
             title: "October",
             items: [
                 JourneyItem(
                     iconName: "laptopcomputer",
-                    iconColor: UIColor(hex: "#0A84FF"),
-                    iconBackgroundColor: UIColor(hex: "#E5F1FF"),
-                    title: "Started Frontend Journey",
-                    subtitle: "First step into development world"
+                    iconColor: UIColor(hex: "#1D4ED8"),
+                    iconBackgroundColor: UIColor(hex: "#DBEAFE"),
+                    title: "Frontend Journey",
+                    subtitle: "First steps into development"
                 ),
 
                 JourneyItem(
                     iconName: "book.fill",
-                    iconColor: UIColor(hex: "#C46A12"),
-                    iconBackgroundColor: UIColor(hex: "#FFEBD8"),
-                    title: "Completed Basics of Programming",
-                    subtitle: "Understanding logic & syntax"
+                    iconColor: UIColor(hex: "#0F766E"),
+                    iconBackgroundColor: UIColor(hex: "#CCFBF1"),
+                    title: "Programming Basics",
+                    subtitle: "Built logic and fundamentals"
                 ),
 
                 JourneyItem(
                     iconName: "brain.head.profile",
-                    iconColor: UIColor(hex: "#B83F77"),
-                    iconBackgroundColor: UIColor(hex: "#FFE3F0"),
-                    title: "Built Strong Learning Habit",
-                    subtitle: "Daily learning without distractions"
+                    iconColor: UIColor(hex: "#9333EA"),
+                    iconBackgroundColor: UIColor(hex: "#F3E8FF"),
+                    title: "Learning Discipline",
+                    subtitle: "Formed a daily learning habit"
                 )
             ]
         ),
+
         JourneySection(
             title: "September",
             items: [
                 JourneyItem(
                     iconName: "sparkles",
-                    iconColor: UIColor(hex: "#9C47D4"),
-                    iconBackgroundColor: UIColor(hex: "#F3E6FF"),
-                    title: "Kickstarted Self-Improvement",
+                    iconColor: UIColor(hex: "#6366F1"),
+                    iconBackgroundColor: UIColor(hex: "#E0E7FF"),
+                    title: "New Beginning",
                     subtitle: "Mindset shift toward growth"
                 ),
 
                 JourneyItem(
                     iconName: "calendar",
-                    iconColor: UIColor(hex: "#D49B33"),
-                    iconBackgroundColor: UIColor(hex: "#FFF1D9"),
-                    title: "Routine & Discipline",
-                    subtitle: "Building daily study schedule"
+                    iconColor: UIColor(hex: "#F59E0B"),
+                    iconBackgroundColor: UIColor(hex: "#FEF3C7"),
+                    title: "Routine Building",
+                    subtitle: "Created a steady study rhythm"
                 ),
 
                 JourneyItem(
                     iconName: "person.3.fill",
-                    iconColor: UIColor(hex: "#207355"),
-                    iconBackgroundColor: UIColor(hex: "#CDF7E6"),
-                    title: "Joined Developer Community",
-                    subtitle: "First exposure to tech ecosystem"
+                    iconColor: UIColor(hex: "#059669"),
+                    iconBackgroundColor: UIColor(hex: "#D1FAE5"), 
+                    title: "Community Entry",
+                    subtitle: "Joined the dev ecosystem"
                 )
             ]
         )
