@@ -87,6 +87,7 @@
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="cardBottomConstraint" destination="0J5-TT-IzU" id="o1r-bY-ncf"/>
                 <outlet property="cardView" destination="ols-mu-VCv" id="ZtH-wh-tCM"/>
                 <outlet property="iconBackgroundView" destination="J5Q-0J-jgJ" id="ccO-EN-eDM"/>
                 <outlet property="iconImageView" destination="21e-AJ-HVp" id="b1D-iK-1oh"/>

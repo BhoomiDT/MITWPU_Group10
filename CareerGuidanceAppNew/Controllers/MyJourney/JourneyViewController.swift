@@ -120,18 +120,15 @@ extension JourneyViewController: UITableViewDataSource {
 
         cell.applyCorners(isFirst: isFirst, isLast: isLast)
         cell.showSeparator(!isLast)
-
+        
+        cell.cardBottomConstraint.constant = isLast ? 12 : 0
+        
         return cell
     }
     
-    func tableView(_ tableView: UITableView,
-                   heightForFooterInSection section: Int) -> CGFloat {
-        return 20
-    }
-
-    func tableView(_ tableView: UITableView,
-                   viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
-    }
+//    func tableView(_ tableView: UITableView,
+//                   heightForFooterInSection section: Int) -> CGFloat {
+//        return 10
+//    }
 }
 

@@ -14,6 +14,7 @@ class JourneyTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
     @IBOutlet weak var separatorView: UIView!
+    @IBOutlet weak var cardBottomConstraint: NSLayoutConstraint!
     override func awakeFromNib() {
         super.awakeFromNib()
         backgroundColor = .clear
