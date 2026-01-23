@@ -19,77 +19,94 @@ struct Question {
     let options: [String]
 }
 
-let psychometricAnswers: [String] = ["Strongly Disagree", "Disagree", "Neutral", "Agree", "Strongly Agree"]
+let psychometricAnswers: [String] = [
+    "Strongly Disagree",
+    "Disagree",
+    "Neutral",
+    "Agree",
+    "Strongly Agree"
+]
 
 class Questionnaire {
     let sections: [Section]
 
     init() {
         sections = [
-            // MARK: - Section 0: Intro / Roadmap (The Walking Man)
-            // Questions array is empty because this is just an introductory/start screen.
+
+            // MARK: - Section 0: Intro / Roadmap
             Section(
-                symbolName: "figure.walk", // SF Symbol for walking person
+                symbolName: "figure.walk",
                 title: "Your Personal Roadmap",
                 subtitle: "Let's create a personalized career path tailored just for you.",
                 questions: []
             ),
-            
+
             // MARK: - Section 1: Technical Skills
-            // Questions array is empty because this launches the Custom Tech Skills UI.
             Section(
                 symbolName: "terminal.fill",
                 title: "Technical Skills",
                 subtitle: "Add your technical skills to get a personalized roadmap",
                 questions: []
             ),
-            
-            // MARK: - Section 2: Practical & Analytical (Psychometric)
+
+            // MARK: - Section 2: Practical & Analytical
             Section(
                 symbolName: "lightbulb.fill",
                 title: "Practical & Analytical Thinking",
-                subtitle: "Tell us about your problem-solving style and hands-on approach to tasks",
+                subtitle: "Your approach to logic and problem solving",
                 questions: [
                     Question(
-                        qText: "How comfortable are you with breaking down complex problems?",
+                        qText: "I enjoy solving complex problems.",
                         options: psychometricAnswers
                     ),
                     Question(
-                        qText: "How often do you work on logical puzzles or problem-solving tasks?",
+                        qText: "I think logically before acting.",
+                        options: psychometricAnswers
+                    ),
+                    Question(
+                        qText: "I like working with data or numbers.",
                         options: psychometricAnswers
                     )
                 ]
             ),
-            
-            // MARK: - Section 3: Creative (Psychometric)
+
+            // MARK: - Section 3: Creative
             Section(
                 symbolName: "paintpalette.fill",
                 title: "Creative & Focused Interests",
-                subtitle: "Share your creativity and communication interests to refine your roadmap",
+                subtitle: "Your creativity and communication style",
                 questions: [
                     Question(
-                        qText: "How much do you enjoy creative work (design, content, UI, etc.)?",
+                        qText: "I enjoy creative or design work.",
                         options: psychometricAnswers
                     ),
                     Question(
-                        qText: "How comfortable are you with presenting or explaining ideas?",
+                        qText: "I like expressing ideas visually.",
+                        options: psychometricAnswers
+                    ),
+                    Question(
+                        qText: "I communicate my ideas clearly.",
                         options: psychometricAnswers
                     )
                 ]
             ),
-            
-            // MARK: - Section 4: Business (Psychometric)
+
+            // MARK: - Section 4: Business
             Section(
                 symbolName: "briefcase.fill",
                 title: "Business & Organizational Skills",
-                subtitle: "Let us understand your leadership style and comfort with planning roles",
+                subtitle: "Your leadership and planning comfort",
                 questions: [
                     Question(
-                        qText: "How interested are you in planning, coordination, or management roles?",
+                        qText: "I enjoy planning tasks or projects.",
                         options: psychometricAnswers
                     ),
                     Question(
-                        qText: "How comfortable are you leading a small team or group?",
+                        qText: "I am comfortable leading a team.",
+                        options: psychometricAnswers
+                    ),
+                    Question(
+                        qText: "I take responsibility in group work.",
                         options: psychometricAnswers
                     )
                 ]

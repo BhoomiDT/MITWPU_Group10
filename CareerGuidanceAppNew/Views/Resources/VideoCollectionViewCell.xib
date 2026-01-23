@@ -20,7 +20,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="SIW-qm-4X7">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="3XM-b7-hD3">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="techwithtim_ml" translatesAutoresizingMaskIntoConstraints="NO" id="3XM-b7-hD3">
                                 <rect key="frame" x="10" y="10" width="120" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="70" id="WhB-de-uPz"/>
@@ -94,9 +94,10 @@
         </collectionViewCell>
     </objects>
     <resources>
+        <image name="techwithtim_ml" width="1536" height="1024"/>
         <image name="youtube" width="1760" height="1232"/>
         <systemColor name="secondaryLabelColor">
-            <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

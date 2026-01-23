@@ -10,7 +10,7 @@ class AnalysisTableViewCell1: UITableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        domainName.text = "Web Development"
+        domainName.text = "Data Analytics"
         domainDescription.text = "Based on your psychometric test results, this is the best domain for you."
         
         domainExplore.addTarget(self, action: #selector(exploreButtonTapped), for: .touchUpInside)

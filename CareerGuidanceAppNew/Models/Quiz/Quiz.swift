@@ -791,242 +791,7 @@ struct TestFactory {
 
 var allRoadmapsData: [Roadmap] = [
 
-    //Data Analytics
-    Roadmap(
-        title: "Data Analytics",
-        subtitle: "Personalised Roadmap",
-        description: "Learn to collect, clean, and visualize complex datasets for actionable insights.",
-        imageName: "data-analytics-role",
-        percentage: 90,
-        milestones: [
-            Milestone(
-                title: "Data Fundamentals",
-                subtitle: "Understand and prepare data",
-                iconName: "tray.full.fill",
-                iconColor: UIColor(hex: "#1950A2"),
-                iconBackgroundColor: UIColor(hex: "#E0ECFC"),
-                lessons: [
-                    Lesson(
-                        id: "data_types",
-                        name: "Data Cleaning Basics",
-                        subtitle: "Categorize quantitative and qualitative data.",
-                        dueDate: "Dec 18",
-                        status: .seeResults,
-                        videos: [
-                            VideoResource(lessonId: "data_types", title: "Quantitative vs Qualitative", duration: "10:20", thumbnailName: "vid_thumb_1", videoURL: "https://www.youtube.com/watch?v=7bsNWqBAyk8")
-                        ],
-                        documents: [
-                            DocResource(lessonId: "data_types", title: "Data Classification Guide", readTime: "5 min read", docURL: "https://en.wikipedia.org/wiki/Statistical_data_type")
-                        ]
-                    ),
-                    Lesson(
-                        id: "data_collection",
-                        name: "Data Collection Methods",
-                        subtitle: "Surveys, APIs, and web scraping basics.",
-                        dueDate: "Dec 18",
-                        status: .startTest,
-                        videos: [
-                            VideoResource(lessonId: "data_collection", title: "Introduction to APIs", duration: "15:45", thumbnailName: "vid_thumb_2", videoURL: "https://www.youtube.com/watch?v=ov7vS0X2_50")
-                        ],
-                        documents: [
-                            DocResource(lessonId: "data_collection", title: "Web Scraping 101", readTime: "10 min read", docURL: "https://www.scrapingbee.com/blog/web-scraping-101/")
-                        ]
-                    )
-                ]
-            ),
-            Milestone(
-                title: "Analytics Tools",
-                subtitle: "Excel, SQL, Python",
-                iconName: "hammer.fill",
-                iconColor: UIColor(hex: "#D4A056"),
-                iconBackgroundColor: UIColor(hex: "#FAF3E7"),
-                lessons: [
-                    Lesson(
-                        id: "excel_basics",
-                        name: "Excel Mastery",
-                        subtitle: "Pivot tables and advanced lookups.",
-                        dueDate: "Dec 22",
-                        status: .startTest,
-                        videos: [
-                            VideoResource(lessonId: "excel_basics", title: "Advanced Excel for Data", duration: "22:10", thumbnailName: "vid_excel", videoURL: "https://www.youtube.com/watch?v=0nbkaYsR94c")
-                        ]
-                    ),
-                    Lesson(
-                        id: "sql_queries",
-                        name: "SQL Queries & Joins",
-                        subtitle: "Relational database querying essentials.",
-                        dueDate: "Dec 22",
-                        status: .startTest,
-                        documents: [
-                            DocResource(lessonId: "sql_queries", title: "The SQL Joins Handbook", readTime: "12 min read", docURL: "https://www.sqlshack.com/sql-join-overview-and-tutorial/")
-                        ]
-                    )
-                ]
-            ),
-            // Milestone 3: Data Visualization & Storytelling
-                        Milestone(
-                            title: "Data Visualization",
-                            subtitle: "Tell stories with data",
-                            iconName: "chart.bar.xaxis",
-                            iconColor: UIColor(hex: "#E67E22"),
-                            iconBackgroundColor: UIColor(hex: "#FDF2E9"),
-                            lessons: [
-                                Lesson(
-                                    id: "viz_principles",
-                                    name: "Visualization Theory",
-                                    subtitle: "Choosing the right chart for your data.",
-                                    dueDate: "Jan 05",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "viz_principles", title: "Effective Data Viz", duration: "12:45", thumbnailName: "vid_viz", videoURL: "https://www.youtube.com/watch?v=hE709Ssh-m0")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "tableau_basics",
-                                    name: "Tableau Essentials",
-                                    subtitle: "Building interactive dashboards.",
-                                    dueDate: "Jan 10",
-                                    status: .startTest,
-                                    documents: [
-                                        DocResource(lessonId: "tableau_basics", title: "Tableau Starter Guide", readTime: "15 min read", docURL: "https://help.tableau.com/current/guides/get-started-tutorial/en-us/get-started-tutorial-home.htm")
-                                    ]
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 4: Statistical Analysis
-                        Milestone(
-                            title: "Statistics for Analytics",
-                            subtitle: "Mathematical foundations",
-                            iconName: "function",
-                            iconColor: UIColor(hex: "#9B59B6"),
-                            iconBackgroundColor: UIColor(hex: "#F5EEF8"),
-                            lessons: [
-                                Lesson(
-                                    id: "descriptive_stats",
-                                    name: "Probability & Distribution",
-                                    subtitle: "Mean, Median, Standard Deviation, and Normal Distribution.",
-                                    dueDate: "Jan 15",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "descriptive_stats", title: "Statistics Explained", duration: "18:20", thumbnailName: "vid_stats", videoURL: "https://www.youtube.com/watch?v=sxQaBpKfDRk")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "hypothesis_testing",
-                                    name: "Hypothesis Testing",
-                                    subtitle: "Understanding P-values and A/B testing basics.",
-                                    dueDate: "Jan 20",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 5: Programming with Python for Data
-                        Milestone(
-                            title: "Advanced Python",
-                            subtitle: "Pandas and NumPy mastery",
-                            iconName: "terminal.fill",
-                            iconColor: UIColor(hex: "#2ECC71"),
-                            iconBackgroundColor: UIColor(hex: "#EAFAF1"),
-                            lessons: [
-                                Lesson(
-                                    id: "pandas_mastery",
-                                    name: "Pandas DataFrames",
-                                    subtitle: "Manipulating complex datasets efficiently.",
-                                    dueDate: "Jan 25",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "pandas_mastery", title: "Pandas in 10 Minutes", duration: "10:00", thumbnailName: "vid_pandas", videoURL: "https://www.youtube.com/watch?v=dcqPhpY761c")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "exploratory_analysis",
-                                    name: "Exploratory Data Analysis",
-                                    subtitle: "Using Python to uncover hidden patterns.",
-                                    dueDate: "Jan 30",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 6: Machine Learning Foundations
-                        Milestone(
-                            title: "Predictive Analytics",
-                            subtitle: "Intro to Machine Learning",
-                            iconName: "brain.headset",
-                            iconColor: UIColor(hex: "#3498DB"),
-                            iconBackgroundColor: UIColor(hex: "#EBF5FB"),
-                            lessons: [
-                                Lesson(
-                                    id: "regression_models",
-                                    name: "Linear Regression",
-                                    subtitle: "Predicting continuous outcomes.",
-                                    dueDate: "Feb 05",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "classification_basics",
-                                    name: "Classification Basics",
-                                    subtitle: "Logic of Decision Trees and K-Nearest Neighbors.",
-                                    dueDate: "Feb 10",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 7: Big Data & Cloud Analytics
-                        Milestone(
-                            title: "Scalable Analytics",
-                            subtitle: "Big Data environments",
-                            iconName: "cloud.fill",
-                            iconColor: UIColor(hex: "#1ABC9C"),
-                            iconBackgroundColor: UIColor(hex: "#E8F8F5"),
-                            lessons: [
-                                Lesson(
-                                    id: "google_bigquery",
-                                    name: "Google BigQuery",
-                                    subtitle: "Querying petabytes of data using SQL.",
-                                    dueDate: "Feb 15",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "data_pipelines",
-                                    name: "ETL Pipelines",
-                                    subtitle: "Automating data flow from source to warehouse.",
-                                    dueDate: "Feb 20",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 8: Capstone Project & Portfolio
-                        Milestone(
-                            title: "Industry Capstone",
-                            subtitle: "Professional portfolio building",
-                            iconName: "briefcase.fill",
-                            iconColor: UIColor(hex: "#34495E"),
-                            iconBackgroundColor: UIColor(hex: "#EBEDEF"),
-                            lessons: [
-                                Lesson(
-                                    id: "portfolio_project",
-                                    name: "End-to-End Analysis",
-                                    subtitle: "From raw data to a presented dashboard.",
-                                    dueDate: "Mar 01",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "interview_prep",
-                                    name: "Analytics Interview Prep",
-                                    subtitle: "Case studies and technical SQL/Python tests.",
-                                    dueDate: "Mar 05",
-                                    status: .startTest
-                                )
-                            ]
-                        )
-        ],
-        isStarted: false
-    ),
+   
     
     //AI & Machine Learning
     Roadmap(
@@ -1036,6 +801,8 @@ var allRoadmapsData: [Roadmap] = [
         imageName: "aiml-role",
         percentage: 40,
         milestones: [
+
+            // Milestone 1: Python for ML
             Milestone(
                 title: "Python for ML",
                 subtitle: "Core programming skills",
@@ -1043,6 +810,7 @@ var allRoadmapsData: [Roadmap] = [
                 iconColor: UIColor(hex: "#1950A2"),
                 iconBackgroundColor: UIColor(hex: "#E0ECFC"),
                 lessons: [
+
                     Lesson(
                         id: "ml_intro",
                         name: "Introduction to ML",
@@ -1050,12 +818,17 @@ var allRoadmapsData: [Roadmap] = [
                         dueDate: "Jan 5",
                         status: .startTest,
                         videos: [
-                            VideoResource(lessonId: "ml_intro", title: "The Map of Machine Learning", duration: "12:00", thumbnailName: "vid_ml_map", videoURL: "https://www.youtube.com/watch?v=HcqpanDadyQ")
+                            VideoResource(lessonId: "ml_intro", title: "The Map of Machine Learning", duration: "12:00", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=HcqpanDadyQ"),
+                            VideoResource(lessonId: "ml_intro", title: "Supervised vs Unsupervised Learning", duration: "14:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=1FZ0A1QCMWc"),
+                            VideoResource(lessonId: "ml_intro", title: "ML Workflow Overview", duration: "11:40", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=ukzFI9rgwfU")
                         ],
                         documents: [
-                            DocResource(lessonId: "ml_intro", title: "Supervised vs Unsupervised Study", readTime: "8 min read", docURL: "https://towardsdatascience.com/supervised-vs-unsupervised-learning-140455914805")
+                            DocResource(lessonId: "ml_intro", title: "Supervised vs Unsupervised Study", readTime: "8 min read", docURL: "https://towardsdatascience.com/supervised-vs-unsupervised-learning-140455914805"),
+                            DocResource(lessonId: "ml_intro", title: "Machine Learning Basics", readTime: "6 min read", docURL: "https://developers.google.com/machine-learning/crash-course/ml-intro"),
+                            DocResource(lessonId: "ml_intro", title: "ML Terminology Guide", readTime: "5 min read", docURL: "https://ml-cheatsheet.readthedocs.io/en/latest/")
                         ]
                     ),
+
                     Lesson(
                         id: "ml_math",
                         name: "Math for ML",
@@ -1063,174 +836,75 @@ var allRoadmapsData: [Roadmap] = [
                         dueDate: "Jan 6",
                         status: .startTest,
                         videos: [
-                            VideoResource(lessonId: "ml_math", title: "Linear Algebra Essence", duration: "25:00", thumbnailName: "vid_math", videoURL: "https://www.youtube.com/watch?v=fNk_zzaMoSs")
+                            VideoResource(lessonId: "ml_math", title: "Linear Algebra Essence", duration: "25:00", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=fNk_zzaMoSs"),
+                            VideoResource(lessonId: "ml_math", title: "Gradient Descent Explained", duration: "13:20", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=IHZwWFHWa-w"),
+                            VideoResource(lessonId: "ml_math", title: "Why Calculus Matters in ML", duration: "12:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=jc2IthslyzM")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "ml_math", title: "Linear Algebra for ML", readTime: "10 min read", docURL: "https://www.deeplearning.ai/resources/linear-algebra/"),
+                            DocResource(lessonId: "ml_math", title: "Gradient Descent Guide", readTime: "7 min read", docURL: "https://ml-cheatsheet.readthedocs.io/en/latest/gradient_descent.html"),
+                            DocResource(lessonId: "ml_math", title: "Math Roadmap for ML", readTime: "6 min read", docURL: "https://towardsdatascience.com/the-mathematics-of-machine-learning-894f046c568")
                         ]
                     )
                 ]
             ),
-            // Milestone 2: Classical Machine Learning
-                        Milestone(
-                            title: "Supervised Learning",
-                            subtitle: "Predictive modeling",
-                            iconName: "chart.line.uptrend.xyaxis",
-                            iconColor: UIColor(hex: "#E67E22"),
-                            iconBackgroundColor: UIColor(hex: "#FDF2E9"),
-                            lessons: [
-                                Lesson(
-                                    id: "regression_basics",
-                                    name: "Regression Analysis",
-                                    subtitle: "Linear and Polynomial regression techniques.",
-                                    dueDate: "Jan 12",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "regression_basics", title: "Linear Regression Path", duration: "15:30", thumbnailName: "vid_reg", videoURL: "https://www.youtube.com/watch?v=PaFPbb66DxQ")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "classification_models",
-                                    name: "Classification Mastery",
-                                    subtitle: "Logistic Regression, SVMs, and Decision Trees.",
-                                    dueDate: "Jan 15",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 3: Ensemble Methods & Optimization
-                        Milestone(
-                            title: "Advanced Algorithms",
-                            subtitle: "Boosting and Bagging",
-                            iconName: "square.stack.3d.up.fill",
-                            iconColor: UIColor(hex: "#9B59B6"),
-                            iconBackgroundColor: UIColor(hex: "#F5EEF8"),
-                            lessons: [
-                                Lesson(
-                                    id: "random_forests",
-                                    name: "Random Forests & XGBoost",
-                                    subtitle: "Building robust ensemble models.",
-                                    dueDate: "Jan 20",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "random_forests", title: "XGBoost Explained", duration: "18:45", thumbnailName: "vid_ensemble", videoURL: "https://www.youtube.com/watch?v=OtD8wVaFm6E")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "hyperparameter_tuning",
-                                    name: "Model Optimization",
-                                    subtitle: "Grid search and Bayesian optimization.",
-                                    dueDate: "Jan 24",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 4: Deep Learning Foundations
-                        Milestone(
-                            title: "Neural Networks",
-                            subtitle: "Artificial intelligence core",
-                            iconName: "brain.headset",
-                            iconColor: UIColor(hex: "#2ECC71"),
-                            iconBackgroundColor: UIColor(hex: "#EAFAF1"),
-                            lessons: [
-                                Lesson(
-                                    id: "neural_net_intro",
-                                    name: "Perceptrons & Backpropagation",
-                                    subtitle: "How neural networks learn from error.",
-                                    dueDate: "Jan 30",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "neural_net_intro", title: "But what is a Neural Network?", duration: "20:00", thumbnailName: "vid_3b1b", videoURL: "https://www.youtube.com/watch?v=aircAruvnKk")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "pytorch_basics",
-                                    name: "PyTorch Framework",
-                                    subtitle: "Building DL models with tensors.",
-                                    dueDate: "Feb 05",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 5: Computer Vision & NLP
-                        Milestone(
-                            title: "Specialized AI",
-                            subtitle: "Vision and Language",
-                            iconName: "eye.fill",
-                            iconColor: UIColor(hex: "#3498DB"),
-                            iconBackgroundColor: UIColor(hex: "#EBF5FB"),
-                            lessons: [
-                                Lesson(
-                                    id: "cnn_vision",
-                                    name: "Convolutional Networks",
-                                    subtitle: "Image recognition and spatial data processing.",
-                                    dueDate: "Feb 12",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "transformers_nlp",
-                                    name: "Transformers & Attention",
-                                    subtitle: "The architecture behind modern NLP.",
-                                    dueDate: "Feb 18",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 6: Large Language Models (LLMs)
-                        Milestone(
-                            title: "Generative AI",
-                            subtitle: "Modern LLM development",
-                            iconName: "sparkles",
-                            iconColor: UIColor(hex: "#F1C40F"),
-                            iconBackgroundColor: UIColor(hex: "#FEF9E7"),
-                            lessons: [
-                                Lesson(
-                                    id: "llm_finetuning",
-                                    name: "Fine-tuning LLMs",
-                                    subtitle: "Customizing GPT models for specific tasks.",
-                                    dueDate: "Feb 25",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "prompt_engineering",
-                                    name: "Prompt Engineering",
-                                    subtitle: "Advanced techniques for GenAI control.",
-                                    dueDate: "Mar 01",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 7: MLOps & Deployment
-                        Milestone(
-                            title: "AI Production",
-                            subtitle: "Deploying intelligent systems",
-                            iconName: "shippingbox.fill",
-                            iconColor: UIColor(hex: "#34495E"),
-                            iconBackgroundColor: UIColor(hex: "#EBEDEF"),
-                            lessons: [
-                                Lesson(
-                                    id: "model_deployment",
-                                    name: "Model Serving",
-                                    subtitle: "Deploying models as APIs using FastAPI.",
-                                    dueDate: "Mar 08",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "monitoring_drift",
-                                    name: "Monitoring & Drift",
-                                    subtitle: "Ensuring AI reliability in production.",
-                                    dueDate: "Mar 12",
-                                    status: .startTest
-                                )
-                            ]
-                        )
+
+            // Milestone 2: Supervised Learning
+            Milestone(
+                title: "Supervised Learning",
+                subtitle: "Predictive modeling",
+                iconName: "chart.line.uptrend.xyaxis",
+                iconColor: UIColor(hex: "#E67E22"),
+                iconBackgroundColor: UIColor(hex: "#FDF2E9"),
+                lessons: [
+
+                    Lesson(
+                        id: "regression_basics",
+                        name: "Regression Analysis",
+                        subtitle: "Linear and Polynomial regression techniques.",
+                        dueDate: "Jan 12",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "regression_basics", title: "Linear Regression Path", duration: "15:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=PaFPbb66DxQ"),
+                            VideoResource(lessonId: "regression_basics", title: "Cost Function Explained", duration: "12:40", thumbnailName: "vid_reg_b", videoURL: "https://www.youtube.com/watch?v=OglS5r0lJqY"),
+                            VideoResource(lessonId: "regression_basics", title: "Overfitting vs Underfitting", duration: "11:20", thumbnailName: "vid_reg_c", videoURL: "https://www.youtube.com/watch?v=RS0sI-mpM6Y")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "regression_basics", title: "Linear Regression Explained", readTime: "8 min read", docURL: "https://www.ibm.com/topics/linear-regression"),
+                            DocResource(lessonId: "regression_basics", title: "R-Squared & Metrics", readTime: "6 min read", docURL: "https://statisticsbyjim.com/regression/r-squared/"),
+                            DocResource(lessonId: "regression_basics", title: "Bias–Variance Tradeoff", readTime: "7 min read", docURL: "https://ml-cheatsheet.readthedocs.io/en/latest/bias_variance.html")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "classification_models",
+                        name: "Classification Mastery",
+                        subtitle: "Logistic Regression, SVMs, and Decision Trees.",
+                        dueDate: "Jan 15",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "classification_models", title: "Logistic Regression Intuition", duration: "14:00", thumbnailName: "vid_cls", videoURL: "https://www.youtube.com/watch?v=yIYKR4sgzI8"),
+                            VideoResource(lessonId: "classification_models", title: "Decision Trees Explained", duration: "16:10", thumbnailName: "vid_cls_b", videoURL: "https://www.youtube.com/watch?v=ZVR2Way4nwQ"),
+                            VideoResource(lessonId: "classification_models", title: "Support Vector Machines", duration: "13:50", thumbnailName: "vid_cls_c", videoURL: "https://www.youtube.com/watch?v=efR1C6CvhmE")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "classification_models", title: "Classification Algorithms", readTime: "8 min read", docURL: "https://towardsdatascience.com/classification-algorithms-95f3a29e7e1"),
+                            DocResource(lessonId: "classification_models", title: "Confusion Matrix Guide", readTime: "6 min read", docURL: "https://scikit-learn.org/stable/modules/model_evaluation.html"),
+                            DocResource(lessonId: "classification_models", title: "Precision vs Recall", readTime: "5 min read", docURL: "https://developers.google.com/machine-learning/crash-course/classification/precision-and-recall")
+                        ]
+                    )
+                ]
+            ),
+
+           
         ],
         isStarted: false
     ),
+    
+    
 
-    //App Development
+
+    // App Development
     Roadmap(
         title: "App Development",
         subtitle: "Full Stack Builder",
@@ -1238,6 +912,8 @@ var allRoadmapsData: [Roadmap] = [
         imageName: "appdev-role 1",
         percentage: 65,
         milestones: [
+
+            // Milestone 1: UI Development
             Milestone(
                 title: "UI Development",
                 subtitle: "Build app interfaces",
@@ -1245,6 +921,7 @@ var allRoadmapsData: [Roadmap] = [
                 iconColor: UIColor(hex: "#007AFF"),
                 iconBackgroundColor: UIColor(hex: "#E5F0FF"),
                 lessons: [
+
                     Lesson(
                         id: "ui_design",
                         name: "UI Design Principles",
@@ -1252,172 +929,185 @@ var allRoadmapsData: [Roadmap] = [
                         dueDate: "Jan 8",
                         status: .startTest,
                         videos: [
-                            VideoResource(lessonId: "ui_design", title: "Principles of Clean UI", duration: "08:30", thumbnailName: "vid_ui", videoURL: "https://www.youtube.com/watch?v=7ZfKovNAtpw")
+                            VideoResource(lessonId: "ui_design", title: "Principles of Clean UI", duration: "08:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=7ZfKovNAtpw"),
+                            VideoResource(lessonId: "ui_design", title: "Typography for Apps", duration: "10:15", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=O_XJ5J8r3yA"),
+                            VideoResource(lessonId: "ui_design", title: "Accessibility Basics", duration: "09:40", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=Kq9MtJw9HwY")
                         ],
                         documents: [
-                            DocResource(lessonId: "ui_design", title: "Apple Human Interface Guidelines", readTime: "20 min read", docURL: "https://developer.apple.com/design/human-interface-guidelines/")
+                            DocResource(lessonId: "ui_design", title: "Apple Human Interface Guidelines", readTime: "20 min read", docURL: "https://developer.apple.com/design/human-interface-guidelines/"),
+                            DocResource(lessonId: "ui_design", title: "Accessibility for iOS", readTime: "10 min read", docURL: "https://developer.apple.com/accessibility/"),
+                            DocResource(lessonId: "ui_design", title: "Mobile UI Best Practices", readTime: "8 min read", docURL: "https://uxdesign.cc/mobile-ui-design-best-practices-6c5c6baf9d84")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "ui_prototyping",
+                        name: "UI Prototyping",
+                        subtitle: "Wireframes and rapid design.",
+                        dueDate: "Jan 9",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "ui_prototyping", title: "Wireframing Basics", duration: "09:20", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=qpH7-KFWZRI"),
+                            VideoResource(lessonId: "ui_prototyping", title: "Figma for Beginners", duration: "12:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=FTFaQWZBqQ8"),
+                            VideoResource(lessonId: "ui_prototyping", title: "Design to Code Flow", duration: "08:50", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=9zJpW5R4yqU")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "ui_prototyping", title: "Wireframing Guide", readTime: "7 min read", docURL: "https://careerfoundry.com/en/blog/ux-design/what-is-a-wireframe-guide/"),
+                            DocResource(lessonId: "ui_prototyping", title: "Figma Documentation", readTime: "10 min read", docURL: "https://help.figma.com/"),
+                            DocResource(lessonId: "ui_prototyping", title: "UI Prototyping Tips", readTime: "6 min read", docURL: "https://uxdesign.cc/prototyping-tips-4c0bdfd9a3d7")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "design_systems",
+                        name: "Design Systems",
+                        subtitle: "Reusable UI components.",
+                        dueDate: "Jan 10",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "design_systems", title: "What is a Design System?", duration: "10:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=wc5krC28ynQ"),
+                            VideoResource(lessonId: "design_systems", title: "Component Libraries", duration: "09:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=GzV2xR7C4yM"),
+                            VideoResource(lessonId: "design_systems", title: "Consistency in UI", duration: "08:40", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=Kj8F1ZQ8g4M")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "design_systems", title: "Design Systems Handbook", readTime: "9 min read", docURL: "https://www.designsystems.com/what-is-a-design-system/"),
+                            DocResource(lessonId: "design_systems", title: "Apple Design Resources", readTime: "7 min read", docURL: "https://developer.apple.com/design/"),
+                            DocResource(lessonId: "design_systems", title: "UI Consistency Guide", readTime: "6 min read", docURL: "https://uxdesign.cc/ui-consistency-guide-3a7f6c8c91e7")
                         ]
                     )
                 ]
             ),
-            // Milestone 2: Native iOS Development (SwiftUI)
-                        Milestone(
-                            title: "Frontend Frameworks",
-                            subtitle: "SwiftUI & State Management",
-                            iconName: "swift",
-                            iconColor: UIColor(hex: "#F05138"),
-                            iconBackgroundColor: UIColor(hex: "#FEEBE9"),
-                            lessons: [
-                                Lesson(
-                                    id: "swiftui_basics",
-                                    name: "Declarative UI with SwiftUI",
-                                    subtitle: "Views, Stacks, and Lists.",
-                                    dueDate: "Jan 15",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "swiftui_basics", title: "SwiftUI for Beginners", duration: "15:20", thumbnailName: "vid_swiftui", videoURL: "https://www.youtube.com/watch?v=b1oC7sli_6Q")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "state_management",
-                                    name: "Data Flow & State",
-                                    subtitle: "@State, @Binding, and @EnvironmentObject.",
-                                    dueDate: "Jan 18",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 3: Networking & API Integration
-                        Milestone(
-                            title: "Data & Networking",
-                            subtitle: "Connect to the world",
-                            iconName: "network",
-                            iconColor: UIColor(hex: "#5856D6"),
-                            iconBackgroundColor: UIColor(hex: "#EFEFFD"),
-                            lessons: [
-                                Lesson(
-                                    id: "json_parsing",
-                                    name: "REST APIs & JSON",
-                                    subtitle: "Using URLSession and Codable to fetch data.",
-                                    dueDate: "Jan 25",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "json_parsing", title: "Networking in Swift", duration: "12:45", thumbnailName: "vid_network", videoURL: "https://www.youtube.com/watch?v=cuEtnjdC670")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "async_await",
-                                    name: "Concurrency",
-                                    subtitle: "Mastering Async/Await for smooth performance.",
-                                    dueDate: "Jan 30",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 4: Backend Development
-                        Milestone(
-                            title: "Backend Foundations",
-                            subtitle: "Node.js & Databases",
-                            iconName: "server.rack",
-                            iconColor: UIColor(hex: "#34C759"),
-                            iconBackgroundColor: UIColor(hex: "#EBF9EE"),
-                            lessons: [
-                                Lesson(
-                                    id: "express_js",
-                                    name: "Server-Side Logic",
-                                    subtitle: "Building APIs with Express.js.",
-                                    dueDate: "Feb 05",
-                                    status: .startTest,
-                                    videos: [
-                                        VideoResource(lessonId: "express_js", title: "Express.js Crash Course", duration: "20:00", thumbnailName: "vid_express", videoURL: "https://www.youtube.com/watch?v=L72fhGm1tfE")
-                                    ]
-                                ),
-                                Lesson(
-                                    id: "sql_db",
-                                    name: "Database Management",
-                                    subtitle: "PostgreSQL and relational data modeling.",
-                                    dueDate: "Feb 10",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 5: Local Persistence & Security
-                        Milestone(
-                            title: "Advanced App Logic",
-                            subtitle: "Persistence & Auth",
-                            iconName: "lock.shield.fill",
-                            iconColor: UIColor(hex: "#FF9500"),
-                            iconBackgroundColor: UIColor(hex: "#FFF4E6"),
-                            lessons: [
-                                Lesson(
-                                    id: "swift_data",
-                                    name: "SwiftData & CoreData",
-                                    subtitle: "Saving user data locally on the device.",
-                                    dueDate: "Feb 18",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "user_auth",
-                                    name: "Firebase Authentication",
-                                    subtitle: "Implementing Login, Signup, and Social Auth.",
-                                    dueDate: "Feb 22",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 6: Architecture & Testing
-                        Milestone(
-                            title: "Pro Architecture",
-                            subtitle: "MVVM & Unit Testing",
-                            iconName: "square.stack.3d.up.fill",
-                            iconColor: UIColor(hex: "#AF52DE"),
-                            iconBackgroundColor: UIColor(hex: "#F7EEFD"),
-                            lessons: [
-                                Lesson(
-                                    id: "mvvm_pattern",
-                                    name: "MVVM Architecture",
-                                    subtitle: "Separating logic from view for scalability.",
-                                    dueDate: "Mar 01",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "unit_testing",
-                                    name: "XCTest & Debugging",
-                                    subtitle: "Writing tests to ensure app reliability.",
-                                    dueDate: "Mar 05",
-                                    status: .startTest
-                                )
-                            ]
-                        ),
-                        
-                        // Milestone 7: Deployment & App Store
-                        Milestone(
-                            title: "Ship to Store",
-                            subtitle: "Deployment & Analytics",
-                            iconName: "paperplane.fill",
-                            iconColor: UIColor(hex: "#007AFF"),
-                            iconBackgroundColor: UIColor(hex: "#E5F0FF"),
-                            lessons: [
-                                Lesson(
-                                    id: "app_store_connect",
-                                    name: "App Store Connect",
-                                    subtitle: "Preparing metadata, screenshots, and privacy info.",
-                                    dueDate: "Mar 12",
-                                    status: .startTest
-                                ),
-                                Lesson(
-                                    id: "testflight",
-                                    name: "Beta Testing",
-                                    subtitle: "Using TestFlight for user feedback.",
-                                    dueDate: "Mar 15",
-                                    status: .startTest
-                                )
-                            ]
-                        )
+
+            // Milestone 2: Frontend Frameworks
+            Milestone(
+                title: "Frontend Frameworks",
+                subtitle: "SwiftUI & State Management",
+                iconName: "swift",
+                iconColor: UIColor(hex: "#F05138"),
+                iconBackgroundColor: UIColor(hex: "#FEEBE9"),
+                lessons: [
+
+                    Lesson(
+                        id: "swiftui_basics",
+                        name: "Declarative UI with SwiftUI",
+                        subtitle: "Views, Stacks, and Lists.",
+                        dueDate: "Jan 15",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "swiftui_basics", title: "SwiftUI for Beginners", duration: "15:20", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=b1oC7sli_6Q"),
+                            VideoResource(lessonId: "swiftui_basics", title: "Stacks & Layout System", duration: "12:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=HXk9mWJZzZ8"),
+                            VideoResource(lessonId: "swiftui_basics", title: "Lists & Navigation", duration: "11:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=ZyK5J5t9ZsU")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "swiftui_basics", title: "SwiftUI Documentation", readTime: "15 min read", docURL: "https://developer.apple.com/documentation/swiftui/"),
+                            DocResource(lessonId: "swiftui_basics", title: "SwiftUI Layout Guide", readTime: "8 min read", docURL: "https://www.hackingwithswift.com/quick-start/swiftui"),
+                            DocResource(lessonId: "swiftui_basics", title: "Common SwiftUI Patterns", readTime: "7 min read", docURL: "https://www.swiftbysundell.com/articles/swiftui-view-patterns/")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "state_management",
+                        name: "Data Flow & State",
+                        subtitle: "@State, @Binding, and @EnvironmentObject.",
+                        dueDate: "Jan 18",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "state_management", title: "Understanding @State", duration: "10:00", thumbnailName: "vid_state", videoURL: "https://www.youtube.com/watch?v=F2G2FJ9ZP5Q"),
+                            VideoResource(lessonId: "state_management", title: "@Binding Explained", duration: "09:30", thumbnailName: "vid_state_b",
+                            videoURL: "https://www.youtube.com/watch?v=Y2s0rK5x4cA"),
+                            VideoResource(lessonId: "state_management", title: "Environment Objects", duration: "11:15", thumbnailName: "vid_state_c", videoURL: "https://www.youtube.com/watch?v=R5M3jTzE9sY")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "state_management", title: "SwiftUI Data Flow", readTime: "10 min read", docURL: "https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app"),
+                            DocResource(lessonId: "state_management", title: "@State vs @ObservedObject", readTime: "7 min read", docURL: "https://www.avanderlee.com/swiftui/state-observedobject-environmentobject/"),
+                            DocResource(lessonId: "state_management", title: "SwiftUI State Best Practices", readTime: "6 min read", docURL: "https://www.swiftwithmajid.com/2020/07/15/understanding-state-in-swiftui/")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "swiftui_navigation",
+                        name: "Navigation & Routing",
+                        subtitle: "NavigationStack and flows.",
+                        dueDate: "Jan 20",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "swiftui_navigation", title: "NavigationStack Explained", duration: "12:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=7yRz5s8x5xA"),
+                            VideoResource(lessonId: "swiftui_navigation", title: "Deep Linking", duration: "09:40", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=QH9F6yq3z5w"),
+                            VideoResource(lessonId: "swiftui_navigation", title: "App Flow Design", duration: "08:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=K8R9GmFz0Uo")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "swiftui_navigation", title: "SwiftUI Navigation Guide", readTime: "8 min read", docURL: "https://developer.apple.com/documentation/swiftui/navigationstack"),
+                            DocResource(lessonId: "swiftui_navigation", title: "Navigation Patterns", readTime: "6 min read", docURL: "https://www.swiftbysundell.com/articles/navigation-in-swiftui/"),
+                            DocResource(lessonId: "swiftui_navigation", title: "Routing Best Practices", readTime: "5 min read", docURL: "https://developer.apple.com/documentation/uikit/view_controllers/providing_a_custom_navigation_experience")
+                        ]
+                    )
+                ]
+            ),
+
+            // Milestone 3: Data & Networking
+            Milestone(
+                title: "Data & Networking",
+                subtitle: "Connect to the world",
+                iconName: "network",
+                iconColor: UIColor(hex: "#5856D6"),
+                iconBackgroundColor: UIColor(hex: "#EFEFFD"),
+                lessons: [
+
+                    Lesson(
+                        id: "json_parsing",
+                        name: "REST APIs & JSON",
+                        subtitle: "Using URLSession and Codable to fetch data.",
+                        dueDate: "Jan 25",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "json_parsing", title: "Networking in Swift", duration: "12:45", thumbnailName: "vid_network", videoURL: "https://www.youtube.com/watch?v=cuEtnjdC670"),
+                            VideoResource(lessonId: "json_parsing", title: "Codable Explained", duration: "10:20", thumbnailName: "vid_network_b", videoURL: "https://www.youtube.com/watch?v=ZQbYjCwXvYk"),
+                            VideoResource(lessonId: "json_parsing", title: "Error Handling in APIs", duration: "09:50", thumbnailName: "vid_network_c", videoURL: "https://www.youtube.com/watch?v=4l0wQx6r4M8")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "json_parsing", title: "URLSession Guide", readTime: "12 min read", docURL: "https://developer.apple.com/documentation/foundation/urlsession"),
+                            DocResource(lessonId: "json_parsing", title: "Swift Codable Guide", readTime: "8 min read", docURL: "https://www.swiftbysundell.com/articles/codable/"),
+                            DocResource(lessonId: "json_parsing", title: "REST API Concepts", readTime: "6 min read", docURL: "https://restfulapi.net/")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "async_await",
+                        name: "Concurrency",
+                        subtitle: "Mastering Async/Await for smooth performance.",
+                        dueDate: "Jan 30",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "async_await", title: "Async Await in Swift", duration: "14:00", thumbnailName: "vid_async", videoURL: "https://www.youtube.com/watch?v=QmYd9x0yGvY"),
+                            VideoResource(lessonId: "async_await", title: "Concurrency Explained", duration: "12:10", thumbnailName: "vid_async_b", videoURL: "https://www.youtube.com/watch?v=V6yQFZ7Z0yA"),
+                            VideoResource(lessonId: "async_await", title: "Task & MainActor", duration: "10:40", thumbnailName: "vid_async_c", videoURL: "https://www.youtube.com/watch?v=Yf6zF7t2ZQ8")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "async_await", title: "Swift Concurrency Overview", readTime: "10 min read", docURL: "https://developer.apple.com/documentation/swift/concurrency"),
+                            DocResource(lessonId: "async_await", title: "Async Await Patterns", readTime: "7 min read", docURL: "https://www.avanderlee.com/swift/async-await/"),
+                            DocResource(lessonId: "async_await", title: "Concurrency Best Practices", readTime: "6 min read", docURL: "https://www.swiftbysundell.com/articles/concurrency-in-swift/")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "network_security",
+                        name: "Network Security",
+                        subtitle: "Secure API communication.",
+                        dueDate: "Feb 1",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "network_security", title: "HTTPS & TLS", duration: "10:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=E4oYjzqZ0zY"),
+                            VideoResource(lessonId: "network_security", title: "API Authentication", duration: "09:20", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=7Q17ubqLfaM"),
+                            VideoResource(lessonId: "network_security", title: "Security Best Practices", duration: "08:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=Qd5FzJrZkK4")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "network_security", title: "API Security Guide", readTime: "8 min read", docURL: "https://owasp.org/www-project-api-security/"),
+                            DocResource(lessonId: "network_security", title: "HTTPS Explained", readTime: "6 min read", docURL: "https://developer.mozilla.org/en-US/docs/Web/HTTP/Overview"),
+                            DocResource(lessonId: "network_security", title: "Secure Networking", readTime: "5 min read", docURL: "https://developer.apple.com/documentation/security")
+                        ]
+                    )
+                ]
+            )
         ],
         isStarted: false
     ),
@@ -1618,7 +1308,7 @@ var allRoadmapsData: [Roadmap] = [
     Roadmap(
         title: "Blockchain Development",
         subtitle: "Web3 & Decentralized Systems",
-        description: "Master the foundations of distributed ledgers, smart contracts, and decentralized application (dApp) architecture.",
+        description: "Master the foundations of smart contracts and decentralized architecture.",
         imageName: "blockchain",
         percentage: 0,
         milestones: [
@@ -1783,6 +1473,160 @@ var allRoadmapsData: [Roadmap] = [
                     )
                 ]
             )
+        ],
+        isStarted: false
+    ),
+    
+    //Data Analytics
+    Roadmap(
+        title: "Data Analytics",
+        subtitle: "Personalised Roadmap",
+        description: "Learn to collect, clean, and visualize complex datasets for actionable insights.",
+        imageName: "data-analytics-role",
+        percentage: 90,
+        milestones: [
+
+            // Milestone 1
+            Milestone(
+                title: "Data Fundamentals",
+                subtitle: "Understand and prepare data",
+                iconName: "tray.full.fill",
+                iconColor: UIColor(hex: "#1950A2"),
+                iconBackgroundColor: UIColor(hex: "#E0ECFC"),
+                lessons: [
+
+                    Lesson(
+                        id: "data_types",
+                        name: "Data Cleaning Basics",
+                        subtitle: "Categorize quantitative and qualitative data.",
+                        dueDate: "Dec 18",
+                        status: .seeResults,
+                        videos: [
+                            VideoResource(lessonId: "data_types", title: "Quantitative vs Qualitative", duration: "10:20", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=7bsNWqBAyk8"),
+                            VideoResource(lessonId: "data_types", title: "Types of Data Explained", duration: "11:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=2V9mKj0l3yU"),
+                            VideoResource(lessonId: "data_types", title: "Categorical vs Numerical Data", duration: "09:40", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=Y6XK8XGJ5J8")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "data_types", title: "Data Classification Guide", readTime: "5 min read", docURL: "https://en.wikipedia.org/wiki/Statistical_data_type"),
+                            DocResource(lessonId: "data_types", title: "Levels of Measurement", readTime: "6 min read", docURL: "https://statistics.laerd.com/statistical-guides/types-of-variable.php"),
+                            DocResource(lessonId: "data_types", title: "Qualitative vs Quantitative Data", readTime: "7 min read", docURL: "https://www.scribbr.com/methodology/qualitative-vs-quantitative-research/")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "data_collection",
+                        name: "Data Collection Methods",
+                        subtitle: "Surveys, APIs, and web scraping basics.",
+                        dueDate: "Dec 18",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "data_collection", title: "Introduction to APIs", duration: "15:45", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=ov7vS0X2_50"),
+                            VideoResource(lessonId: "data_collection", title: "Survey Design Basics", duration: "12:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=G4J0nQz5J7I"),
+                            VideoResource(lessonId: "data_collection", title: "Web Scraping Overview", duration: "14:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=RUQWPJ1T6Zc")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "data_collection", title: "Web Scraping 101", readTime: "10 min read", docURL: "https://www.scrapingbee.com/blog/web-scraping-101/"),
+                            DocResource(lessonId: "data_collection", title: "API Data Collection", readTime: "8 min read", docURL: "https://www.redhat.com/en/topics/api/what-is-a-rest-api"),
+                            DocResource(lessonId: "data_collection", title: "Survey Sampling Methods", readTime: "7 min read", docURL: "https://www.questionpro.com/blog/sampling-methods/")
+                        ]
+                    )
+                ]
+            ),
+
+            // Milestone 2
+            Milestone(
+                title: "Analytics Tools",
+                subtitle: "Excel, SQL, Python",
+                iconName: "hammer.fill",
+                iconColor: UIColor(hex: "#D4A056"),
+                iconBackgroundColor: UIColor(hex: "#FAF3E7"),
+                lessons: [
+
+                    Lesson(
+                        id: "excel_basics",
+                        name: "Excel Mastery",
+                        subtitle: "Pivot tables and advanced lookups.",
+                        dueDate: "Dec 22",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "excel_basics", title: "Advanced Excel for Data", duration: "22:10", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=0nbkaYsR94c"),
+                            VideoResource(lessonId: "excel_basics", title: "Pivot Tables Deep Dive", duration: "18:40", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=9NUjHBNWe9M"),
+                            VideoResource(lessonId: "excel_basics", title: "Excel Lookups Explained", duration: "14:30", thumbnailName: "techwithtim_ml", videoURL: "https://www.youtube.com/watch?v=U5xXq7Xz1R8")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "excel_basics", title: "Excel Pivot Tables Guide", readTime: "10 min read", docURL: "https://support.microsoft.com/excel-pivot-tables"),
+                            DocResource(lessonId: "excel_basics", title: "VLOOKUP vs XLOOKUP", readTime: "8 min read", docURL: "https://www.excelcampus.com/functions/xlookup/"),
+                            DocResource(lessonId: "excel_basics", title: "Excel Best Practices", readTime: "6 min read", docURL: "https://www.contextures.com/excel-best-practices.html")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "sql_queries",
+                        name: "SQL Queries & Joins",
+                        subtitle: "Relational database querying essentials.",
+                        dueDate: "Dec 22",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "sql_queries", title: "SQL Joins Explained", duration: "16:20", thumbnailName: "vid_sql", videoURL: "https://www.youtube.com/watch?v=9yeOJ0ZMUYw"),
+                            VideoResource(lessonId: "sql_queries", title: "GROUP BY & HAVING", duration: "14:10", thumbnailName: "vid_sql_b", videoURL: "https://www.youtube.com/watch?v=7S_tz1z_5bA"),
+                            VideoResource(lessonId: "sql_queries", title: "SQL Subqueries", duration: "12:45", thumbnailName: "vid_sql_c", videoURL: "https://www.youtube.com/watch?v=2K9a3t9JXqM")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "sql_queries", title: "The SQL Joins Handbook", readTime: "12 min read", docURL: "https://www.sqlshack.com/sql-join-overview-and-tutorial/"),
+                            DocResource(lessonId: "sql_queries", title: "SQL Execution Order", readTime: "7 min read", docURL: "https://mode.com/sql-tutorial/sql-order-of-operations/"),
+                            DocResource(lessonId: "sql_queries", title: "SQL Subqueries Guide", readTime: "8 min read", docURL: "https://www.w3schools.com/sql/sql_subqueries.asp")
+                        ]
+                    )
+                ]
+            ),
+
+            // Milestone 3
+            Milestone(
+                title: "Data Visualization",
+                subtitle: "Tell stories with data",
+                iconName: "chart.bar.xaxis",
+                iconColor: UIColor(hex: "#E67E22"),
+                iconBackgroundColor: UIColor(hex: "#FDF2E9"),
+                lessons: [
+
+                    Lesson(
+                        id: "viz_principles",
+                        name: "Visualization Theory",
+                        subtitle: "Choosing the right chart for your data.",
+                        dueDate: "Jan 05",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "viz_principles", title: "Effective Data Viz", duration: "12:45", thumbnailName: "vid_viz", videoURL: "https://www.youtube.com/watch?v=hE709Ssh-m0"),
+                            VideoResource(lessonId: "viz_principles", title: "Chart Selection Guide", duration: "10:20", thumbnailName: "vid_viz_b", videoURL: "https://www.youtube.com/watch?v=AdSZJzb-aX8"),
+                            VideoResource(lessonId: "viz_principles", title: "Avoiding Visualization Mistakes", duration: "09:30", thumbnailName: "vid_viz_c", videoURL: "https://www.youtube.com/watch?v=Yd1M4o0uZQw")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "viz_principles", title: "Data Visualization Principles", readTime: "8 min read", docURL: "https://www.data-to-viz.com/"),
+                            DocResource(lessonId: "viz_principles", title: "Choosing Charts", readTime: "6 min read", docURL: "https://www.storytellingwithdata.com/chart-guide"),
+                            DocResource(lessonId: "viz_principles", title: "Common Visualization Errors", readTime: "5 min read", docURL: "https://www.tableau.com/learn/articles/data-visualization-tips")
+                        ]
+                    ),
+
+                    Lesson(
+                        id: "tableau_basics",
+                        name: "Tableau Essentials",
+                        subtitle: "Building interactive dashboards.",
+                        dueDate: "Jan 10",
+                        status: .startTest,
+                        videos: [
+                            VideoResource(lessonId: "tableau_basics", title: "Tableau Basics", duration: "15:30", thumbnailName: "vid_tableau", videoURL: "https://www.youtube.com/watch?v=TPMlZxRRaBQ"),
+                            VideoResource(lessonId: "tableau_basics", title: "Tableau Dashboards", duration: "18:00", thumbnailName: "vid_tableau_b", videoURL: "https://www.youtube.com/watch?v=K1xR9z6y8bU"),
+                            VideoResource(lessonId: "tableau_basics", title: "Interactive Filters", duration: "11:20", thumbnailName: "vid_tableau_c", videoURL: "https://www.youtube.com/watch?v=jEgVto5QME8")
+                        ],
+                        documents: [
+                            DocResource(lessonId: "tableau_basics", title: "Tableau Starter Guide", readTime: "15 min read", docURL: "https://help.tableau.com/current/guides/get-started-tutorial/en-us/get-started-tutorial-home.htm"),
+                            DocResource(lessonId: "tableau_basics", title: "Dashboard Design Tips", readTime: "8 min read", docURL: "https://www.tableau.com/learn/articles/dashboard-design"),
+                            DocResource(lessonId: "tableau_basics", title: "Tableau Best Practices", readTime: "6 min read", docURL: "https://www.thedataschool.co.uk/tableau-best-practices/")
+                        ]
+                    )
+                ]
+            )
+
         ],
         isStarted: false
     ),
