@@ -16,44 +16,37 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         setupUI()
         setupCloseButton()
     }
-    
-   
+
     private func setupCloseButton() {
-
-        let blurEffect = UIBlurEffect(style: .systemMaterial)
-        let blurView = UIVisualEffectView(effect: blurEffect)
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        blurView.layer.cornerRadius = 18
-        blurView.clipsToBounds = true
-
-        let closeButton = UIButton(type: .system)
-        closeButton.translatesAutoresizingMaskIntoConstraints = false
-        closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        closeButton.tintColor = .label
-        closeButton.addTarget(self, action: #selector(closeButtonTapped(_:)), for: .touchUpInside)
-
-        blurView.contentView.addSubview(closeButton)
-        view.addSubview(blurView)
-
+            let button = UIButton(type: .system)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            
+            let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium)
+            
+            let image = UIImage(
+                systemName: "xmark",
+                withConfiguration: config
+            )
+            
+            button.setImage(image, for: .normal)
+            button.tintColor = .label
+            button.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.85)
+            button.layer.cornerRadius = 20
+            button.layer.shadowColor = UIColor.black.cgColor
+            button.layer.shadowOpacity = 0.08
+            button.layer.shadowRadius = 6
+            button.layer.shadowOffset = CGSize(width: 0, height: 2)
+           
+            view.addSubview(button)
+            button.addTarget(self, action: #selector(closeButtonTapped), for: .touchUpInside)
+            
         NSLayoutConstraint.activate([
-            // Blur container
-            blurView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            blurView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            blurView.widthAnchor.constraint(equalToConstant: 36),
-            blurView.heightAnchor.constraint(equalToConstant: 36),
-
-            // Button inside blur
-            closeButton.centerXAnchor.constraint(equalTo: blurView.centerXAnchor),
-            closeButton.centerYAnchor.constraint(equalTo: blurView.centerYAnchor),
-            closeButton.widthAnchor.constraint(equalToConstant: 20),
-            closeButton.heightAnchor.constraint(equalToConstant: 20)
+            button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            button.widthAnchor.constraint(equalToConstant: 40),
+            button.heightAnchor.constraint(equalToConstant: 40)
         ])
-
-        // Optional subtle border
-        blurView.layer.borderWidth = 0.5
-        blurView.layer.borderColor = UIColor.separator.cgColor
-    }
-
+        }
     @IBAction func closeButtonTapped(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }

@@ -9,14 +9,14 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         RoadmapStore.shared.roadmaps
     }
     
-    let personalisedRoadmap = allRoadmapsData.first
+    let personalisedRoadmap = allRoadmapsData.last
     
     var visibleRoadmaps: [Roadmap] {
-        guard let personalised = allRoadmaps.first else { return [] }
+        guard let personalised = personalisedRoadmap else { return [] }
 
-        let startedRoadmaps = allRoadmaps
-            .dropFirst()
-            .filter { $0.isStarted }
+            let startedRoadmaps = allRoadmaps.filter { roadmap in
+                return roadmap.isStarted && roadmap.title != personalised.title
+            }
 
         return [personalised] + startedRoadmaps
     }
@@ -24,8 +24,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     var trendingData: [Roadmap] {
             RoadmapStore.shared.roadmaps
         }
-    
-        
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -83,15 +81,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
     
     func numberOfSections(in collectionView: UICollectionView) -> Int { 6 }
-    //changed t
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        if section == 1 { return
-//
-//            OnboardingManager.shared.isOnboardingFullyComplete() ?
-//          
-//            roadmapData.count : 1 }
-//        return section == 5 ? trendingData.count : 1
-//    }
+
     func collectionView(
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
@@ -114,19 +104,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "StatsCard", for: indexPath) as! StatsCard
             cell.configure(with: UserStats.shared)
             return cell
-            //changed T
-//        case 1:
-//            if OnboardingManager.shared.isOnboardingFullyComplete() {
-//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "roadmapScrollCollectionViewCell", for: indexPath) as! roadmapScrollCollectionViewCell
-//                let data = roadmapData[indexPath.row]
-//                cell.configure(title: data.title, subtitle: data.subtitle, percentage: data.percentage, milestone: data.milestone)
-//                return cell
-//            } else {
-//                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "onboardingNotCompleted", for: indexPath) as! onboardingNotCompleted
-//                cell.progressBarOnboarding.progress = OnboardingManager.shared.getProgress()
-//                cell.continuePersonalisationButton.addTarget(self, action: #selector(continueOnboarding), for: .touchUpInside)
-//                return cell
-//            }
+
         case 1:
             if OnboardingManager.shared.isOnboardingCompleted {
                 let cell = collectionView.dequeueReusableCell(
@@ -195,16 +173,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         let selectedRoadmap: Roadmap
         
-        // Check which section was tapped to pull from the correct data array
         if indexPath.section == 1 {
-            // Section 1: My Personalised Roadmaps
             guard OnboardingManager.shared.isOnboardingCompleted else { return }
             selectedRoadmap = visibleRoadmaps[indexPath.row]
         } else if indexPath.section == 5 {
-            // Section 5: Trending Domains
             selectedRoadmap = trendingData[indexPath.row]
         } else {
-            // Other sections (Stats, Journey, etc.) are not handled here
             return
         }
         
@@ -218,7 +192,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             return
         }
         
-        // Pass the Roadmap object (e.g., Data Analytics, App Development)
         vc.roadmap = selectedRoadmap
         
         navigationController?.pushViewController(vc, animated: true)
@@ -241,8 +214,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
         header.titleLabel.text = [
             "",
-            //changed t
-            //OnboardingManager.shared.isOnboardingFullyComplete()
             OnboardingManager.shared.isOnboardingCompleted ?
             "My Roadmaps" : "Finish Setup",
             "My Journey",
@@ -272,12 +243,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     func createLayout() -> UICollectionViewLayout {
         UICollectionViewCompositionalLayout { index, env in
             let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: .init(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(40)), elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-            //CHANGED T
-            //let isDone = OnboardingManager.shared.isOnboardingFullyComplete()
+
             let isDone = OnboardingManager.shared.isOnboardingCompleted
 
-//            added T
-//            if index == 1 { return self.layoutSection(height: isDone ? 165 : 170, scroll: isDone ? .groupPaging : .none, header: header, width: isDone ? 0.85 : 1.0) }
             if index == 1 {
 
                 let roadmapCount = OnboardingManager.shared.isOnboardingCompleted
