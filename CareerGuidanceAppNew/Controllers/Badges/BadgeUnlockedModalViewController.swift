@@ -49,14 +49,91 @@ class BadgeUnlockedModalViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseOut, animations: {
-            self.view.backgroundColor = UIColor.black.withAlphaComponent(0.4)
-            self.modalCardCenterYConstraint.constant = 0
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: .curveEaseOut, animations: {
+                self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                self.modalCardCenterYConstraint.constant = 0
+                self.view.layoutIfNeeded()
+            }) { _ in
+                self.triggerBadgeFlip()
+            }
+    }
+    private func createConfetti() {
+        let emitter = CAEmitterLayer()
+        emitter.emitterPosition = CGPoint(x: view.center.x, y: view.center.y - 50)
+        emitter.emitterShape = .point
+        emitter.emitterSize = CGSize(width: 10, height: 10)
+        
+        let colors: [UIColor] = [.systemYellow, .systemPink, .systemBlue, .systemGreen, .systemOrange]
+        
+        let cells: [CAEmitterCell] = colors.map { color in
+            let cell = CAEmitterCell()
+            cell.birthRate = 15
+            cell.lifetime = 2.0
+            cell.velocity = 200
+            cell.velocityRange = 100
+            cell.emissionRange = .pi * 2
+            cell.spin = 4
+            cell.scale = 0.1
+            cell.scaleRange = 0.05
+            cell.contents = drawConfettiShape()?.cgImage
+            cell.color = color.cgColor
+            return cell
+        }
+        
+        emitter.emitterCells = cells
+        view.layer.insertSublayer(emitter, below: modalCardView.layer)
+        
+        // Stop emitting after a brief burst
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            emitter.birthRate = 0
+        }
     }
 
-
+    private func drawConfettiShape() -> UIImage? {
+        let size = CGSize(width: 10, height: 10)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        let context = UIGraphicsGetCurrentContext()
+        context?.setFillColor(UIColor.white.cgColor)
+        context?.fill(CGRect(origin: .zero, size: size))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+    private func triggerBadgeFlip() {
+        // 1. Add Perspective
+        var perspective = CATransform3DIdentity
+        perspective.m34 = -1.0 / 500.0 // The lower the value, the more intense the 3D effect
+        
+        // 2. Create the Flip Animation
+        let flipAnim = CABasicAnimation(keyPath: "transform")
+        flipAnim.fromValue = NSValue(caTransform3D: CATransform3DRotate(perspective, 0, 0, 1, 0))
+        flipAnim.toValue = NSValue(caTransform3D: CATransform3DRotate(perspective, .pi * 2, 0, 1, 0))
+        flipAnim.duration = 1.2
+        flipAnim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        // 3. Create a Scale "Pop" (Duolingo Style)
+        let scaleAnim = CAKeyframeAnimation(keyPath: "transform.scale")
+        scaleAnim.values = [1.0, 1.2, 1.0]
+        scaleAnim.keyTimes = [0, 0.5, 1.0]
+        scaleAnim.duration = 1.2
+        
+        // Group them
+        let group = CAAnimationGroup()
+        group.animations = [flipAnim, scaleAnim]
+        group.duration = 1.2
+        
+        largeIconBackgroundView.layer.add(group, forKey: "fitnessFlip")
+        
+        // Trigger Confetti if the badge is unlocked
+        if badge.isUnlocked {
+            createConfetti()
+        }
+        
+        // Premium Haptics
+        let generator = UIImpactFeedbackGenerator(style: .heavy)
+        generator.prepare()
+        generator.impactOccurred()
+    }
         func configureUI() {
             guard let badge = badge else {
                 print("ERROR: Badge data is missing for modal configuration.")
@@ -74,6 +151,19 @@ class BadgeUnlockedModalViewController: UIViewController {
             let config = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
             largeIconImageView.image = UIImage(systemName: badge.iconName, withConfiguration: config)
             largeIconImageView.tintColor = .white
+            // Adds depth to the badge for the flip animation
+            largeIconBackgroundView.layer.shadowColor = UIColor.black.cgColor
+            largeIconBackgroundView.layer.shadowOpacity = 0.3
+            largeIconBackgroundView.layer.shadowOffset = CGSize(width: 0, height: 10)
+            largeIconBackgroundView.layer.shadowRadius = 10
+            largeIconBackgroundView.layer.shouldRasterize = true
+            largeIconBackgroundView.layer.rasterizationScale = UIScreen.main.scale
+
+            // Optional: Rotate the icon slightly during the slide up for more energy
+            largeIconBackgroundView.transform = CGAffineTransform(rotationAngle: -0.2)
+            UIView.animate(withDuration: 0.5) {
+                self.largeIconBackgroundView.transform = .identity
+            }
         }
 
     func setupTapToDismiss() {
