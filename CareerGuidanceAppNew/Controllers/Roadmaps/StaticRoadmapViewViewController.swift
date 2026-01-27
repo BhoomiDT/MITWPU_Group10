@@ -4,7 +4,6 @@
 //
 //  Created by SDC-USER on 08/12/25.
 //
-//changes
 import UIKit
 
 class StaticRoadmapViewViewController: UIViewController {
@@ -86,6 +85,7 @@ class StaticRoadmapViewViewController: UIViewController {
     
     private func openCurrentModule() {
         guard let roadmap = roadmap else { return }
+        RoadmapStore.shared.markRoadmapStarted(title: roadmap.title)
         var targetMilestone: Milestone?
         var targetLessonIndex: Int = 0
 
@@ -111,21 +111,7 @@ class StaticRoadmapViewViewController: UIViewController {
             
         }
     }
-    
-//    private func getCurrentMilestoneIndex() -> Int {
-//        guard let roadmap = roadmap else { return 0 }
-//        
-//        // Find the index of the first milestone that has at least one uncompleted lesson
-//        for (index, milestone) in roadmap.milestones.enumerated() {
-//            let isMilestoneComplete = milestone.lessons.allSatisfy {
-//                QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
-//            }
-//            if !isMilestoneComplete {
-//                return index
-//            }
-//        }
-//        return roadmap.milestones.count // All completed
-//    }
+
     private func getUnlockedMilestoneIndex() -> Int {
         guard let roadmap = roadmap else { return 0 }
         

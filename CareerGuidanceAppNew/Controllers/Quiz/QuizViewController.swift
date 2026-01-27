@@ -30,8 +30,6 @@ class QuizViewController: UIViewController {
     private var currentQuestionIndex = 0
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = String("Question \(questionIndex+1)")
-
         navigationController?.navigationBar.prefersLargeTitles = true
         nextButton.layer.cornerRadius = 20
         optionStack.autoresizingMask = [.flexibleHeight, .flexibleWidth]
@@ -72,7 +70,11 @@ class QuizViewController: UIViewController {
         navigationItem.leftBarButtonItem = backButton
     }
     @objc func backChevronTapped() {
-        // If you want the alert to show regardless of question index to prevent accidental exit:
+        if currentQuestionIndex > 0 {
+                currentQuestionIndex -= 1
+                loadQuestion()
+                return
+            }
         let alert = UIAlertController(
             title: "Exit Quiz?",
             message: "If you go back now, your progress in this test will be lost.",
@@ -97,6 +99,7 @@ class QuizViewController: UIViewController {
     }
     private func loadQuestion() {
         guard let quiz = quiz else { return }
+        self.title = String("Question \(currentQuestionIndex+1)")
 
         let question = quiz.questions[currentQuestionIndex]
 
@@ -166,29 +169,6 @@ class QuizViewController: UIViewController {
 
         present(alert, animated: true)
     }
-//    private func showSubmitConfirmation() {
-//        let alert = UIAlertController(
-//            title: "Submit Test?",
-//            message: "Your test is being submitted.",
-//            preferredStyle: .alert
-//        )
-//        self.onQuizCompleted?()
-//        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-//
-//        alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
-////  This is also comment            let result = self.generateTestResult()
-////  This is also comment          self.navigateToResults(result: result)
-//            let completedQuiz = self.generateCompletedQuiz()
-//            QuizHistoryManager.shared.save(completedQuiz)
-//            if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
-//                self.onRoadmapStarted?()
-//            }
-//
-//            self.navigateToResults(completedQuiz: completedQuiz)
-//        })
-//
-//        present(alert, animated: true)
-//    }
     
     private func showSubmitConfirmation() {
         let alert = UIAlertController(
