@@ -1,3 +1,10 @@
+//
+//  WelcomeViewController.swift
+//  CareerGuidanceAppNew
+//
+//  Created by SDC-USER on 15/12/25.
+//
+
 import UIKit
 
 class WelcomeViewController: UIViewController {
@@ -6,8 +13,6 @@ class WelcomeViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
         setupSheetPresentation()
     }
 

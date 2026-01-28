@@ -101,10 +101,8 @@ extension RoadmapsViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         if searchText.isEmpty {
-            // If search text is empty, show all data
             roadmapsData = allRoadmaps
         } else {
-            // Filter the original 'allRoadmaps' list
             roadmapsData = allRoadmaps.filter { roadmap in
                 let titleMatch = roadmap.title.lowercased().contains(searchText.lowercased())
                 return titleMatch

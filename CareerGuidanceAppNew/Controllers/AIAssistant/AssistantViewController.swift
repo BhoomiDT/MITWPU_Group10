@@ -18,6 +18,7 @@ class AssistantViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         searchBar.delegate = self
+        searchBar.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
         searchBar.isUserInteractionEnabled = true
         searchBar.barTintColor = .appBackground
         tableView.backgroundColor = .appBackground
@@ -51,17 +52,20 @@ class AssistantViewController: UIViewController, UITableViewDelegate, UITableVie
 
     @objc func kbMove(_ n: NSNotification) {
         guard let userInfo = n.userInfo,
-              let frame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+              let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
         
-        let keyboardHeight = frame.cgRectValue.height
-        let safeAreaBottom = view.safeAreaInsets.bottom
+        let keyboardViewEndFrame = view.convert(keyboardFrame.cgRectValue, from: view.window)
+        let heightOffset = view.bounds.height - keyboardViewEndFrame.origin.y
         
-        bottomConstraint.constant = keyboardHeight - safeAreaBottom
+        bottomConstraint.constant = heightOffset - view.safeAreaInsets.bottom
         
         let duration = userInfo[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double ?? 0.3
-        UIView.animate(withDuration: duration) {
+        let curveValue = userInfo[UIResponder.keyboardAnimationCurveUserInfoKey] as? Int ?? 0
+        let options = UIView.AnimationOptions(rawValue: UInt(curveValue << 16))
+
+        UIView.animate(withDuration: duration, delay: 0, options: options, animations: {
             self.view.layoutIfNeeded()
-        }
+        }, completion: nil)
     }
 
     @objc func kbHide() {

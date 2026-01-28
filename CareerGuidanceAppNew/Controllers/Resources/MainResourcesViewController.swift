@@ -32,13 +32,6 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
             
             modalVC.lesson = lesson
             modalVC.delegate = self
-//            modalVC.modalPresentationStyle = .overFullScreen
-//            modalVC.modalTransitionStyle = .crossDissolve
-//            
-//            present(modalVC, animated: true)
-//            
-//            modalVC.lesson = lesson
-//            modalVC.delegate = self
 
             if let sheet = modalVC.sheetPresentationController {
                 let customDetent = UISheetPresentationController.Detent.custom { context in

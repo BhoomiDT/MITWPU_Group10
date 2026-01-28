@@ -11,16 +11,16 @@ class BadgeUnlockedModalViewController: UIViewController {
 
     var badge: Badge!
     var modalTitleString: String?
-    
+    private var floatingCloseButton: UIButton?
     @IBOutlet weak var headerLabel: UILabel!
-    @IBOutlet weak var dismissButtonView: UIView!
+    //@IBOutlet weak var dismissButtonView: UIView!
     @IBOutlet weak var modalCardCenterYConstraint: NSLayoutConstraint!
     @IBOutlet weak var modalCardView: UIView!
     @IBOutlet weak var largeIconBackgroundView: UIView!
     @IBOutlet weak var largeIconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-    @IBOutlet weak var dismissButton: UIButton!
+   // @IBOutlet weak var dismissButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,23 +35,47 @@ class BadgeUnlockedModalViewController: UIViewController {
             modalCardCenterYConstraint.constant = view.bounds.height
             view.layoutIfNeeded()
         
-        dismissButtonView.layer.cornerRadius = dismissButton.frame.height / 2
-        dismissButtonView.layer.masksToBounds = true
-        
-        let iconSize: CGFloat = 12
-        let iconConfig = UIImage.SymbolConfiguration(pointSize: iconSize, weight: .medium)
-        
-        let dismissImage = UIImage(systemName: "xmark", withConfiguration: iconConfig)
-        dismissButton.setImage(dismissImage, for: .normal)
+        setupCloseButton()
         setupTapToDismiss()
                 configureUI()
     }
-    
+    private func setupCloseButton() {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium)
+        
+        let image = UIImage(
+            systemName: "xmark",
+            withConfiguration: config
+        )
+        
+        button.setImage(image, for: .normal)
+        button.tintColor = .label
+        button.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.85)
+        button.layer.cornerRadius = 20
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.08
+        button.layer.shadowRadius = 6
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.alpha = 0
+        self.floatingCloseButton = button
+        modalCardView.addSubview(button)
+        button.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
+        
+    NSLayoutConstraint.activate([
+        button.topAnchor.constraint(equalTo: modalCardView.topAnchor, constant: 16),
+        button.leadingAnchor.constraint(equalTo: modalCardView.leadingAnchor, constant: 16),
+        button.widthAnchor.constraint(equalToConstant: 40),
+        button.heightAnchor.constraint(equalToConstant: 40)
+    ])
+    }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.3, options: .curveEaseOut, animations: {
                 self.view.backgroundColor = UIColor.black.withAlphaComponent(0.5)
                 self.modalCardCenterYConstraint.constant = 0
+                self.floatingCloseButton?.alpha = 1
                 self.view.layoutIfNeeded()
             }) { _ in
                 self.triggerBadgeFlip()
@@ -100,36 +124,30 @@ class BadgeUnlockedModalViewController: UIViewController {
         return image
     }
     private func triggerBadgeFlip() {
-        // 1. Add Perspective
         var perspective = CATransform3DIdentity
-        perspective.m34 = -1.0 / 500.0 // The lower the value, the more intense the 3D effect
+        perspective.m34 = -1.0 / 500.0
         
-        // 2. Create the Flip Animation
         let flipAnim = CABasicAnimation(keyPath: "transform")
         flipAnim.fromValue = NSValue(caTransform3D: CATransform3DRotate(perspective, 0, 0, 1, 0))
         flipAnim.toValue = NSValue(caTransform3D: CATransform3DRotate(perspective, .pi * 2, 0, 1, 0))
         flipAnim.duration = 1.2
         flipAnim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
-        // 3. Create a Scale "Pop" (Duolingo Style)
         let scaleAnim = CAKeyframeAnimation(keyPath: "transform.scale")
         scaleAnim.values = [1.0, 1.2, 1.0]
         scaleAnim.keyTimes = [0, 0.5, 1.0]
         scaleAnim.duration = 1.2
         
-        // Group them
         let group = CAAnimationGroup()
         group.animations = [flipAnim, scaleAnim]
         group.duration = 1.2
         
         largeIconBackgroundView.layer.add(group, forKey: "fitnessFlip")
         
-        // Trigger Confetti if the badge is unlocked
         if badge.isUnlocked {
             createConfetti()
         }
         
-        // Premium Haptics
         let generator = UIImpactFeedbackGenerator(style: .heavy)
         generator.prepare()
         generator.impactOccurred()

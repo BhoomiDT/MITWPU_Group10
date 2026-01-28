@@ -1,3 +1,10 @@
+//
+//  NewModuleScreen.swift
+//  CareerGuidanceAppNew
+//
+//  Created by SDC-USER on 15/12/25.
+//
+
 import UIKit
 
 class NewModuleScreen: UIViewController, StartTestModalDelegate {
@@ -9,9 +16,7 @@ class NewModuleScreen: UIViewController, StartTestModalDelegate {
         quizVC.quiz = quiz
         quizVC.lesson = lesson
         
-        // Notify the Store that this roadmap has started
         if let roadmapTitle = parentRoadmap?.title {
-            // Option A: Start immediately when the test modal is opened
             RoadmapStore.shared.markRoadmapStarted(title: roadmapTitle)
             print("Roadmap \(roadmapTitle) marked as started!")
         }
@@ -47,7 +52,7 @@ class NewModuleScreen: UIViewController, StartTestModalDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        collectionNewModules.reloadData() // Refresh UI whenever the screen becomes visible
+        collectionNewModules.reloadData()
     }
 
     private func setupCollectionView() {
@@ -65,10 +70,8 @@ class NewModuleScreen: UIViewController, StartTestModalDelegate {
     private func loadData() {
             guard let milestone = milestone else { return }
             
-            // Use the Milestone title as the navigation bar title
             self.title = milestone.title
             
-            // Load lessons from the milestone
             self.lessons = milestone.lessons
             collectionNewModules.reloadData()
         }
@@ -95,17 +98,14 @@ extension NewModuleScreen: UICollectionViewDelegate,
         
         let lesson = lessons[indexPath.item]
         
-        // 1. Find the index of the first incomplete lesson
         let firstIncompleteIndex = lessons.firstIndex(where: {
             !QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
         }) ?? lessons.count
         
-        // 2. Determine states
         let isCompleted = QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
         let isCurrentActive = (indexPath.item == firstIncompleteIndex)
         let isLocked = indexPath.item > firstIncompleteIndex
         
-        // 3. Configure the cell with these new states
         cell.configure(with: lesson, isCompleted: isCompleted, isCurrentActive: isCurrentActive, isLocked: isLocked)
         
         cell.onSeeResourcesTapped = { [weak self] in
@@ -118,7 +118,6 @@ extension NewModuleScreen: UICollectionViewDelegate,
             } else if isCurrentActive {
                 self?.showStartTestModal(for: lesson)
             } else {
-                // Handle tapped locked state if necessary (e.g., show an alert)
                 print("!!")
                 let alert = UIAlertController(
                                 title: "Lesson Locked",
@@ -138,9 +137,7 @@ extension NewModuleScreen: UICollectionViewDelegate,
         return cell
     }
     
-    // Add this inside NewModuleScreen or its extension
     private func showStartTestModal(for lesson: Lesson) {
-        // Ensure "Roadmaps" matches the actual name of your Storyboard file
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
         
         guard let modalVC = storyboard.instantiateViewController(withIdentifier: "StartTestModalVC") as? StartTestModalViewController else {
@@ -149,11 +146,10 @@ extension NewModuleScreen: UICollectionViewDelegate,
         }
         
         modalVC.lesson = lesson
-        modalVC.delegate = self // This requires the extension below
-
+        modalVC.delegate = self
         if let sheet = modalVC.sheetPresentationController {
             let customDetent = UISheetPresentationController.Detent.custom { context in
-                return 550
+                return 480
             }
 
             sheet.detents = [customDetent]
@@ -168,7 +164,6 @@ extension NewModuleScreen: UICollectionViewDelegate,
         let storyboard = UIStoryboard(name: "Resources", bundle: nil) // Update to your Storyboard name
         if let resourcesVC = storyboard.instantiateViewController(withIdentifier: "MainResourcesVC") as? MainResourcesViewController {
             
-            // Pass the nested lesson data
             resourcesVC.selectedLesson = lesson
             
             self.navigationController?.pushViewController(resourcesVC, animated: true)
@@ -190,12 +185,7 @@ extension NewModuleScreen: UICollectionViewDelegate,
         }
     }
     func roadmapLessonRowCell(_ cell: ModuleCardCellCollectionViewCell, didTapStatusFor lesson: Lesson) {
-//            switch lesson.status {
-//            case .seeResults:
-//                openResults(for: lesson)
-//            case .startTest:
-//                openTest(for: lesson)
-//            }
+
         let hasResult =
             QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
 

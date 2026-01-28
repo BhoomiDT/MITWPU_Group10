@@ -12,9 +12,6 @@ protocol StartTestModalDelegate: AnyObject {
 }
 
 class StartTestModalViewController: UIViewController {
-
-
-    @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
 
     @IBOutlet weak var closeButtonContainer: UIView!
@@ -68,14 +65,38 @@ class StartTestModalViewController: UIViewController {
             bg?.clipsToBounds = true
         }
         startButton.layer.cornerRadius = 22
-        cancelButton.layer.cornerRadius = 22
         infoLabel.textColor = .gray
     }
 
     private func setupCloseButton() {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(closeTapped))
-        closeButtonContainer.addGestureRecognizer(tap)
-        closeButtonContainer.isUserInteractionEnabled = true
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium)
+        
+        let image = UIImage(
+            systemName: "xmark",
+            withConfiguration: config
+        )
+        
+        button.setImage(image, for: .normal)
+        button.tintColor = .label
+        button.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.85)
+        button.layer.cornerRadius = 20
+        button.layer.shadowColor = UIColor.black.cgColor
+        button.layer.shadowOpacity = 0.08
+        button.layer.shadowRadius = 6
+        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+       
+        view.addSubview(button)
+        button.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
+        
+    NSLayoutConstraint.activate([
+        button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+        button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+        button.widthAnchor.constraint(equalToConstant: 40),
+        button.heightAnchor.constraint(equalToConstant: 40)
+    ])
     }
 
     private func loadQuiz() {

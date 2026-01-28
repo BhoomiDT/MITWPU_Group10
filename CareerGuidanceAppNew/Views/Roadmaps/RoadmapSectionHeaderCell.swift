@@ -11,7 +11,6 @@ class RoadmapSectionHeaderCell: UITableViewCell {
     @IBOutlet weak var cardContainerView: UIView!
     @IBOutlet weak var clockImageView: UIImageView!
     @IBOutlet weak var dueDateLabel: UILabel!
-    //@IBOutlet weak var arrowImageView: UIImageView!
 
     override func awakeFromNib() {
         super.awakeFromNib()

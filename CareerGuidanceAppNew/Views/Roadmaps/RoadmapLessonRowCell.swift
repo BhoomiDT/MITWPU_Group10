@@ -8,7 +8,6 @@
 import UIKit
 
 protocol RoadmapLessonRowCellDelegate: AnyObject {
-    //called when status button tapped
     func roadmapLessonRowCell(_ cell: RoadmapLessonRowCell, didTapStatusFor lesson: Lesson)
 }
 
@@ -60,22 +59,6 @@ class RoadmapLessonRowCell: UITableViewCell {
         statusButton.setTitleColor(.label, for: .normal)
         statusButton.setTitle("", for: .normal)
     }
-
-//    func configure(with lesson: Lesson) {
-//        self.lesson = lesson
-//        lessonTitleLabel.text = lesson.name
-//
-//        statusButton.setTitle(lesson.status.rawValue, for: .normal)
-//
-//        switch lesson.status {
-//        case .seeResults:
-//            statusButton.backgroundColor = UIColor(hex: "1FA5A1")
-//            statusButton.setTitleColor(.white, for: .normal)
-//        case .startTest:
-//            statusButton.backgroundColor = .systemGray5
-//            statusButton.setTitleColor(.darkGray, for: .normal)
-//        }
-//    }
     
     func configure(with lesson: Lesson) {
         self.lesson = lesson

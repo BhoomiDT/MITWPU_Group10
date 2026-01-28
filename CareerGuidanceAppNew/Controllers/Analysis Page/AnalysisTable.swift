@@ -80,7 +80,6 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
             cell.progressBar.progressTintColor = data.color
             cell.labelScore.text = "\(Int(data.score * 100))%"
 
-            // spacing inside the card
             let isFirst = indexPath.row == 0
             let isLast  = indexPath.row == riasecData.count - 1
 

@@ -1,3 +1,9 @@
+//
+//  StatsCard.swift
+//  CareerGuidanceAppNew
+//
+//  Created by SDC-USER on 15/12/25.
+//
 
 import UIKit
 
@@ -36,25 +42,8 @@ class StatsCard: UICollectionViewCell {
         badgeTitle.text = "Badges"
         
     }
-    
-
-//    private func setupSeparators() {
-//        [0.66, 1.33].forEach { m in
-//            let v = UIView()
-//            v.backgroundColor = .lightGray.withAlphaComponent(0.4)
-//            v.translatesAutoresizingMaskIntoConstraints = false
-//            addSubview(v)
-//            NSLayoutConstraint.activate([
-//                v.widthAnchor.constraint(equalToConstant: 1),
-//                v.topAnchor.constraint(equalTo: xpTitle.topAnchor),
-//                v.bottomAnchor.constraint(equalTo: xpValue.bottomAnchor),
-//                NSLayoutConstraint(item: v, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: m, constant: 0)
-//            ])
-//        }
-//    }
 
     private func setupSeparators() {
-            // We use the 'trailing' (width) attribute to calculate exact thirds.
             let multipliers: [CGFloat] = [1.0/3.0, 2.0/3.0]
             
             multipliers.forEach { m in

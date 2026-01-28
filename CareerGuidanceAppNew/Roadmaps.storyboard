@@ -133,7 +133,7 @@
                                 <rect key="frame" x="16" y="300" width="361" height="480"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9eH-3q-PyU">
-                                        <rect key="frame" x="23.999999999999993" y="48.666666666666686" width="104.33333333333331" height="240"/>
+                                        <rect key="frame" x="23.999999999999993" y="95" width="104.33333333333331" height="240"/>
                                         <subviews>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="0tm-Th-9Mq">
                                                 <rect key="frame" x="0.0" y="0.0" width="104.33333333333333" height="45"/>
@@ -142,7 +142,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="clock.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="59C-tk-Prw">
-                                                                <rect key="frame" x="7.6666666666666643" y="8.3333333333332948" width="30" height="28.666666666666671"/>
+                                                                <rect key="frame" x="7.6666666666666643" y="8.3333333333333517" width="30" height="28.666666666666671"/>
                                                                 <color key="tintColor" systemColor="systemIndigoColor"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="sxx-aF-BTR"/>
@@ -184,7 +184,7 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="list.clipboard.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="jEv-Gm-00F">
-                                                                <rect key="frame" x="7.6666666666666643" y="5.3333333333332966" width="30" height="33"/>
+                                                                <rect key="frame" x="7.6666666666666643" y="5.3333333333333535" width="30" height="33"/>
                                                                 <color key="tintColor" red="0.18431372549019609" green="0.66666666666666663" blue="0.92156862745098034" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="height" constant="30" id="Vr9-hB-h5E"/>
@@ -253,7 +253,7 @@
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zCe-W8-JXH">
-                                                                <rect key="frame" x="0.0" y="28.333333333333314" width="43.333333333333336" height="16.666666666666671"/>
+                                                                <rect key="frame" x="0.0" y="28.333333333333371" width="43.333333333333336" height="16.666666666666671"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                                 <nil key="highlightedColor"/>
@@ -263,13 +263,13 @@
                                                 </subviews>
                                             </stackView>
                                             <stackView opaque="NO" contentMode="scaleToFill" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="aSH-TO-K9R">
-                                                <rect key="frame" x="0.0" y="194.99999999999994" width="104.33333333333333" height="45"/>
+                                                <rect key="frame" x="0.0" y="195" width="104.33333333333333" height="45"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yac-ko-Ggp">
                                                         <rect key="frame" x="0.0" y="0.0" width="45" height="45"/>
                                                         <subviews>
                                                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="arrow.clockwise" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="neE-Kk-9kS">
-                                                                <rect key="frame" x="7.6666666666666643" y="7.0000000000000728" width="30" height="29.666666666666671"/>
+                                                                <rect key="frame" x="7.6666666666666643" y="6.9999999999999591" width="30" height="29.666666666666671"/>
                                                                 <color key="tintColor" red="0.96078431372549022" green="0.61960784313725492" blue="0.047058823529411764" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <constraints>
                                                                     <constraint firstAttribute="width" constant="30" id="DAN-jE-63G"/>
@@ -306,19 +306,8 @@
                                             </stackView>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="VUh-IH-eVN">
-                                        <rect key="frame" x="24" y="429.66666666666663" width="313" height="34.333333333333314"/>
-                                        <color key="tintColor" systemColor="systemGray6Color"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="filled" title="Cancel">
-                                            <color key="baseForegroundColor" systemColor="systemRedColor"/>
-                                        </buttonConfiguration>
-                                        <connections>
-                                            <action selector="cancelTapped:" destination="tZI-1U-aE9" eventType="touchUpInside" id="v5b-e6-5N2"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4pb-Cs-8Ph">
-                                        <rect key="frame" x="24" y="383.33333333333337" width="313" height="34.333333333333314"/>
+                                        <rect key="frame" x="24" y="429.66666666666663" width="313" height="34.333333333333314"/>
                                         <color key="tintColor" red="0.12156862745098039" green="0.6470588235294118" blue="0.63137254901960782" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="filled" title="Start Test"/>
@@ -327,7 +316,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Once you begin, the timer will not stop. Good Luck!" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zx1-re-S3R">
-                                        <rect key="frame" x="24" y="318.66666666666663" width="313" height="40.666666666666686"/>
+                                        <rect key="frame" x="24" y="365" width="313" height="40.666666666666686"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
@@ -336,8 +325,6 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="480" id="2C4-yT-KhX"/>
-                                    <constraint firstItem="VUh-IH-eVN" firstAttribute="leading" secondItem="HK5-Kr-mbC" secondAttribute="leading" constant="24" id="ARY-4e-9H9"/>
-                                    <constraint firstItem="VUh-IH-eVN" firstAttribute="top" secondItem="4pb-Cs-8Ph" secondAttribute="bottom" constant="12" id="B6j-g9-9v2"/>
                                     <constraint firstItem="4pb-Cs-8Ph" firstAttribute="top" secondItem="zx1-re-S3R" secondAttribute="bottom" constant="24" id="Dia-Cf-A01"/>
                                     <constraint firstAttribute="trailing" secondItem="4pb-Cs-8Ph" secondAttribute="trailing" constant="24" id="Emu-ib-xrP"/>
                                     <constraint firstItem="4pb-Cs-8Ph" firstAttribute="leading" secondItem="HK5-Kr-mbC" secondAttribute="leading" constant="24" id="Eu5-oa-VAK"/>
@@ -346,9 +333,7 @@
                                     <constraint firstAttribute="trailing" secondItem="zx1-re-S3R" secondAttribute="trailing" constant="24" id="VZg-1u-Mpd"/>
                                     <constraint firstItem="4pb-Cs-8Ph" firstAttribute="centerX" secondItem="HK5-Kr-mbC" secondAttribute="centerX" id="XvN-Pb-jlU"/>
                                     <constraint firstItem="9eH-3q-PyU" firstAttribute="leading" secondItem="HK5-Kr-mbC" secondAttribute="leading" constant="24" id="gOl-Gy-rdn"/>
-                                    <constraint firstItem="VUh-IH-eVN" firstAttribute="centerX" secondItem="HK5-Kr-mbC" secondAttribute="centerX" id="lSh-EA-LWO"/>
-                                    <constraint firstAttribute="trailing" secondItem="VUh-IH-eVN" secondAttribute="trailing" constant="24" id="w7a-hf-Ph9"/>
-                                    <constraint firstAttribute="bottom" secondItem="VUh-IH-eVN" secondAttribute="bottom" constant="16" id="zeM-TR-RhE"/>
+                                    <constraint firstAttribute="bottom" secondItem="4pb-Cs-8Ph" secondAttribute="bottom" constant="16" id="yoC-Dt-OQw"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -367,7 +352,6 @@
                         <outlet property="attemptsIconBackground" destination="neE-Kk-9kS" id="33X-Bc-UIF"/>
                         <outlet property="attemptsSubtitleLabel" destination="0rr-wk-8Q0" id="tW8-b6-jeU"/>
                         <outlet property="attemptsTitleLabel" destination="4JY-2S-ZmE" id="aVb-tH-ohq"/>
-                        <outlet property="cancelButton" destination="VUh-IH-eVN" id="gEm-Ee-KND"/>
                         <outlet property="closeButtonContainer" destination="EIk-rN-dtP" id="bqS-7d-Mcl"/>
                         <outlet property="closeImageView" destination="gUY-Qy-WVd" id="G9N-YC-Ps8"/>
                         <outlet property="durationIcon" destination="59C-tk-Prw" id="j0F-uS-7do"/>
@@ -909,14 +893,8 @@
         <systemColor name="systemGray5Color">
             <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemGray6Color">
-            <color red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
         <systemColor name="systemIndigoColor">
             <color red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </systemColor>
-        <systemColor name="systemRedColor">
-            <color red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

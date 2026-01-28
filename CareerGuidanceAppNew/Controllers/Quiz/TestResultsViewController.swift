@@ -34,26 +34,7 @@ class TestResultsViewController: UIViewController {
 
            let barButton = UIBarButtonItem(customView: backButton)
            navigationItem.leftBarButtonItem = barButton
-//        if testResult == nil && lesson?.status == .seeResults {
-//            testResult = makeViewOnlyResult()
-//        }
-//        
-//
-//        guard let testResult = testResult else {
-//            fatalError("TestResult not available")
-//        }
 
-//        resultCardView.layer.cornerRadius = 16
-//        resultCardView.clipsToBounds = true
-//
-//        setupResultCard()
-//
-//        tableContainer.layer.cornerRadius = 16
-//        tableContainer.clipsToBounds = true
-//
-//        tableView.backgroundColor = .clear
-//        setupTableView()
-        
         guard completedQuiz != nil else {
                 fatalError("CompletedQuiz not provided")
             }
@@ -83,12 +64,7 @@ class TestResultsViewController: UIViewController {
     }
 
     @IBAction func viewYourAnswersTapped(_ sender: Any) {
-//        let storyboard = UIStoryboard(name: "Answers", bundle: nil)
-//        guard let resultsVC = storyboard.instantiateViewController(withIdentifier: "YourAnswersVC") as? YourAnswersViewController else {
-//            print("TestResultsViewController not found")
-//            return
-//        }
-//        navigationController?.pushViewController(resultsVC, animated: true)
+
         let storyboard = UIStoryboard(name: "Answers", bundle: nil)
             let vc = storyboard.instantiateViewController(
                 withIdentifier: "YourAnswersVC"
@@ -97,23 +73,9 @@ class TestResultsViewController: UIViewController {
             vc.completedQuiz = completedQuiz
             navigationController?.pushViewController(vc, animated: true)
     }
-//    private func makeViewOnlyResult() -> TestResult {
-//        return TestResult(
-//            score: 80,
-//            strengths: [
-//                StrengthItem(title: "Conceptual understanding"),
-//                StrengthItem(title: "Analytical thinking")
-//            ],
-//            improvements: [
-//                ImprovementItem(title: "Advanced applications"),
-//                ImprovementItem(title: "Time efficiency")
-//            ],
-//            lessonName: lesson?.name ?? ""
-//        )
-//    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        //progressRingView.setProgress(CGFloat(testResult.score) / 100)
         progressRingView.setProgress(
             CGFloat(completedQuiz.scorePercentage) / 100
         )
@@ -124,12 +86,7 @@ class TestResultsViewController: UIViewController {
         
         tableViewHeightConstraint.constant = tableView.contentSize.height
     }
-    
-//    private func setupResultCard(with testResult: TestResult) {
-//        percentageLabel.text = "\(testResult.score)%"
-//        descriptionLabel.text =
-//            "Great work! You’ve shown strong skills in \(testResult.lessonName)"
-//    }
+
     private func setupResultCard() {
         percentageLabel.text = "\(completedQuiz.scorePercentage)%"
         descriptionLabel.text =
@@ -150,7 +107,6 @@ extension TestResultsViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        //return section == 0 ? testResult.strengths.count : testResult.improvements.count
             return 3
     }
 
@@ -171,7 +127,7 @@ extension TestResultsViewController: UITableViewDataSource {
             let isLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
 
             if isFirst && isLast {
-                // Only one cell (single-row section)
+                // Only one cell
                 cell.layer.maskedCorners = [
                     .layerMinXMinYCorner,
                     .layerMaxXMinYCorner,
@@ -179,13 +135,13 @@ extension TestResultsViewController: UITableViewDataSource {
                     .layerMaxXMaxYCorner
                 ]
             } else if isFirst {
-                // First cell → top corners only
+                // First cell: top corners only
                 cell.layer.maskedCorners = [
                     .layerMinXMinYCorner,
                     .layerMaxXMinYCorner
                 ]
             } else if isLast {
-                // Last cell → bottom corners only
+                // Last cell: bottom corners only
                 cell.layer.maskedCorners = [
                     .layerMinXMaxYCorner,
                     .layerMaxXMaxYCorner
@@ -197,7 +153,7 @@ extension TestResultsViewController: UITableViewDataSource {
                         right: 0
                     )
             } else {
-                // Middle cells → no rounding
+                // Middle cells: no rounding
                 cell.layer.cornerRadius = 0
             }
             
@@ -217,7 +173,6 @@ extension TestResultsViewController: UITableViewDataSource {
             let isLast = indexPath.row == tableView.numberOfRows(inSection: indexPath.section) - 1
 
             if isFirst && isLast {
-                // Only one cell (single-row section)
                 cell.layer.maskedCorners = [
                     .layerMinXMinYCorner,
                     .layerMaxXMinYCorner,
@@ -225,13 +180,11 @@ extension TestResultsViewController: UITableViewDataSource {
                     .layerMaxXMaxYCorner
                 ]
             } else if isFirst {
-                // First cell → top corners only
                 cell.layer.maskedCorners = [
                     .layerMinXMinYCorner,
                     .layerMaxXMinYCorner
                 ]
             } else if isLast {
-                // Last cell → bottom corners only
                 cell.layer.maskedCorners = [
                     .layerMinXMaxYCorner,
                     .layerMaxXMaxYCorner
@@ -243,7 +196,6 @@ extension TestResultsViewController: UITableViewDataSource {
                         right: 0
                     )
             } else {
-                // Middle cells → no rounding
                 cell.layer.cornerRadius = 0
             }
             
@@ -251,28 +203,6 @@ extension TestResultsViewController: UITableViewDataSource {
             return cell
         }
     }
-//    func tableView(_ tableView: UITableView,
-//                   cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//
-//        if indexPath.section == 0 {
-//            let cell = tableView.dequeueReusableCell(
-//                withIdentifier: "StrengthCell",
-//                for: indexPath
-//            ) as! StrengthCell
-//
-//            cell.configure(text: "Good conceptual understanding")
-//            return cell
-//        } else {
-//            let cell = tableView.dequeueReusableCell(
-//                withIdentifier: "WeaknessCell",
-//                for: indexPath
-//            ) as! WeaknessCell
-//
-//            cell.configure(text: "Needs more practice")
-//            return cell
-//        }
-//    }
-    
 }
 
 extension TestResultsViewController: UITableViewDelegate {

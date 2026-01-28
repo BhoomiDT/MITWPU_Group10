@@ -1,3 +1,10 @@
+//
+//  JourneyViewController.swift
+//  CareerGuidanceAppNew
+//
+//  Created by SDC-USER on 11/12/25.
+//
+
 import UIKit
 
 class JourneyViewController: UIViewController,UITableViewDelegate{
@@ -41,9 +48,6 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 80
         tableView.separatorStyle = .none
-        //tableView.backgroundColor = .systemGroupedBackground
-         //   view.backgroundColor = .systemGroupedBackground
-
     }
 
 
@@ -64,11 +68,6 @@ extension JourneyViewController: UITableViewDataSource {
         return sections.count
     }
 
-//    func tableView(_ tableView: UITableView,
-//                   titleForHeaderInSection section: Int) -> String? {
-//        return sections[section].title
-//    }
-    
     func tableView(_ tableView: UITableView,
                    viewForHeaderInSection section: Int) -> UIView? {
 
@@ -125,10 +124,5 @@ extension JourneyViewController: UITableViewDataSource {
         
         return cell
     }
-    
-//    func tableView(_ tableView: UITableView,
-//                   heightForFooterInSection section: Int) -> CGFloat {
-//        return 10
-//    }
 }
 

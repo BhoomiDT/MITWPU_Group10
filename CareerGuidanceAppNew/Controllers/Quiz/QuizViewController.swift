@@ -49,15 +49,12 @@ class QuizViewController: UIViewController {
     private func goToMilestoneScreen() {
         if let nav = navigationController {
             for vc in nav.viewControllers {
-                // Find the milestone screen (NewModuleScreen) in the stack
                 if let milestoneVC = vc as? NewModuleScreen {
                     nav.popToViewController(milestoneVC, animated: true)
                     return
                 }
             }
         }
-        
-        // Fallback: If for some reason the screen isn't found, just pop once
         navigationController?.popViewController(animated: true)
     }
     func setupBackChevron() {
@@ -150,7 +147,6 @@ class QuizViewController: UIViewController {
             return
         }
 
-        // If last question then submit func called
         if currentQuestionIndex == quiz.questions.count - 1 {
             showSubmitConfirmation()
         } else {

@@ -24,6 +24,7 @@ class BadgesViewController: UIViewController, UICollectionViewDataSource, UIColl
         view.layoutIfNeeded()
         collectionViewHeightConstraint.constant = badgesCollectionView.contentSize.height
     }
+    
     func presentBadgeModal(with badge: Badge) {
 
         let storyboard = UIStoryboard(name: "Badges", bundle: nil)
@@ -89,6 +90,7 @@ class BadgesViewController: UIViewController, UICollectionViewDataSource, UIColl
         return cell
     }
 }
+
 extension BadgesViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         

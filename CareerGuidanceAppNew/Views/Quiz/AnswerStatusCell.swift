@@ -5,8 +5,6 @@
 //  Created by SDC-USER on 12/12/25.
 //
 
-// AnswerStatusCell.swift
-
 import UIKit
 
 class AnswerStatusCell: UITableViewCell {
@@ -23,12 +21,7 @@ class AnswerStatusCell: UITableViewCell {
     
     @IBAction func chevronTapped(_ sender: Any) {
     }
-//    func configure(with question: QuestionAnswer) {
-//        questionLabel.text = question.questionText
-//        statusBackgroundView.backgroundColor = question.isCorrect ? UIColor(hex: "c6ece8") : UIColor(hex: "fde9e6")
-//        statusImageView.image = UIImage(systemName: question.isCorrect ? "checkmark" : "xmark")
-//        statusImageView.tintColor = question.isCorrect ? UIColor(hex: "1fa5a1") : UIColor(hex: "e1736c")
-//    }
+
     func configure(with result: QuestionResult, index: Int) {
         questionLabel.text = "Question \(index + 1)"
         

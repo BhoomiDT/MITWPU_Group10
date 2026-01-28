@@ -7,8 +7,6 @@
 
 import UIKit
 
-// RoadmapCardCell.swift
-
 class RoadmapsCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var illustrationImageView: UIImageView!
