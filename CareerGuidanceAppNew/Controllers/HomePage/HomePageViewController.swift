@@ -35,7 +35,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //added T
         print(" Completed sections:",
                OnboardingManager.shared.completedSectionIndexes)
          print(" Onboarding completed:",
@@ -113,6 +112,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             return cell
 
         case 1:
+            
             if OnboardingManager.shared.isOnboardingCompleted {
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "roadmapScrollCollectionViewCell",
@@ -189,7 +189,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             return
         }
         
-        // Perform Navigation
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
         
         guard let vc = storyboard.instantiateViewController(

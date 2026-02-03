@@ -14,7 +14,6 @@ class SkillsViewController: UIViewController {
     @IBOutlet weak var searchBar: UISearchBar!
 
     @IBOutlet weak var continueButtonTapped: UIBarButtonItem!
-    // MARK: - Data
     private var selected: [String] = [
         "Cloud Computing",
         "Flask",

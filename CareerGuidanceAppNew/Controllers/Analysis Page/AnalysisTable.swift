@@ -13,7 +13,6 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
     var recommendedPath: String = "Calculating..."
         var riasecData: [(label: String, score: Float, color: UIColor)] = []
         
-        // You can keep this or update it based on logic
         var interests: [String] = [
             "Problem Solving",
             "Technical Analysis",
@@ -66,11 +65,8 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
         if section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! AnalysisTableViewCell1
             
-            // INTEGRATION: Set the domain name from the ML model prediction
-            // We replace the default "Data Analytics" with our dynamic result
             cell.domainName.text = recommendedPath
             
-            // Set the description (optional: you could also make this dynamic)
             cell.domainDescription.text = "Based on your RIASEC results, \(recommendedPath) is the best match for your skills and interests."
             
             cell.onExploreTapped = { [weak self] in
@@ -80,7 +76,6 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
                 }
             }
             
-            // Style the cell
             cell.layer.cornerRadius = 16
             cell.clipsToBounds = true
             return cell

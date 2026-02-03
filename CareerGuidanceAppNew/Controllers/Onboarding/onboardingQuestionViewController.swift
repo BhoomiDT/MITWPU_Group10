@@ -12,7 +12,7 @@ class onboardingQuestionViewController: UIViewController {
     var questionnaire: Questionnaire!
     var sectionIndex: Int = 0
     var questionIndex: Int = 0
-    var userSelectedAnswers: [[String]] = [[], [], []] // This must be passed from the IntroVC
+    var userSelectedAnswers: [[String]] = [[], [], []]
     var currentSectionAnswers: [String] = []
 
     @IBOutlet weak var questionLabel: UILabel!
@@ -69,12 +69,9 @@ class onboardingQuestionViewController: UIViewController {
     private func goToCurrentSectionIntro() {
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
         
-        // We need to find the IntroVC that matches this question set.
-        // Since Screen Index = Data Index + 2:
         let expectedIntroIndex = sectionIndex + 2
         
         if let nav = navigationController {
-            // Look through the stack for the IntroVC that matches the offset index
             for vc in nav.viewControllers {
                 if let introVC = vc as? onboardingSectionIntroViewController {
                     if introVC.sectionIndex == expectedIntroIndex {
@@ -84,7 +81,6 @@ class onboardingQuestionViewController: UIViewController {
                 }
             }
             
-            // Fallback: If for some reason it's not in the stack, just pop once
             nav.popViewController(animated: true)
         }
     }
@@ -139,17 +135,13 @@ class onboardingQuestionViewController: UIViewController {
         sender.layer.cornerRadius = 8
         sender.clipsToBounds = true
         print("Selected option: \(sender.currentTitle ?? "")")
-        // SAVE THE ANSWER
                 if let answer = sender.currentTitle {
-                    // Update the answer for the current question index
                     if currentSectionAnswers.count > questionIndex {
                         currentSectionAnswers[questionIndex] = answer
                     }
                 }
-        //added T
         nextButton.isEnabled = true
     }
-    // added fucntion
     private func finishSection() {
         OnboardingManager.shared.userSelectedAnswers[sectionIndex] = currentSectionAnswers
         OnboardingManager.shared.markSectionCompleted(index: sectionIndex)
@@ -157,35 +149,26 @@ class onboardingQuestionViewController: UIViewController {
     }
     
     private func routeAfterSectionCompletion() {
-        // 1. Mark the current section as finished in the Manager
-        // We add 2 because the QuestionVC's 0, 1, 2 maps to the Manager's 2, 3, 4
+
         let completedIndex = self.sectionIndex + 2
         OnboardingManager.shared.markSectionCompleted(index: completedIndex)
         
         let nextDataIndex = sectionIndex + 1
         let totalDataSections = OnboardingManager.shared.questionnaire.sections.count
         
-        // 2. Decide if we go to the next Cover Page or the Results
         if nextDataIndex < totalDataSections {
-            // More questions remain: Go to the next Intro/Cover screen
             if let introVC = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
                 introVC.sectionIndex = nextDataIndex + 2
                 navigationController?.pushViewController(introVC, animated: true)
             }
         } else {
-            // All sections finished!
-            // The markSectionCompleted(index: 4) we called above
-            // will have set isOnboardingCompleted to true.
             goToResults()
         }
     }
-    // Add this inside onboardingQuestionViewController
     private func goToResults() {
-        // 1. Find the IntroVC in the stack to access its calculation logic
         if let nav = navigationController {
             for vc in nav.viewControllers {
                 if let introVC = vc as? onboardingSectionIntroViewController {
-                    // Instead of popping to it, we just tell it to push the results
                     introVC.calculateAndPushResults()
                     return
                 }
@@ -203,7 +186,6 @@ class onboardingQuestionViewController: UIViewController {
                 vc.questionnaire = questionnaire
                 vc.sectionIndex = sectionIndex
                 vc.questionIndex = questionIndex + 1
-                // Pass the data forward
                 vc.userSelectedAnswers = self.userSelectedAnswers
                 vc.currentSectionAnswers = self.currentSectionAnswers
                 
@@ -211,7 +193,6 @@ class onboardingQuestionViewController: UIViewController {
                 return
             }
             
-            // Section is finished, save the section's answers into the main array
             userSelectedAnswers[sectionIndex] = currentSectionAnswers
             finishSection()
         }

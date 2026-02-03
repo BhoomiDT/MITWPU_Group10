@@ -20,7 +20,6 @@ class BadgeUnlockedModalViewController: UIViewController {
     @IBOutlet weak var largeIconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
-   // @IBOutlet weak var dismissButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()

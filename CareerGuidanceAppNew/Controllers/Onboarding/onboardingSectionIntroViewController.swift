@@ -20,11 +20,14 @@ class onboardingSectionIntroViewController: UIViewController {
     
     var sectionIndex: Int = 0
     var questionIndex: Int = 0
-    
+    // Add this property to store the name
+    var recommendedDomainName: String? {
+        get { UserDefaults.standard.string(forKey: "kRecommendedDomainName") }
+        set { UserDefaults.standard.set(newValue, forKey: "kRecommendedDomainName") }
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         configureContent()
-        //setupBackChevron()
         navigationItem.hidesBackButton = true
         
     }
@@ -67,7 +70,6 @@ class onboardingSectionIntroViewController: UIViewController {
             subtitleLabel.text = "Add your technical skills to get a personalized roadmap"
             imageView.image = UIImage(systemName: "terminal.fill")
         } else {
-            // Maps Screen 2, 3, 4 to Data 0, 1, 2
             let dataIndex = sectionIndex - 2
             guard dataIndex < questionnaire.sections.count else { return }
             
@@ -80,29 +82,21 @@ class onboardingSectionIntroViewController: UIViewController {
         btnSkip.isHidden = (sectionIndex == 0)
     }
     @IBAction func continueButtonTapped(_ sender: UIButton) {
-        //added T
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
             
             switch sectionIndex {
             case 0:
-                // Welcome -> Technical Skills Cover
                 navigateToSectionIntro(index: 1)
                 
             case 1:
-                // Technical Skills Cover -> Skills Selection Screen
                 if let techVC = storyboard?.instantiateViewController(withIdentifier: "technicalSkills") as? SkillsViewController {
                     navigationController?.pushViewController(techVC, animated: true)
                 }
                 
             case 2, 3, 4:
-                // These are your 3 Question Sections
                 if let questionVC = storyboard?.instantiateViewController(withIdentifier: "QuestionVC") as? onboardingQuestionViewController {
                     questionVC.questionnaire = OnboardingManager.shared.questionnaire
-                    
-                    // CRITICAL FIX:
-                    // Screen Index 2 uses Data Section 0
-                    // Screen Index 3 uses Data Section 1
-                    // Screen Index 4 uses Data Section 2
+                   
                     questionVC.sectionIndex = self.sectionIndex - 2
                     
                     navigationController?.pushViewController(questionVC, animated: true)
@@ -112,25 +106,17 @@ class onboardingSectionIntroViewController: UIViewController {
                 calculateAndPushResults()
             }        }
 
-        // Ensure this helper function is in your class
         private func navigateToSectionIntro(index: Int) {
             if let nextIntro = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
                 nextIntro.sectionIndex = index
                 navigationController?.pushViewController(nextIntro, animated: true)
             }
     }
-    // Add this inside onboardingSectionIntroViewController
-//    private func navigateToSectionIntro(index: Int) {
-//        if let nextIntro = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
-//            nextIntro.sectionIndex = index
-//            navigationController?.pushViewController(nextIntro, animated: true)
-//        }
-//    }
+ 
     func calculateAndPushResults() {
         OnboardingManager.shared.isOnboardingCompleted = true
         let allAnswers = OnboardingManager.shared.userSelectedAnswers
             
-            // Verify we actually have data to process
             guard allAnswers.flatMap({ $0 }).count > 0 else {
                 print("Error: No answers found to calculate results")
                 return
@@ -145,9 +131,7 @@ class onboardingSectionIntroViewController: UIViewController {
                 "Agree": 4.0,
                 "Strongly Agree": 5.0
             ]
-      //  let allAnswers = OnboardingManager.shared.userSelectedAnswers
-
-            // Math for the Interleaved Set (R,I,A,S,E,C, R,I,A,S,E,C)
+   
             for section in allAnswers {
                 for (qIndex, answer) in section.enumerated() {
                     let points = scoreMap[answer] ?? 0.0
@@ -161,15 +145,12 @@ class onboardingSectionIntroViewController: UIViewController {
                 let storyboard = UIStoryboard(name: "Main", bundle: nil)
                 if let analysisVC = storyboard.instantiateViewController(withIdentifier: "path") as? AnalysisTable {
                     
-                    // 1. Set the Path (Title)
                     analysisVC.recommendedPath = domain.replacingOccurrences(of: "_", with: " ")
                     
-                    // 2. Prepare the RIASEC Progress Bars
                     let labels = ["Realistic", "Investigative", "Artistic", "Social", "Enterprising", "Conventional"]
                     let colors: [UIColor] = [.systemRed, .systemBlue, .systemPurple, .systemGreen, .systemOrange, .systemTeal]
                     
                     analysisVC.riasecData = finalScores.enumerated().map { (i, score) in
-                        // Max score for 6 questions is 30.0
                         return (label: labels[i], score: Float(score / 30.0), color: colors[i])
                     }
                     
@@ -178,14 +159,7 @@ class onboardingSectionIntroViewController: UIViewController {
             }
         }
     @IBAction func skipButtonTapped(_ sender: UIButton) {
-        //changed T
-        //        let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
-        //
-        //        if let homeVC = homeStoryboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
-        //            navigationController?.setViewControllers([homeVC], animated: true)
-        //        }
-        
-
+       
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
         
         let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
