@@ -1479,7 +1479,7 @@ var allRoadmapsData: [Roadmap] = [
     
     //Data Analytics
     Roadmap(
-        title: "Data Analytics",
+        title: "Data Science",
         subtitle: "Personalised Roadmap",
         description: "Learn to collect, clean, and visualize complex datasets for actionable insights.",
         imageName: "data-analytics-role",

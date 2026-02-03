@@ -68,7 +68,7 @@ class StatsCard: UICollectionViewCell {
         }
     
     func configure(with stats: UserStats) {
-        let isComplete = OnboardingManager.shared.isOnboardingFullyComplete()
+        let isComplete = OnboardingManager.shared.isOnboardingCompleted
         let xp = isComplete ? stats.xp : 100
         let streak = isComplete ? stats.streak : 1
         let badges = isComplete ? stats.badges : 1

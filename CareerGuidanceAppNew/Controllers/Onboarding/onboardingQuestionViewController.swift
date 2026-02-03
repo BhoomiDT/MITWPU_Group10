@@ -67,27 +67,26 @@ class onboardingQuestionViewController: UIViewController {
     }
 
     private func goToCurrentSectionIntro() {
-
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+        
+        // We need to find the IntroVC that matches this question set.
+        // Since Screen Index = Data Index + 2:
+        let expectedIntroIndex = sectionIndex + 2
+        
         if let nav = navigationController {
+            // Look through the stack for the IntroVC that matches the offset index
             for vc in nav.viewControllers {
-                if let introVC = vc as? onboardingSectionIntroViewController,
-                   introVC.sectionIndex == sectionIndex {
-                    
-                    nav.popToViewController(introVC, animated: true)
-                    return
+                if let introVC = vc as? onboardingSectionIntroViewController {
+                    if introVC.sectionIndex == expectedIntroIndex {
+                        nav.popToViewController(introVC, animated: true)
+                        return
+                    }
                 }
             }
+            
+            // Fallback: If for some reason it's not in the stack, just pop once
+            nav.popViewController(animated: true)
         }
-
-        guard let introVC = storyboard?.instantiateViewController(
-            withIdentifier: "introVC"
-        ) as? onboardingSectionIntroViewController else {
-            return
-        }
-
-        introVC.sectionIndex = sectionIndex
-        navigationController?.popViewController(animated: true)
     }
 
     private func configureUI() {
@@ -158,38 +157,41 @@ class onboardingQuestionViewController: UIViewController {
     }
     
     private func routeAfterSectionCompletion() {
-
-        let nextSectionIndex = sectionIndex + 1
-        let lastSectionIndex = questionnaire.sections.count - 1
-
-
-        if sectionIndex == lastSectionIndex {
-                // Find the IntroVC in the stack and pass the final answers back to it
-                if let nav = navigationController {
-                    for vc in nav.viewControllers {
-                        if let introVC = vc as? onboardingSectionIntroViewController {
-                            introVC.userSelectedAnswers = self.userSelectedAnswers
-                            introVC.sectionIndex = 3 // Set to 3 to trigger the calculation logic
-                            nav.popToViewController(introVC, animated: true)
-                            
-                            // Trigger the button tap programmatically to run calculateAndPushResults
-                            introVC.continueButtonTapped(UIButton())
-                            return
-                        }
-                    }
-                }
+        // 1. Mark the current section as finished in the Manager
+        // We add 2 because the QuestionVC's 0, 1, 2 maps to the Manager's 2, 3, 4
+        let completedIndex = self.sectionIndex + 2
+        OnboardingManager.shared.markSectionCompleted(index: completedIndex)
+        
+        let nextDataIndex = sectionIndex + 1
+        let totalDataSections = OnboardingManager.shared.questionnaire.sections.count
+        
+        // 2. Decide if we go to the next Cover Page or the Results
+        if nextDataIndex < totalDataSections {
+            // More questions remain: Go to the next Intro/Cover screen
+            if let introVC = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
+                introVC.sectionIndex = nextDataIndex + 2
+                navigationController?.pushViewController(introVC, animated: true)
             }
-
-
-        if let introVC = storyboard?.instantiateViewController(
-            withIdentifier: "introVC"
-        ) as? onboardingSectionIntroViewController {
-
-            introVC.sectionIndex = nextSectionIndex
-            navigationController?.pushViewController(introVC, animated: true)
+        } else {
+            // All sections finished!
+            // The markSectionCompleted(index: 4) we called above
+            // will have set isOnboardingCompleted to true.
+            goToResults()
         }
     }
-
+    // Add this inside onboardingQuestionViewController
+    private func goToResults() {
+        // 1. Find the IntroVC in the stack to access its calculation logic
+        if let nav = navigationController {
+            for vc in nav.viewControllers {
+                if let introVC = vc as? onboardingSectionIntroViewController {
+                    // Instead of popping to it, we just tell it to push the results
+                    introVC.calculateAndPushResults()
+                    return
+                }
+            }
+        }
+    }
         
 @IBAction func nextTapped(_ sender: UIButton)  {
     OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
