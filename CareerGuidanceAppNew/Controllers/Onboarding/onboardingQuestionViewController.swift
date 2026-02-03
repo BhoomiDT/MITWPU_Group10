@@ -12,7 +12,8 @@ class onboardingQuestionViewController: UIViewController {
     var questionnaire: Questionnaire!
     var sectionIndex: Int = 0
     var questionIndex: Int = 0
-    
+    var userSelectedAnswers: [[String]] = [[], [], []] // This must be passed from the IntroVC
+    var currentSectionAnswers: [String] = []
 
     @IBOutlet weak var questionLabel: UILabel!
     
@@ -30,6 +31,9 @@ class onboardingQuestionViewController: UIViewController {
         nextButton.isEnabled = false
         self.title = String("Question \(questionIndex+1)")
         navigationController?.navigationBar.prefersLargeTitles = true
+        if questionIndex == 0 {
+                    currentSectionAnswers = Array(repeating: "", count: questionnaire.sections[sectionIndex].questions.count)
+                }
         configureUI()
         setupBackChevron()
     }
@@ -136,11 +140,19 @@ class onboardingQuestionViewController: UIViewController {
         sender.layer.cornerRadius = 8
         sender.clipsToBounds = true
         print("Selected option: \(sender.currentTitle ?? "")")
+        // SAVE THE ANSWER
+                if let answer = sender.currentTitle {
+                    // Update the answer for the current question index
+                    if currentSectionAnswers.count > questionIndex {
+                        currentSectionAnswers[questionIndex] = answer
+                    }
+                }
         //added T
         nextButton.isEnabled = true
     }
     // added fucntion
     private func finishSection() {
+        OnboardingManager.shared.userSelectedAnswers[sectionIndex] = currentSectionAnswers
         OnboardingManager.shared.markSectionCompleted(index: sectionIndex)
         routeAfterSectionCompletion()
     }
@@ -152,18 +164,21 @@ class onboardingQuestionViewController: UIViewController {
 
 
         if sectionIndex == lastSectionIndex {
-
-            OnboardingManager.shared.isOnboardingCompleted = true
-
-            if let analysisVC = storyboard?.instantiateViewController(
-                withIdentifier: "path"
-            ) {
-                navigationController?.pushViewController(analysisVC, animated: true)
-            } else {
-                navigationController?.popToRootViewController(animated: true)
+                // Find the IntroVC in the stack and pass the final answers back to it
+                if let nav = navigationController {
+                    for vc in nav.viewControllers {
+                        if let introVC = vc as? onboardingSectionIntroViewController {
+                            introVC.userSelectedAnswers = self.userSelectedAnswers
+                            introVC.sectionIndex = 3 // Set to 3 to trigger the calculation logic
+                            nav.popToViewController(introVC, animated: true)
+                            
+                            // Trigger the button tap programmatically to run calculateAndPushResults
+                            introVC.continueButtonTapped(UIButton())
+                            return
+                        }
+                    }
+                }
             }
-            return
-        }
 
 
         if let introVC = storyboard?.instantiateViewController(
@@ -177,27 +192,26 @@ class onboardingQuestionViewController: UIViewController {
 
         
 @IBAction func nextTapped(_ sender: UIButton)  {
-            OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
-            
-            nextButton.isEnabled = false
-            
+    OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
             let section = questionnaire.sections[sectionIndex]
             
             if questionIndex < section.questions.count - 1 {
-                guard let vc = storyboard?.instantiateViewController(
-                    withIdentifier: "QuestionVC"
-                ) as? onboardingQuestionViewController else { return }
+                guard let vc = storyboard?.instantiateViewController(withIdentifier: "QuestionVC") as? onboardingQuestionViewController else { return }
                 
                 vc.questionnaire = questionnaire
                 vc.sectionIndex = sectionIndex
                 vc.questionIndex = questionIndex + 1
+                // Pass the data forward
+                vc.userSelectedAnswers = self.userSelectedAnswers
+                vc.currentSectionAnswers = self.currentSectionAnswers
                 
                 navigationController?.pushViewController(vc, animated: true)
-                nextButton.isEnabled = true
-                
                 return
             }
             
-            finishSection()}
+            // Section is finished, save the section's answers into the main array
+            userSelectedAnswers[sectionIndex] = currentSectionAnswers
+            finishSection()
+        }
     }
 

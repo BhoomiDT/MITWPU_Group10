@@ -5,7 +5,7 @@ class OnboardingManager {
     static let shared = OnboardingManager()
     private let kOnboardingCompleted = "kOnboardingCompleted"
     private let kLastVisitedSection = "kLastVisitedSection"
-
+    var userSelectedAnswers: [[String]] = [[], [], [], []]
     var lastVisitedSectionIndex: Int {
         get { defaults.integer(forKey: kLastVisitedSection) }
         set { defaults.set(newValue, forKey: kLastVisitedSection) }
@@ -108,6 +108,7 @@ class OnboardingManager {
     func resetOnboarding() {
         let domain = Bundle.main.bundleIdentifier!
         defaults.removePersistentDomain(forName: domain)
+        userSelectedAnswers = [[], [], [], []]
         defaults.synchronize()
         print("Onboarding Reset")
     }
