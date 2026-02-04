@@ -162,7 +162,9 @@ class QuizViewController: UIViewController {
         )
 
         alert.addAction(UIAlertAction(title: "OK", style: .default))
-
+        if let lessonId = self.lesson?.id {
+                OnboardingManager.shared.markLessonComplete(id: lessonId)
+            }
         present(alert, animated: true)
     }
     

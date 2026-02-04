@@ -30,7 +30,8 @@ class SkillsViewController: UIViewController {
         "React Native",
         "SQL Database",
         "Django",
-        "Kotlin"
+        "Kotlin",
+        "CPP"
     ]
 
     private var filteredSuggestions: [String] = []

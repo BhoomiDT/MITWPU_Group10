@@ -69,7 +69,11 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
             
             cell.domainDescription.text = "Based on your RIASEC results, \(recommendedPath) is the best match for your skills and interests."
             
+            // Inside AnalysisTable.swift -> cellForRowAt section 0
             cell.onExploreTapped = { [weak self] in
+                // Save the recommended path globally before navigating
+                OnboardingManager.shared.recommendedDomain = self?.recommendedPath
+                
                 let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
                 if let homeVC = storyboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
                     self?.navigationController?.pushViewController(homeVC, animated: true)
