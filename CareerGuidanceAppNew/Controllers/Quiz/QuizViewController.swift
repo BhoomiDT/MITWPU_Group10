@@ -168,6 +168,38 @@ class QuizViewController: UIViewController {
         present(alert, animated: true)
     }
     
+//    private func showSubmitConfirmation() {
+//        let alert = UIAlertController(
+//            title: "Submit Test?",
+//            message: "Your test is being submitted.",
+//            preferredStyle: .alert
+//        )
+//        
+//        self.onQuizCompleted?()
+//        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+//
+//        alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
+//            let completedQuiz = self.generateCompletedQuiz()
+//            
+//            let correctAnswers = completedQuiz.correctCount
+//            
+//            let earnedXP = correctAnswers * 10
+//            
+//            UserStats.shared.addXP(earnedXP)
+//            JourneyModel.incrementStatsAfterQuiz()
+//            
+//            QuizHistoryManager.shared.save(completedQuiz)
+//            
+//            if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
+//                self.onRoadmapStarted?()
+//            }
+//
+//            self.navigateToResults(completedQuiz: completedQuiz)
+//        })
+//
+//        present(alert, animated: true)
+//    }
+
     private func showSubmitConfirmation() {
         let alert = UIAlertController(
             title: "Submit Test?",
@@ -175,21 +207,23 @@ class QuizViewController: UIViewController {
             preferredStyle: .alert
         )
         
-        self.onQuizCompleted?()
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
         alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
+            // 1. MARK AS COMPLETE FIRST
+            if let lessonId = self.lesson?.id {
+                OnboardingManager.shared.markLessonComplete(id: lessonId)
+                print("DEBUG: Lesson \(lessonId) marked as complete.")
+            }
+
+            // 2. Existing logic
             let completedQuiz = self.generateCompletedQuiz()
-            
-            let correctAnswers = completedQuiz.correctCount
-            
-            let earnedXP = correctAnswers * 10
-            
-            UserStats.shared.addXP(earnedXP)
+            UserStats.shared.addXP(completedQuiz.correctCount * 10)
             JourneyModel.incrementStatsAfterQuiz()
-            
             QuizHistoryManager.shared.save(completedQuiz)
             
+            self.onQuizCompleted?()
+
             if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
                 self.onRoadmapStarted?()
             }
@@ -199,7 +233,6 @@ class QuizViewController: UIViewController {
 
         present(alert, animated: true)
     }
-    
     private func updateSelectionUI(selectedIndex: Int) {
         let buttons = [optionButton1, optionButton2, optionButton3, optionButton4]
         let selectedColor = UIColor(hex: "#1FA5A1")
