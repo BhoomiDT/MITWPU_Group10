@@ -42,7 +42,7 @@ class homepageMyJourney: UICollectionViewCell {
         }
     func configure(days: String, quizzes: String, quests: String) {
        
-        let isComplete = OnboardingManager.shared.isOnboardingFullyComplete()
+        let isComplete = OnboardingManager.shared.isOnboardingCompleted
         
         let displayDays = isComplete ? days : "0"
         let displayQuizzes = isComplete ? quizzes : "0"

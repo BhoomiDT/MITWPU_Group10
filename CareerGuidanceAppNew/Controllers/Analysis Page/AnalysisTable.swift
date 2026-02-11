@@ -10,7 +10,14 @@ import UIKit
 class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableViewAnalysis: UITableView!
-    
+    var recommendedPath: String = "Calculating..."
+        var riasecData: [(label: String, score: Float, color: UIColor)] = []
+        
+        var interests: [String] = [
+            "Problem Solving",
+            "Technical Analysis",
+            "System Design"
+        ]
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.hidesBackButton = true
@@ -26,8 +33,12 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
         tableViewAnalysis.register(UINib(nibName: "AnalysisTableViewCell3", bundle: nil), forCellReuseIdentifier: "cell3")
         
         tableViewAnalysis.separatorStyle = .none
+        tableViewAnalysis.reloadData()
     }
-    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableViewAnalysis.reloadData()
+    }
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
@@ -54,18 +65,22 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
         if section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! AnalysisTableViewCell1
             
-                cell.onExploreTapped = { [weak self] in
-                    let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
-                    if let homeVC = storyboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
-                        // Push to the home page
-                        self?.navigationController?.pushViewController(homeVC, animated: true)
-                    }
+            cell.domainName.text = recommendedPath
+            
+            cell.domainDescription.text = "Based on your RIASEC results, \(recommendedPath) is the best match for your skills and interests."
+            
+            // Inside AnalysisTable.swift -> cellForRowAt section 0
+            cell.onExploreTapped = { [weak self] in
+                // Save the recommended path globally before navigating
+                OnboardingManager.shared.recommendedDomain = self?.recommendedPath
+                
+                let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
+                if let homeVC = storyboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
+                    self?.navigationController?.pushViewController(homeVC, animated: true)
                 }
+            }
+            
             cell.layer.cornerRadius = 16
-            cell.layer.maskedCorners = [.layerMinXMinYCorner,
-                                         .layerMaxXMinYCorner,
-                                         .layerMinXMaxYCorner,
-                                         .layerMaxXMaxYCorner]
             cell.clipsToBounds = true
             return cell
         }

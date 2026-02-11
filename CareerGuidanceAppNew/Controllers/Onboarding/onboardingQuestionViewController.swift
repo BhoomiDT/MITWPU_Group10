@@ -12,7 +12,8 @@ class onboardingQuestionViewController: UIViewController {
     var questionnaire: Questionnaire!
     var sectionIndex: Int = 0
     var questionIndex: Int = 0
-    
+    var userSelectedAnswers: [[String]] = [[], [], []]
+    var currentSectionAnswers: [String] = []
 
     @IBOutlet weak var questionLabel: UILabel!
     
@@ -30,6 +31,9 @@ class onboardingQuestionViewController: UIViewController {
         nextButton.isEnabled = false
         self.title = String("Question \(questionIndex+1)")
         navigationController?.navigationBar.prefersLargeTitles = true
+        if questionIndex == 0 {
+                    currentSectionAnswers = Array(repeating: "", count: questionnaire.sections[sectionIndex].questions.count)
+                }
         configureUI()
         setupBackChevron()
     }
@@ -63,27 +67,22 @@ class onboardingQuestionViewController: UIViewController {
     }
 
     private func goToCurrentSectionIntro() {
-
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
+        
+        let expectedIntroIndex = sectionIndex + 2
+        
         if let nav = navigationController {
             for vc in nav.viewControllers {
-                if let introVC = vc as? onboardingSectionIntroViewController,
-                   introVC.sectionIndex == sectionIndex {
-                    
-                    nav.popToViewController(introVC, animated: true)
-                    return
+                if let introVC = vc as? onboardingSectionIntroViewController {
+                    if introVC.sectionIndex == expectedIntroIndex {
+                        nav.popToViewController(introVC, animated: true)
+                        return
+                    }
                 }
             }
+            
+            nav.popViewController(animated: true)
         }
-
-        guard let introVC = storyboard?.instantiateViewController(
-            withIdentifier: "introVC"
-        ) as? onboardingSectionIntroViewController else {
-            return
-        }
-
-        introVC.sectionIndex = sectionIndex
-        navigationController?.popViewController(animated: true)
     }
 
     private func configureUI() {
@@ -136,68 +135,66 @@ class onboardingQuestionViewController: UIViewController {
         sender.layer.cornerRadius = 8
         sender.clipsToBounds = true
         print("Selected option: \(sender.currentTitle ?? "")")
-        //added T
+                if let answer = sender.currentTitle {
+                    if currentSectionAnswers.count > questionIndex {
+                        currentSectionAnswers[questionIndex] = answer
+                    }
+                }
         nextButton.isEnabled = true
     }
-    // added fucntion
     private func finishSection() {
+        OnboardingManager.shared.userSelectedAnswers[sectionIndex] = currentSectionAnswers
         OnboardingManager.shared.markSectionCompleted(index: sectionIndex)
         routeAfterSectionCompletion()
     }
     
     private func routeAfterSectionCompletion() {
 
-        let nextSectionIndex = sectionIndex + 1
-        let lastSectionIndex = questionnaire.sections.count - 1
-
-
-        if sectionIndex == lastSectionIndex {
-
-            OnboardingManager.shared.isOnboardingCompleted = true
-
-            if let analysisVC = storyboard?.instantiateViewController(
-                withIdentifier: "path"
-            ) {
-                navigationController?.pushViewController(analysisVC, animated: true)
-            } else {
-                navigationController?.popToRootViewController(animated: true)
+        let completedIndex = self.sectionIndex + 2
+        OnboardingManager.shared.markSectionCompleted(index: completedIndex)
+        
+        let nextDataIndex = sectionIndex + 1
+        let totalDataSections = OnboardingManager.shared.questionnaire.sections.count
+        
+        if nextDataIndex < totalDataSections {
+            if let introVC = storyboard?.instantiateViewController(withIdentifier: "introVC") as? onboardingSectionIntroViewController {
+                introVC.sectionIndex = nextDataIndex + 2
+                navigationController?.pushViewController(introVC, animated: true)
             }
-            return
-        }
-
-
-        if let introVC = storyboard?.instantiateViewController(
-            withIdentifier: "introVC"
-        ) as? onboardingSectionIntroViewController {
-
-            introVC.sectionIndex = nextSectionIndex
-            navigationController?.pushViewController(introVC, animated: true)
+        } else {
+            goToResults()
         }
     }
-
+    private func goToResults() {
+        if let nav = navigationController {
+            for vc in nav.viewControllers {
+                if let introVC = vc as? onboardingSectionIntroViewController {
+                    introVC.calculateAndPushResults()
+                    return
+                }
+            }
+        }
+    }
         
 @IBAction func nextTapped(_ sender: UIButton)  {
-            OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
-            
-            nextButton.isEnabled = false
-            
+    OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex
             let section = questionnaire.sections[sectionIndex]
             
             if questionIndex < section.questions.count - 1 {
-                guard let vc = storyboard?.instantiateViewController(
-                    withIdentifier: "QuestionVC"
-                ) as? onboardingQuestionViewController else { return }
+                guard let vc = storyboard?.instantiateViewController(withIdentifier: "QuestionVC") as? onboardingQuestionViewController else { return }
                 
                 vc.questionnaire = questionnaire
                 vc.sectionIndex = sectionIndex
                 vc.questionIndex = questionIndex + 1
+                vc.userSelectedAnswers = self.userSelectedAnswers
+                vc.currentSectionAnswers = self.currentSectionAnswers
                 
                 navigationController?.pushViewController(vc, animated: true)
-                nextButton.isEnabled = true
-                
                 return
             }
             
-            finishSection()}
+            userSelectedAnswers[sectionIndex] = currentSectionAnswers
+            finishSection()
+        }
     }
 

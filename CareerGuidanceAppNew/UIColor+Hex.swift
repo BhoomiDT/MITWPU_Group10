@@ -3,7 +3,7 @@ import UIKit
 
 extension UIColor {
     
-    // Helper initializer to create UIColor from a Hex string (e.g., "1FA5A1")
+    // Helper initializer to create UIColor from a Hex string
     convenience init(hex: String, alpha: CGFloat = 1.0) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
@@ -32,7 +32,7 @@ extension UIColor {
         self.init(red: r, green: g, blue: b, alpha: alpha)
     }
 
-    // ⭐️ Static property for the main background color (#F2F2F7)
+    //Static property for the main background color (#F2F2F7)
     static let appBackground = UIColor(hex: "F2F2F7")
     
     // Static property for the main teal color (1FA5A1)
@@ -40,9 +40,7 @@ extension UIColor {
     
     // Static property for the light background circle color
     static let appTealLightBackground = UIColor(red: 0.88, green: 0.95, blue: 0.95, alpha: 1.0)
-    
-    // MARK: - RIASEC Progress Bar Colors
-    
+        
     // Realistic (R) - 43B6E4 (Blue)
     static let riasecRealistic = UIColor(hex: "43B6E4")
     

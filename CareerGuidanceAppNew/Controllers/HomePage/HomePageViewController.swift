@@ -16,26 +16,131 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         RoadmapStore.shared.roadmaps
     }
     
-    let personalisedRoadmap = allRoadmapsData.last
-    
+//    let personalisedRoadmap = allRoadmapsData.last
+//    
+//    var visibleRoadmaps: [Roadmap] {
+//        guard let personalised = personalisedRoadmap else { return [] }
+//
+//            let startedRoadmaps = allRoadmaps.filter { roadmap in
+//                return roadmap.isStarted && roadmap.title != personalised.title
+//            }
+//
+//        return [personalised] + startedRoadmaps
+//    }
+    // In HomePageViewController.swift
+
+//    var personalisedRoadmap: Roadmap? {
+//        // 1. Get the domain name suggested by the ML model
+//        guard let recommendedTitle = OnboardingManager.shared.recommendedDomain else {
+//            // Fallback 1: If no recommendation yet, just show the last roadmap
+//            return allRoadmaps.last
+//        }
+//        
+//        // 2. Try to find the actual roadmap object that matches that title
+//        // We search the store to see if we have "Web Development", "AI", etc.
+//        let matchedRoadmap = allRoadmaps.first { $0.title.lowercased() == recommendedTitle.lowercased() }
+//        
+//        // 3. Define which base data to use (the match OR the fallback last one)
+//        let baseRoadmap = matchedRoadmap ?? allRoadmaps.last
+//        
+//        guard let roadmapToUse = baseRoadmap else { return nil }
+//        
+//        // 4. CALCULATE DYNAMIC PERCENTAGE (Specific to the chosen roadmap)
+//        let allLessons = roadmapToUse.milestones.flatMap { $0.lessons }
+//        let totalQuizzes = allLessons.count
+//        let completedCount = allLessons.filter {
+//            OnboardingManager.shared.completedLessonIds.contains($0.id)
+//        }.count
+//        
+//        let calculatedPercentage = totalQuizzes > 0 ? (completedCount * 100) / totalQuizzes : 0
+//        
+//        // 5. Return the final roadmap
+//        // Note: We keep the recommendedTitle as the title even if we fall back
+//        // to the last roadmap's milestones/content.
+//        return Roadmap(
+//            title: recommendedTitle,
+//            subtitle: roadmapToUse.subtitle,
+//            description: roadmapToUse.description,
+//            imageName: roadmapToUse.imageName,
+//            percentage: calculatedPercentage,
+//            milestones: roadmapToUse.milestones,
+//            isStarted: roadmapToUse.isStarted
+//        )
+//    }
+//
+//    var visibleRoadmaps: [Roadmap] {
+//        guard let personalised = personalisedRoadmap else { return [] }
+//
+//        // Filter out whichever roadmap is currently being shown as "Personalised"
+//        let otherStartedRoadmaps = allRoadmaps.filter { roadmap in
+//            return roadmap.isStarted && roadmap.title != personalised.title
+//        }
+//
+//        return [personalised] + otherStartedRoadmaps
+//    }
+    var personalisedRoadmap: Roadmap? {
+        guard let recommendedTitle = OnboardingManager.shared.recommendedDomain else {
+            return allRoadmaps.last.map { getDynamicRoadmap(for: $0) }
+        }
+        
+        let matched = allRoadmaps.first { $0.title.lowercased() == recommendedTitle.lowercased() }
+        let base = matched ?? allRoadmaps.last
+        
+        guard let roadmapToUse = base else { return nil }
+        
+        // We wrap this in our helper, but override the title with the ML recommendation
+        let dynamic = getDynamicRoadmap(for: roadmapToUse)
+        return Roadmap(
+            title: recommendedTitle, // Keep the dynamic ML title
+            subtitle: dynamic.subtitle,
+            description: dynamic.description,
+            imageName: dynamic.imageName,
+            percentage: dynamic.percentage,
+            milestones: dynamic.milestones,
+            isStarted: dynamic.isStarted
+        )
+    }
+
     var visibleRoadmaps: [Roadmap] {
         guard let personalised = personalisedRoadmap else { return [] }
 
-            let startedRoadmaps = allRoadmaps.filter { roadmap in
-                return roadmap.isStarted && roadmap.title != personalised.title
-            }
+        // Map through other started roadmaps and calculate progress for EACH
+        let otherStartedRoadmaps = allRoadmaps
+            .filter { $0.isStarted && $0.title != personalised.title }
+            .map { getDynamicRoadmap(for: $0) } // <--- CRITICAL FIX
 
-        return [personalised] + startedRoadmaps
+        return [personalised] + otherStartedRoadmaps
     }
     
+    private func getDynamicRoadmap(for baseRoadmap: Roadmap) -> Roadmap {
+        let allLessons = baseRoadmap.milestones.flatMap { $0.lessons }
+        let totalQuizzes = allLessons.count
+        let completedCount = allLessons.filter {
+            OnboardingManager.shared.completedLessonIds.contains($0.id)
+        }.count
+        
+        let calculatedPercentage = totalQuizzes > 0 ? (completedCount * 100) / totalQuizzes : 0
+        
+        return Roadmap(
+            title: baseRoadmap.title,
+            subtitle: baseRoadmap.subtitle,
+            description: baseRoadmap.description,
+            imageName: baseRoadmap.imageName,
+            percentage: calculatedPercentage, // The dynamic value
+            milestones: baseRoadmap.milestones,
+            isStarted: baseRoadmap.isStarted
+        )
+    }
+//    var trendingData: [Roadmap] {
+//            RoadmapStore.shared.roadmaps
+//        }
     var trendingData: [Roadmap] {
-            RoadmapStore.shared.roadmaps
-        }
+        RoadmapStore.shared.roadmaps.map { getDynamicRoadmap(for: $0) }
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        //added T
         print(" Completed sections:",
                OnboardingManager.shared.completedSectionIndexes)
          print(" Onboarding completed:",
@@ -113,6 +218,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             return cell
 
         case 1:
+            
             if OnboardingManager.shared.isOnboardingCompleted {
                 let cell = collectionView.dequeueReusableCell(
                     withReuseIdentifier: "roadmapScrollCollectionViewCell",
@@ -124,7 +230,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                     title: data.title,
                     subtitle: data.subtitle,
                     percentage: data.percentage,
-                    milestone: data.milestones.first?.title ?? "Start Learning"
+                    milestone: data.currentMilestoneTitle
                 )
 
                 return cell
@@ -189,7 +295,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             return
         }
         
-        // Perform Navigation
         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
         
         guard let vc = storyboard.instantiateViewController(
@@ -317,4 +422,20 @@ class HomeSectionHeaderView: UICollectionReusableView {
     required init?(coder: NSCoder) { fatalError() }
     @objc func tap() { onViewAllTapped?()}
       
+}
+extension Roadmap {
+    var currentMilestoneTitle: String {
+        // Find the first milestone where NOT all lessons are completed
+        let activeMilestone = milestones.first { milestone in
+            let completedCount = milestone.lessons.filter {
+                OnboardingManager.shared.completedLessonIds.contains($0.id)
+            }.count
+            
+            return completedCount < milestone.lessons.count
+        }
+        
+        // If all milestones are done, return "Completed!",
+        // otherwise return the title of the active one.
+        return activeMilestone?.title ?? "Course Completed!"
+    }
 }
