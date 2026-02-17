@@ -1,14 +1,14 @@
+# macOS
 .DS_Store
-# Xcode user-specific files
-*.xcuserdata
-*.xcuserdatad
-*.xcuserstate
-<<<<<<< HEAD
-=======
-.DS_Store
+
 # Xcode user-specific files
 *.xcuserdata/
 *.xcuserdatad/
 *.xcuserstate
->>>>>>> ef5ffbd43dbc5d030ba823c8e8ef8fb816f7402e
-.DS_Store
+
+# Xcode build
+DerivedData/
+build/
+
+# Xcode config files (secrets)
+*.xcconfig

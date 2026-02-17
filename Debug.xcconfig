@@ -1,0 +1,12 @@
+//
+//  Debug.xcconfig
+//  CareerGuidanceAppNew
+//
+//  Created by SDC-USER on 13/02/26.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://developer.apple.com/documentation/xcode/adding-a-build-configuration-file-to-your-project]]
+
+SUPABASE_URL = "https://xffbxethqutrkgwyiick.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhmZmJ4ZXRocXV0cmtnd3lpaWNrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4MDAzNjcsImV4cCI6MjA4NjM3NjM2N30._0gEE8TTSogvf4OrMEc5MBdWqO_MIQeZ8Shp6oAUw1g"
