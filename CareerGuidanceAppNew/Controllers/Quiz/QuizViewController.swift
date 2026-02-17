@@ -206,22 +206,40 @@ class QuizViewController: UIViewController {
             message: "Your test is being submitted.",
             preferredStyle: .alert
         )
-        
+
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
         alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
-            // 1. MARK AS COMPLETE FIRST
+
+            // 🚀 1️⃣ SEND ATTEMPT TO SUPABASE
+            Task {
+                do {
+                    print("🚀 submitQuiz() CALLED")
+
+                    try await QuizAttemptService.shared.submitQuiz(
+                        quiz: self.quiz!,
+                        lesson: self.lesson!,
+                        selectedOptionIndices: self.selectedOptionIndices
+                    )
+
+                    print("✅ Quiz attempt stored in Supabase")
+
+                } catch {
+                    print("❌ Failed to store quiz attempt:", error)
+                }
+            }
+
+            // 🧠 2️⃣ EXISTING LOCAL LOGIC (UNCHANGED)
             if let lessonId = self.lesson?.id {
                 OnboardingManager.shared.markLessonComplete(id: lessonId)
                 print("DEBUG: Lesson \(lessonId) marked as complete.")
             }
 
-            // 2. Existing logic
             let completedQuiz = self.generateCompletedQuiz()
             UserStats.shared.addXP(completedQuiz.correctCount * 10)
             JourneyModel.incrementStatsAfterQuiz()
             QuizHistoryManager.shared.save(completedQuiz)
-            
+
             self.onQuizCompleted?()
 
             if let roadmap = self.roadmapStatus, roadmap.isStarted == false {

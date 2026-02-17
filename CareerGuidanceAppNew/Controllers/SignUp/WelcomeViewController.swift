@@ -14,6 +14,9 @@ class WelcomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSheetPresentation()
+        Task {
+                await AuthService.shared.ensureAnonymousUser()
+            }
     }
 
     private func setupSheetPresentation() {

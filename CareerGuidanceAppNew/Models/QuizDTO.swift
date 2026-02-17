@@ -39,6 +39,33 @@ struct QuizQuestionDTO: Decodable {
     }
 }
 
+struct QuizAttemptDTO: Decodable {
+    let id: UUID
+}
+
+struct QuizAttemptInsertDTO: Encodable {
+    let user_id: UUID
+    let lesson_id: String
+    let score_percent: Int
+    let correct_count: Int
+    let total_questions: Int
+}
+
+struct QuizAnswerInsertDTO: Encodable {
+    let attempt_id: UUID
+    let question_id: UUID
+    let selected_index: Int
+}
+struct UserLessonProgressInsertDTO: Encodable {
+    let user_id: UUID
+    let lesson_id: String
+    let is_completed: Bool
+    let completed_at: String
+}
+
+
+
+
 enum QuizMapper {
 
     static func fromDTO(
