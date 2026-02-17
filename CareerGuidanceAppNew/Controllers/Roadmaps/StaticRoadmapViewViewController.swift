@@ -11,12 +11,11 @@ class StaticRoadmapViewViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     var roadmap: Roadmap?
     var milestoneList: [Milestone] = []
+    private var isFetching = false
     
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        
-        print("VIEW DID LOAD WORKED")
         self.title = roadmap?.title
         navigationController?.navigationBar.prefersLargeTitles = true
         loadRoadmapData()
@@ -27,7 +26,7 @@ class StaticRoadmapViewViewController: UIViewController {
         guard let header = tableView.tableHeaderView as? StaticHeaderView,
               let roadmap = roadmap else { return }
         
-        let hasStarted = roadmap.milestones.flatMap({ $0.lessons }).contains {
+        let hasStarted = milestoneList.flatMap({ $0.lessons }).contains {
             QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
         }
         
@@ -89,7 +88,7 @@ class StaticRoadmapViewViewController: UIViewController {
         var targetMilestone: Milestone?
         var targetLessonIndex: Int = 0
 
-        for milestone in roadmap.milestones {
+        for milestone in milestoneList {
             if let firstUncompletedIndex = milestone.lessons.firstIndex(where: {
                 !QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
             }) {
@@ -99,7 +98,7 @@ class StaticRoadmapViewViewController: UIViewController {
             }
         }
 
-        let milestoneToOpen = targetMilestone ?? roadmap.milestones.first
+        let milestoneToOpen = targetMilestone ?? milestoneList.first
         
         guard let finalMilestone = milestoneToOpen else { return }
         let storyboard = UIStoryboard(name: "ResourcesDescription", bundle: nil)
@@ -113,34 +112,63 @@ class StaticRoadmapViewViewController: UIViewController {
     }
 
     private func getUnlockedMilestoneIndex() -> Int {
-        guard let roadmap = roadmap else { return 0 }
-        
         var lastCompletedIndex = -1
-        
-        for (index, milestone) in roadmap.milestones.enumerated() {
+
+        for (index, milestone) in milestoneList.enumerated() {
             let isMilestoneComplete = milestone.lessons.allSatisfy {
                 QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
             }
-            
+
             if isMilestoneComplete {
                 lastCompletedIndex = index
             } else {
                 return index
             }
         }
-        
-        return roadmap.milestones.count - 1
+
+        return milestoneList.count - 1
     }
+    
+    
     func loadRoadmapData() {
         guard let roadmap = roadmap else {
             print("Roadmap not injected")
             return
         }
-        self.milestoneList = roadmap.milestones
+        //self.milestoneList = roadmap.milestones
+        Task {
+                do {
+                    let milestoneDTOs = try await RoadmapService.shared
+                        .fetchMilestones(for: roadmap.id)
+
+                    var loadedMilestones: [Milestone] = []
+
+                    for dto in milestoneDTOs {
+                        var milestone = MilestoneMapper.fromDTO(dto)
+
+                        let lessonDTOs = try await RoadmapService.shared
+                            .fetchLessons(for: dto.id)
+
+                        milestone.lessons = lessonDTOs.map {
+                            LessonMapper.fromDTO($0)
+                        }
+
+                        loadedMilestones.append(milestone)
+                    }
+
+                    await MainActor.run {
+                        self.milestoneList = loadedMilestones
+                        self.tableView.reloadData()
+                        self.updateHeaderUI()
+                    }
+
+                } catch {
+                    print("❌ Error loading milestones + lessons:", error)
+                }
+            }
     }
 
     func setupTable() {
-        print("setupTable CALLED")
         tableView.delegate = self
         tableView.dataSource = self
         tableView.separatorStyle = .none
@@ -156,7 +184,7 @@ class StaticRoadmapViewViewController: UIViewController {
 extension StaticRoadmapViewViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print("Rows count =", milestoneList.count)
+        //print("Rows count =", milestoneList.count)
         return milestoneList.count
     }
 

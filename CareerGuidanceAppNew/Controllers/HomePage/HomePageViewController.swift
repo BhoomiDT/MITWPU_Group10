@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Supabase
 
 class HomePageViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -91,6 +92,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         // We wrap this in our helper, but override the title with the ML recommendation
         let dynamic = getDynamicRoadmap(for: roadmapToUse)
         return Roadmap(
+            id: dynamic.id,
             title: recommendedTitle, // Keep the dynamic ML title
             subtitle: dynamic.subtitle,
             description: dynamic.description,
@@ -122,6 +124,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         let calculatedPercentage = totalQuizzes > 0 ? (completedCount * 100) / totalQuizzes : 0
         
         return Roadmap(
+            id: baseRoadmap.id,
             title: baseRoadmap.title,
             subtitle: baseRoadmap.subtitle,
             description: baseRoadmap.description,
@@ -130,6 +133,26 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             milestones: baseRoadmap.milestones,
             isStarted: baseRoadmap.isStarted
         )
+    }
+    
+    private func loadRoadmapsFromSupabase() async {
+
+        do {
+            let response = try await SupabaseManager.shared.client
+                .from("roadmaps")
+                .select()
+                .execute()
+
+            let dtos = try JSONDecoder().decode([RoadmapDTO].self, from: response.data)
+
+            let mapped = dtos.map { RoadmapMapper.fromDTO($0) }
+
+            RoadmapStore.shared.setRoadmaps(mapped)
+            print("FETCHED FROM SUPABASE");
+
+        } catch {
+            print("❌ Supabase roadmap load failed:", error)
+        }
     }
 //    var trendingData: [Roadmap] {
 //            RoadmapStore.shared.roadmaps
@@ -156,6 +179,12 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        
+        Task {
+                await loadRoadmapsFromSupabase()
+                collectionView.reloadData()
+            }
+        
         navigationController!.navigationBar.prefersLargeTitles = true
         navigationItem.hidesBackButton = true
         collectionView.delegate = self

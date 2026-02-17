@@ -11,18 +11,20 @@ class RoadmapsViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var searchBar: UISearchBar!
-    var allRoadmaps: [Roadmap] = []
-    var roadmapsData: [Roadmap] = []
+    var allRoadmaps: [Roadmap] = []   // SOURCE
+    var roadmapsData: [Roadmap] = [] //used by collection view
     override func viewDidLoad() {
         super.viewDidLoad()
-        loadRoadmapData()
         registerRoadmapCells()
         setupSearchBar()
+        loadRoadmapData() 
     }
-    
+        
     private func loadRoadmapData() {
-        self.allRoadmaps = allRoadmapsData
-        self.roadmapsData = allRoadmaps
+        let storeRoadmaps = RoadmapStore.shared.roadmaps
+        self.allRoadmaps = storeRoadmaps
+        self.roadmapsData = storeRoadmaps
+        collectionView.reloadData()
     }
     
     private func registerRoadmapCells() {
@@ -100,15 +102,15 @@ extension RoadmapsViewController: UICollectionViewDelegate {
 extension RoadmapsViewController: UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
+
+        if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             roadmapsData = allRoadmaps
         } else {
             roadmapsData = allRoadmaps.filter { roadmap in
-                let titleMatch = roadmap.title.lowercased().contains(searchText.lowercased())
-                return titleMatch
+                roadmap.title.lowercased().contains(searchText.lowercased())
             }
         }
-        
+
         collectionView.reloadData()
     }
     

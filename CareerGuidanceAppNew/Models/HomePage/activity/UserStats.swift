@@ -1,13 +1,10 @@
-//import Foundation
 //
-//struct UserStats {
-//    let xp: Int
-//    let streak: Int
-//    let badges: Int
-//    
-//   
-//    static let demo = UserStats(xp: 120, streak: 7, badges: 15)
-//}
+//  UserStats.swift
+//  CareerGuidanceAppNew
+//
+//  Created by SDC-USER on 12/01/26.
+//
+
 
 import Foundation
 

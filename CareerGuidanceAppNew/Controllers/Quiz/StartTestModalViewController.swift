@@ -100,10 +100,33 @@ class StartTestModalViewController: UIViewController {
     }
 
     private func loadQuiz() {
-        quiz = TestFactory.makeQuiz(
-            lessonId: lesson.id,
-            lessonName: lesson.name
-        )
+        Task {
+            do {
+                let quiz = try await QuizService.shared.fetchQuiz(
+                    lessonId: lesson.id
+                )
+
+                await MainActor.run {
+                    self.quiz = quiz
+                    self.bindQuizToUI()
+                }
+
+                print("📡 Quiz loaded from Supabase")
+
+            } catch {
+                print("❌ Failed to load quiz:", error)
+
+                // TEMP fallback (optional during MVP)
+//                self.quiz = TestFactory.makeQuiz(
+//                    lessonId: lesson.id,
+//                    lessonName: lesson.name
+//                )
+                self.bindQuizToUI()
+            }
+        }
+    }
+    
+    private func bindQuizToUI() {
         durationTitleLabel.text = "Duration"
         durationSubtitleLabel.text = "\(quiz.durationMinutes) mins"
 
