@@ -230,11 +230,8 @@ class QuizViewController: UIViewController {
             }
 
             // 🧠 2️⃣ EXISTING LOCAL LOGIC (UNCHANGED)
-            if let lessonId = self.lesson?.id {
-                OnboardingManager.shared.markLessonComplete(id: lessonId)
-                print("DEBUG: Lesson \(lessonId) marked as complete.")
-            }
 
+            //LEGACY CODE STATIC DATA STORE
             let completedQuiz = self.generateCompletedQuiz()
             UserStats.shared.addXP(completedQuiz.correctCount * 10)
             JourneyModel.incrementStatsAfterQuiz()

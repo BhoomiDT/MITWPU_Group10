@@ -24,4 +24,8 @@ class QuizHistoryManager {
     func hasCompletedQuiz(for lessonId: String) -> Bool {
         completedQuizzes.contains { $0.lessonId == lessonId }
     }
+    
+    func loadFromAttempts(_ attempts: [CompletedQuiz]) {
+        completedQuizzes = attempts
+    }
 }

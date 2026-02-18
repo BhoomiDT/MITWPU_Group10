@@ -88,4 +88,27 @@ final class QuizAttemptService {
         print("✅ lesson progress saved")
     }
     
+    func fetchLatestAttempt(
+        lessonId: String
+    ) async throws -> QuizAttemptDTO? {
+
+        guard let userId = UserSessionManager.shared.userId else {
+            return nil
+        }
+
+        let response = try await SupabaseManager.shared.client
+            .from("quiz_attempts")
+            .select()
+            .eq("user_id", value: userId.uuidString)
+            .eq("lesson_id", value: lessonId)
+            .order("created_at", ascending: false)
+            .limit(1)
+            .execute()
+
+        let attempts = try JSONDecoder()
+            .decode([QuizAttemptDTO].self, from: response.data)
+
+        return attempts.first
+    }
+    
 }

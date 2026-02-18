@@ -63,6 +63,10 @@ struct UserLessonProgressInsertDTO: Encodable {
     let completed_at: String
 }
 
+enum QuizState {
+    case notStarted
+    case completed(score: Int, passed: Bool)
+}
 
 
 
