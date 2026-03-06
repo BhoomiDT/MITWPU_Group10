@@ -43,7 +43,7 @@ class StartTestModalViewController: UIViewController {
 
     weak var delegate: StartTestModalDelegate?
     var lesson: Lesson!
-    private var quiz: Quiz!
+    var quiz: Quiz?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,6 +127,12 @@ class StartTestModalViewController: UIViewController {
     }
     
     private func bindQuizToUI() {
+
+        guard let quiz = quiz else {
+            print("Quiz is nil, cannot bind UI")
+            return
+        }
+
         durationTitleLabel.text = "Duration"
         durationSubtitleLabel.text = "\(quiz.durationMinutes) mins"
 
@@ -139,7 +145,6 @@ class StartTestModalViewController: UIViewController {
         attemptsTitleLabel.text = "Attempts Remaining"
         attemptsSubtitleLabel.text = "3 of 3"
     }
-
     @objc private func closeTapped() {
         dismiss(animated: true)
     }
@@ -148,9 +153,14 @@ class StartTestModalViewController: UIViewController {
         print("Start button tapped")
         print("Delegate is nil?", delegate == nil)
 
+        guard let quiz = quiz else {
+            print("Quiz is nil, cannot start test")
+            return
+        }
+
         dismiss(animated: true) {
             print("Modal dismissed, calling delegate")
-            self.delegate?.didTapStartTest(quiz: self.quiz, lesson: self.lesson)
+            self.delegate?.didTapStartTest(quiz: quiz, lesson: self.lesson)
         }
     }
 

@@ -16,39 +16,47 @@ class TestResultsViewController: UIViewController {
     @IBOutlet weak var tableContainer: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var tableViewHeightConstraint: NSLayoutConstraint!
-    var completedQuiz: CompletedQuiz!
-    var testResult: TestResult!
+    
+    var quizAttemptId: UUID?
+    var testResult: TestResult?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+
         navigationItem.hidesBackButton = true
         navigationController!.navigationBar.prefersLargeTitles = true
-        self.testResult = makeTestResult(for: completedQuiz.lessonId)
+
+        guard let attemptId = quizAttemptId else {
+            fatalError("quizAttemptId not provided")
+        }
+
+        // Custom back button
         let backButton = UIButton(type: .system)
-           backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-           backButton.tintColor = .label
-           backButton.addTarget(
-               self,
-               action: #selector(backChevronTapped),
-               for: .touchUpInside
-           )
+        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        backButton.tintColor = .label
+        backButton.addTarget(
+            self,
+            action: #selector(backChevronTapped),
+            for: .touchUpInside
+        )
 
-           let barButton = UIBarButtonItem(customView: backButton)
-           navigationItem.leftBarButtonItem = barButton
+        let barButton = UIBarButtonItem(customView: backButton)
+        navigationItem.leftBarButtonItem = barButton
 
-        guard completedQuiz != nil else {
-                fatalError("CompletedQuiz not provided")
-            }
+        // UI styling
+        resultCardView.layer.cornerRadius = 16
+        resultCardView.clipsToBounds = true
 
-            resultCardView.layer.cornerRadius = 16
-            resultCardView.clipsToBounds = true
+        tableContainer.layer.cornerRadius = 16
+        tableContainer.clipsToBounds = true
 
-            setupResultCard()
+        tableView.backgroundColor = .clear
+        setupTableView()
 
-            tableContainer.layer.cornerRadius = 16
-            tableContainer.clipsToBounds = true
-
-            tableView.backgroundColor = .clear
-            setupTableView()
+        // Load results from Supabase
+        Task {
+            await loadResults(attemptId: attemptId)
+        }
     }
     @objc func backChevronTapped() {
         guard let navigationController = navigationController else { return }
@@ -70,16 +78,19 @@ class TestResultsViewController: UIViewController {
                 withIdentifier: "YourAnswersVC"
             ) as! YourAnswersViewController
 
-            vc.completedQuiz = completedQuiz
+            vc.quizAttemptId = quizAttemptId
+
             navigationController?.pushViewController(vc, animated: true)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        progressRingView.setProgress(
-            CGFloat(completedQuiz.scorePercentage) / 100
-        )
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        if let completedQuiz {
+//            progressRingView.setProgress(
+//                CGFloat(completedQuiz.scorePercentage) / 100
+//            )
+//        }
+//    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -87,16 +98,47 @@ class TestResultsViewController: UIViewController {
         tableViewHeightConstraint.constant = tableView.contentSize.height
     }
 
-    private func setupResultCard() {
-        percentageLabel.text = "\(completedQuiz.scorePercentage)%"
-        descriptionLabel.text =
-            "Great work! You’ve shown strong skills in \(completedQuiz.lessonName)"
-    }
+//    private func setupResultCard() {
+//        guard let completedQuiz else { return }
+//
+//        percentageLabel.text = "\(completedQuiz.scorePercentage)%"
+//        descriptionLabel.text =
+//            "Great work! You’ve shown strong skills in \(completedQuiz.lessonName)"
+//    }
     private func setupTableView() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.estimatedRowHeight = 80
         tableView.isScrollEnabled = false
+    }
+    
+    func loadResults(attemptId: UUID) async {
+
+        do {
+
+            let result = try await QuizResultsService.shared.fetchResults(
+                attemptId: attemptId
+            )
+
+            DispatchQueue.main.async {
+
+                self.testResult = result
+
+                self.percentageLabel.text = "\(result.score)%"
+
+                self.progressRingView.setProgress(
+                    CGFloat(result.score) / 100
+                )
+
+                self.descriptionLabel.text =
+                "Great work! You scored \(result.score)%"
+
+                self.tableView.reloadData()
+            }
+
+        } catch {
+            print("❌ Failed to load results:", error)
+        }
     }
 }
 
@@ -157,7 +199,7 @@ extension TestResultsViewController: UITableViewDataSource {
                 cell.layer.cornerRadius = 0
             }
             
-            cell.configure(text: testResult.strengths[indexPath.row].title)
+            cell.configure(text: testResult?.strengths[indexPath.row].title ?? "")
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(
@@ -199,7 +241,7 @@ extension TestResultsViewController: UITableViewDataSource {
                 cell.layer.cornerRadius = 0
             }
             
-            cell.configure(text: testResult.improvements[indexPath.row].title)
+            cell.configure(text: testResult?.improvements[indexPath.row].title ?? "")
             return cell
         }
     }

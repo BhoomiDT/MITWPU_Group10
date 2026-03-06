@@ -118,7 +118,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         let allLessons = baseRoadmap.milestones.flatMap { $0.lessons }
         let totalQuizzes = allLessons.count
         let completedCount = allLessons.filter {
-            OnboardingManager.shared.completedLessonIds.contains($0.id)
+            QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
         }.count
         
         let calculatedPercentage = totalQuizzes > 0 ? (completedCount * 100) / totalQuizzes : 0
@@ -154,6 +154,23 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             print("❌ Supabase roadmap load failed:", error)
         }
     }
+    func hydrateQuizHistory() async {
+
+        do {
+
+            let attempts = try await QuizHistoryService.shared
+                .fetchCompletedQuizzes()
+
+            QuizHistoryManager.shared.hydrate(attempts)
+
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+
+        } catch {
+            print("Quiz history hydration failed:", error)
+        }
+    }
 //    var trendingData: [Roadmap] {
 //            RoadmapStore.shared.roadmaps
 //        }
@@ -184,6 +201,10 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 await loadRoadmapsFromSupabase()
                 collectionView.reloadData()
             }
+        Task {
+            await hydrateQuizHistory()
+        }
+        
         
         navigationController!.navigationBar.prefersLargeTitles = true
         navigationItem.hidesBackButton = true
@@ -457,7 +478,7 @@ extension Roadmap {
         // Find the first milestone where NOT all lessons are completed
         let activeMilestone = milestones.first { milestone in
             let completedCount = milestone.lessons.filter {
-                OnboardingManager.shared.completedLessonIds.contains($0.id)
+                QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
             }.count
             
             return completedCount < milestone.lessons.count

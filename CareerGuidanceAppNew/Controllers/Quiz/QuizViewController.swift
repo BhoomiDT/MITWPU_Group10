@@ -199,7 +199,6 @@ class QuizViewController: UIViewController {
 //
 //        present(alert, animated: true)
 //    }
-
     private func showSubmitConfirmation() {
         let alert = UIAlertController(
             title: "Submit Test?",
@@ -211,12 +210,13 @@ class QuizViewController: UIViewController {
 
         alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
 
-            // 🚀 1️⃣ SEND ATTEMPT TO SUPABASE
             Task {
                 do {
+
                     print("🚀 submitQuiz() CALLED")
 
-                    try await QuizAttemptService.shared.submitQuiz(
+                    // 1️⃣ Save quiz and receive attemptId
+                    let attemptId = try await QuizAttemptService.shared.submitQuiz(
                         quiz: self.quiz!,
                         lesson: self.lesson!,
                         selectedOptionIndices: self.selectedOptionIndices
@@ -224,30 +224,69 @@ class QuizViewController: UIViewController {
 
                     print("✅ Quiz attempt stored in Supabase")
 
+                    DispatchQueue.main.async {
+
+                        self.onQuizCompleted?()
+
+                        if let roadmap = self.roadmapStatus,
+                           roadmap.isStarted == false {
+                            self.onRoadmapStarted?()
+                        }
+
+                        // 2️⃣ Open results screen with attemptId
+                        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+
+                        guard let resultsVC =
+                                storyboard.instantiateViewController(
+                                    withIdentifier: "TestResultsVC"
+                                ) as? TestResultsViewController
+                        else { return }
+
+                        resultsVC.quizAttemptId = attemptId
+
+                        self.navigationController?.pushViewController(
+                            resultsVC,
+                            animated: true
+                        )
+                    }
+
                 } catch {
                     print("❌ Failed to store quiz attempt:", error)
                 }
             }
-
-            // 🧠 2️⃣ EXISTING LOCAL LOGIC (UNCHANGED)
-
-            //LEGACY CODE STATIC DATA STORE
-            let completedQuiz = self.generateCompletedQuiz()
-            UserStats.shared.addXP(completedQuiz.correctCount * 10)
-            JourneyModel.incrementStatsAfterQuiz()
-            QuizHistoryManager.shared.save(completedQuiz)
-
-            self.onQuizCompleted?()
-
-            if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
-                self.onRoadmapStarted?()
-            }
-
-            self.navigateToResults(completedQuiz: completedQuiz)
-        })
+        }
+        )
 
         present(alert, animated: true)
     }
+//    private func openResultsScreen() {
+//
+//        Task {
+//
+//            guard let lesson = self.lesson else { return }
+//
+//            do {
+//
+//                guard let attempt = try await QuizAttemptService.shared
+//                    .fetchLatestAttempt(lessonId: lesson.id) else { return }
+//
+//                DispatchQueue.main.async {
+//
+//                    let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+//
+//                    guard let resultsVC = storyboard.instantiateViewController(
+//                        withIdentifier: "TestResultsVC"
+//                    ) as? TestResultsViewController else { return }
+//
+//                    resultsVC.quizAttemptId = attempt.id
+//                    self.navigationController?.pushViewController(resultsVC, animated: true)
+//                }
+//
+//            } catch {
+//                print("Failed to fetch attempt:", error)
+//            }
+//        }
+//    }
     private func updateSelectionUI(selectedIndex: Int) {
         let buttons = [optionButton1, optionButton2, optionButton3, optionButton4]
         let selectedColor = UIColor(hex: "#1FA5A1")
@@ -276,60 +315,60 @@ class QuizViewController: UIViewController {
             $0?.setTitleColor(.label, for: .normal)
         }
     }
-    func calculateScore() -> Int {
-        guard let quiz = quiz else { return 0 }
+//    func calculateScore() -> Int {
+//        guard let quiz = quiz else { return 0 }
+//
+//        var correct = 0
+//        for (index, question) in quiz.questions.enumerated() {
+//            if selectedOptionIndices[index] == question.correctIndex {
+//                correct += 1
+//            }
+//        }
+//
+//        return Int(
+//            (Double(correct) / Double(quiz.questions.count)) * 100
+//        )
+//    }
 
-        var correct = 0
-        for (index, question) in quiz.questions.enumerated() {
-            if selectedOptionIndices[index] == question.correctIndex {
-                correct += 1
-            }
-        }
+//    private func generateCompletedQuiz() -> CompletedQuiz {
+//        guard let quiz = quiz else {
+//            fatalError("Quiz missing")
+//        }
+//        
+//        guard let lesson = lesson else {
+//            fatalError("Lesson missing")
+//        }
+//
+//        var results: [QuestionResult] = []
+//
+//        for (index, question) in quiz.questions.enumerated() {
+//
+//            let result = QuestionResult(
+//                questionText: question.question,
+//                options: question.options,
+//                userSelectedIndex: selectedOptionIndices[index],
+//                correctIndex: question.correctIndex
+//            )
+//            results.append(result)
+//        }
+//
+//        return CompletedQuiz(
+//            domainTitle: "Data Analytics", 
+//            moduleTitle: "Module 1: Foundations of Data",
+//            lessonId: lesson.id,
+//            lessonName: lesson.name,
+//            completedAt: Date(),
+//            questionResults: results
+//        )
+//    }
 
-        return Int(
-            (Double(correct) / Double(quiz.questions.count)) * 100
-        )
-    }
-
-    private func generateCompletedQuiz() -> CompletedQuiz {
-        guard let quiz = quiz else {
-            fatalError("Quiz missing")
-        }
-        
-        guard let lesson = lesson else {
-            fatalError("Lesson missing")
-        }
-
-        var results: [QuestionResult] = []
-
-        for (index, question) in quiz.questions.enumerated() {
-
-            let result = QuestionResult(
-                questionText: question.question,
-                options: question.options,
-                userSelectedIndex: selectedOptionIndices[index],
-                correctIndex: question.correctIndex
-            )
-            results.append(result)
-        }
-
-        return CompletedQuiz(
-            domainTitle: "Data Analytics", 
-            moduleTitle: "Module 1: Foundations of Data",
-            lessonId: lesson.id,
-            lessonName: lesson.name,
-            completedAt: Date(),
-            questionResults: results
-        )
-    }
-
-    private func navigateToResults(completedQuiz: CompletedQuiz) {
-        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-        let vc = storyboard.instantiateViewController(
-            withIdentifier: "TestResultsVC"
-        ) as! TestResultsViewController
-
-        vc.completedQuiz = completedQuiz
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
+//    private func navigateToResults(completedQuiz: CompletedQuiz) {
+//        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+//        let vc = storyboard.instantiateViewController(
+//            withIdentifier: "TestResultsVC"
+//        ) as! TestResultsViewController
+//
+//        vc.completedQuiz = completedQuiz
+//        self.navigationController?.pushViewController(vc, animated: true)
+//    }
 }

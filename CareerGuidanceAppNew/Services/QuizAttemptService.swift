@@ -17,7 +17,7 @@ final class QuizAttemptService {
         quiz: Quiz,
         lesson: Lesson,
         selectedOptionIndices: [Int?]
-    ) async throws {
+    ) async throws -> UUID{
         
         let client = SupabaseManager.shared.client
         let userId = UserSessionManager.shared.userId!
@@ -86,6 +86,7 @@ final class QuizAttemptService {
             .execute()
         
         print("✅ lesson progress saved")
+        return attempt.id
     }
     
     func fetchLatestAttempt(
@@ -101,7 +102,7 @@ final class QuizAttemptService {
             .select()
             .eq("user_id", value: userId.uuidString)
             .eq("lesson_id", value: lessonId)
-            .order("created_at", ascending: false)
+            .order("completed_at", ascending: false)
             .limit(1)
             .execute()
 

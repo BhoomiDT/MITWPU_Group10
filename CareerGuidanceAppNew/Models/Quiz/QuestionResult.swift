@@ -21,6 +21,10 @@ struct QuestionResult {
     }
 }
 
+struct Insight {
+    let title: String
+}
+
 struct CompletedQuiz {
 
     let domainTitle: String

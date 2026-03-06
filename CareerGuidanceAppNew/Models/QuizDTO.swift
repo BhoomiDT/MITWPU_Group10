@@ -41,8 +41,10 @@ struct QuizQuestionDTO: Decodable {
 
 struct QuizAttemptDTO: Decodable {
     let id: UUID
+    let lesson_id: String
+    let score_percent: Int?
+    let created_at: String?
 }
-
 struct QuizAttemptInsertDTO: Encodable {
     let user_id: UUID
     let lesson_id: String

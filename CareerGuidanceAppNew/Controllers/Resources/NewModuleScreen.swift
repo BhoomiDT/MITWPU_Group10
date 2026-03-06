@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Supabase
 
 class NewModuleScreen: UIViewController, StartTestModalDelegate {
     func didTapStartTest(quiz: Quiz, lesson: Lesson) {
@@ -43,16 +44,18 @@ class NewModuleScreen: UIViewController, StartTestModalDelegate {
     var milestone: Milestone?
     var parentRoadmap: Roadmap?
     private var lessons: [Lesson] = []
+    private var completedLessonIds: Set<String> = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupCollectionView()
         loadData()
+        fetchCompletedLessons()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        collectionNewModules.reloadData()
+        fetchCompletedLessons()
     }
 
     private func setupCollectionView() {
@@ -76,6 +79,37 @@ class NewModuleScreen: UIViewController, StartTestModalDelegate {
             collectionNewModules.reloadData()
         }
     
+    private func fetchCompletedLessons() {
+
+        Task {
+
+            guard let userId = UserSessionManager.shared.userId else { return }
+
+            do {
+
+                let response = try await SupabaseManager.shared.client
+                    .from("quiz_attempts")
+                    .select("lesson_id")
+                    .eq("user_id", value: userId.uuidString)
+                    .execute()
+
+                let rows = try JSONSerialization.jsonObject(
+                    with: response.data
+                ) as? [[String: Any]] ?? []
+
+                let lessonIds = rows.compactMap { $0["lesson_id"] as? String }
+
+                DispatchQueue.main.async {
+
+                    self.completedLessonIds = Set(lessonIds)
+                    self.collectionNewModules.reloadData()
+                }
+
+            } catch {
+                print("Failed to fetch completed lessons:", error)
+            }
+        }
+    }
 
 }
 
@@ -98,66 +132,150 @@ extension NewModuleScreen: UICollectionViewDelegate,
         
         let lesson = lessons[indexPath.item]
         
-        let firstIncompleteIndex = lessons.firstIndex(where: {
-            !QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
-        }) ?? lessons.count
-        
-        let isCompleted = QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
-        let isCurrentActive = (indexPath.item == firstIncompleteIndex)
-        let isLocked = indexPath.item > firstIncompleteIndex
-        
-        cell.configure(with: lesson, isCompleted: isCompleted, isCurrentActive: isCurrentActive, isLocked: isLocked)
+//        let firstIncompleteIndex = lessons.firstIndex(where: {
+//            !QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
+//        }) ?? lessons.count
+//        
+//        let isCompleted = QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
+//        let isCurrentActive = (indexPath.item == firstIncompleteIndex)
+//        let isLocked = indexPath.item > firstIncompleteIndex
+//        
+//        cell.configure(with: lesson, isCompleted: isCompleted, isCurrentActive: isCurrentActive, isLocked: isLocked)
+        cell.configure(
+            with: lesson,
+            isCompleted: false,
+            isCurrentActive: true,
+            isLocked: false
+        )
+
+        Task {
+            do {
+                let attempt = try await QuizAttemptService.shared
+                    .fetchLatestAttempt(lessonId: lesson.id)
+
+                let isCompleted = attempt != nil
+
+                DispatchQueue.main.async {
+                    cell.configure(
+                        with: lesson,
+                        isCompleted: isCompleted,
+                        isCurrentActive: true,
+                        isLocked: false
+                    )
+                }
+
+            } catch {
+                print("Failed to fetch attempt:", error)
+            }
+        }
         
         cell.onSeeResourcesTapped = { [weak self] in
             self?.navigateToResources(for: lesson)
         }
-
+//
+//        cell.onTestTapped = { [weak self] in
+//            if isCompleted {
+//                self?.openResults(for: lesson)
+//            } else if isCurrentActive {
+//                self?.showStartTestModal(for: lesson)
+//            } else {
+//                print("!!")
+//                let alert = UIAlertController(
+//                                title: "Lesson Locked",
+//                                message: "Please complete the previous lessons and tests to unlock this one.",
+//                                preferredStyle: .alert
+//                            )
+//                            alert.addAction(UIAlertAction(title: "OK", style: .default))
+//                            
+//                            // Optional: Add haptic feedback for a native feel
+//                            let generator = UINotificationFeedbackGenerator()
+//                            generator.notificationOccurred(.warning)
+//                            
+//                self?.present(alert, animated: true)
+//                print("Done!!!")
+//            }
+//        }
         cell.onTestTapped = { [weak self] in
-            if isCompleted {
-                self?.openResults(for: lesson)
-            } else if isCurrentActive {
-                self?.showStartTestModal(for: lesson)
-            } else {
-                print("!!")
-                let alert = UIAlertController(
-                                title: "Lesson Locked",
-                                message: "Please complete the previous lessons and tests to unlock this one.",
-                                preferredStyle: .alert
-                            )
-                            alert.addAction(UIAlertAction(title: "OK", style: .default))
-                            
-                            // Optional: Add haptic feedback for a native feel
-                            let generator = UINotificationFeedbackGenerator()
-                            generator.notificationOccurred(.warning)
-                            
-                self?.present(alert, animated: true)
-                print("Done!!!")
+
+            Task {
+
+                do {
+
+                    if let _ = try await QuizAttemptService.shared
+                        .fetchLatestAttempt(lessonId: lesson.id) {
+
+                        self?.openResults(for: lesson)
+
+                    } else {
+
+                        self?.showStartTestModal(for: lesson)
+
+                    }
+
+                } catch {
+                    print("Failed to check quiz attempt:", error)
+                }
             }
         }
         return cell
     }
     
     private func showStartTestModal(for lesson: Lesson) {
-        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-        
-        guard let modalVC = storyboard.instantiateViewController(withIdentifier: "StartTestModalVC") as? StartTestModalViewController else {
-            print("Could not find StartTestModalViewController in Storyboard")
-            return
-        }
-        
-        modalVC.lesson = lesson
-        modalVC.delegate = self
-        if let sheet = modalVC.sheetPresentationController {
-            let customDetent = UISheetPresentationController.Detent.custom { context in
-                return 480
-            }
 
-            sheet.detents = [customDetent]
-            sheet.prefersGrabberVisible = false
-            sheet.preferredCornerRadius = 20
+        Task {
+
+            do {
+
+                // Try to fetch quiz for this lesson
+                let quiz = try await QuizService.shared.fetchQuiz(
+                    lessonId: lesson.id
+                )
+
+                DispatchQueue.main.async {
+
+                    let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+
+                    guard let modalVC = storyboard.instantiateViewController(
+                        withIdentifier: "StartTestModalVC"
+                    ) as? StartTestModalViewController else {
+                        print("Could not find StartTestModalViewController in Storyboard")
+                        return
+                    }
+
+                    modalVC.lesson = lesson
+                    modalVC.quiz = quiz   // pass quiz to modal
+                    modalVC.delegate = self
+
+                    if let sheet = modalVC.sheetPresentationController {
+
+                        let customDetent = UISheetPresentationController.Detent.custom { _ in
+                            return 480
+                        }
+
+                        sheet.detents = [customDetent]
+                        sheet.prefersGrabberVisible = false
+                        sheet.preferredCornerRadius = 20
+                    }
+
+                    print("Delegate set:", modalVC.delegate != nil)
+                    self.present(modalVC, animated: true)
+                }
+
+            } catch {
+
+                DispatchQueue.main.async {
+
+                    let alert = UIAlertController(
+                        title: "Quiz Not Available",
+                        message: "This lesson does not have a quiz yet.",
+                        preferredStyle: .alert
+                    )
+
+                    alert.addAction(UIAlertAction(title: "OK", style: .default))
+                    self.present(alert, animated: true)
+                }
+            }
         }
-        print("Delegate set:", modalVC.delegate != nil)
-        present(modalVC, animated: true)
     }
     
     private func navigateToResources(for lesson: Lesson) {
@@ -184,38 +302,69 @@ extension NewModuleScreen: UICollectionViewDelegate,
             return 16
         }
     }
-    func roadmapLessonRowCell(_ cell: ModuleCardCellCollectionViewCell, didTapStatusFor lesson: Lesson) {
-
-        let hasResult =
-            QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
-
-        if hasResult {
-            openResults(for: lesson)
-        } else {
-            showStartTestModal(for: lesson)
-        }
-        }
+//    func roadmapLessonRowCell(_ cell: ModuleCardCellCollectionViewCell, didTapStatusFor lesson: Lesson) {
+//
+//        let hasResult =
+//            QuizHistoryManager.shared.hasCompletedQuiz(for: lesson.id)
+//
+//        if hasResult {
+//            openResults(for: lesson)
+//        } else {
+//            showStartTestModal(for: lesson)
+//        }
+//        }
     
+//    private func openResults(for lesson: Lesson) {
+//        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+//
+//        guard let resultsVC = storyboard.instantiateViewController(
+//            withIdentifier: "TestResultsVC"
+//        ) as? TestResultsViewController else {
+//            print("TestResultsViewController not found")
+//            return
+//        }
+//
+//        guard let completedQuiz =
+//            QuizHistoryManager.shared
+//                .quizzes(for: lesson.id)
+//                .last else {
+//            print("No completed quiz found for lesson:", lesson.name)
+//            return
+//        }
+//
+//        resultsVC.completedQuiz = completedQuiz
+//        navigationController?.pushViewController(resultsVC, animated: true)
+//    }
     private func openResults(for lesson: Lesson) {
-        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
 
-        guard let resultsVC = storyboard.instantiateViewController(
-            withIdentifier: "TestResultsVC"
-        ) as? TestResultsViewController else {
-            print("TestResultsViewController not found")
-            return
+        Task {
+
+            do {
+
+                guard let attempt = try await QuizAttemptService.shared
+                    .fetchLatestAttempt(lessonId: lesson.id) else {
+                    print("No completed quiz found for lesson:", lesson.name)
+                    return
+                }
+
+                DispatchQueue.main.async {
+
+                    let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
+
+                    guard let resultsVC = storyboard.instantiateViewController(
+                        withIdentifier: "TestResultsVC"
+                    ) as? TestResultsViewController else {
+                        return
+                    }
+
+                    resultsVC.quizAttemptId = attempt.id
+                    self.navigationController?.pushViewController(resultsVC, animated: true)
+                }
+
+            } catch {
+                print("Failed to fetch attempt:", error)
+            }
         }
-
-        guard let completedQuiz =
-            QuizHistoryManager.shared
-                .quizzes(for: lesson.id)
-                .last else {
-            print("No completed quiz found for lesson:", lesson.name)
-            return
-        }
-
-        resultsVC.completedQuiz = completedQuiz
-        navigationController?.pushViewController(resultsVC, animated: true)
     }
     
 }
