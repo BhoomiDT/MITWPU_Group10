@@ -113,51 +113,77 @@ class onboardingSectionIntroViewController: UIViewController {
             }
     }
  
+//    func calculateAndPushResults() {
+//        OnboardingManager.shared.isOnboardingCompleted = true
+//        let allAnswers = OnboardingManager.shared.userSelectedAnswers
+//            
+//            guard allAnswers.flatMap({ $0 }).count > 0 else {
+//                print("Error: No answers found to calculate results")
+//                return
+//            }
+//        
+//            var finalScores: [Double] = [0, 0, 0, 0, 0, 0] // R, I, A, S, E, C
+//            
+//            let scoreMap: [String: Double] = [
+//                "Strongly Disagree": 1.0,
+//                "Disagree": 2.0,
+//                "Neutral": 3.0,
+//                "Agree": 4.0,
+//                "Strongly Agree": 5.0
+//            ]
+//   
+//            for section in allAnswers {
+//                for (qIndex, answer) in section.enumerated() {
+//                    let points = scoreMap[answer] ?? 0.0
+//                    let riasecIndex = qIndex % 6
+//                    finalScores[riasecIndex] += points
+//                }
+//            }
+//
+//            // Get ML Prediction
+//            if let domain = CareerPredictionManager.shared.getRecommendation(scores: finalScores) {
+//                let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//                if let analysisVC = storyboard.instantiateViewController(withIdentifier: "path") as? AnalysisTable {
+//                    
+//                    analysisVC.recommendedPath = domain.replacingOccurrences(of: "_", with: " ")
+//                    
+//                    let labels = ["Realistic", "Investigative", "Artistic", "Social", "Enterprising", "Conventional"]
+//                    let colors: [UIColor] = [.systemRed, .systemBlue, .systemPurple, .systemGreen, .systemOrange, .systemTeal]
+//                    
+//                    analysisVC.riasecData = finalScores.enumerated().map { (i, score) in
+//                        return (label: labels[i], score: Float(score / 30.0), color: colors[i])
+//                    }
+//                    
+//                    navigationController?.pushViewController(analysisVC, animated: true)
+//                }
+//            }
+//        }
     func calculateAndPushResults() {
         OnboardingManager.shared.isOnboardingCompleted = true
-        let allAnswers = OnboardingManager.shared.userSelectedAnswers
-            
-            guard allAnswers.flatMap({ $0 }).count > 0 else {
-                print("Error: No answers found to calculate results")
-                return
-            }
         
-            var finalScores: [Double] = [0, 0, 0, 0, 0, 0] // R, I, A, S, E, C
+        let scores = OnboardingManager.shared.calculateRIASEC()
+        let selectedSkills = UserDefaults.standard.stringArray(forKey: "kUserTechSkills") ?? []
+        
+        // 1. Call the TOP THREE function, not the single recommendation one
+        if let top3 = CareerPredictionManager.shared.getTopThreeRecommendations(scores: scores, skills: selectedSkills) {
             
-            let scoreMap: [String: Double] = [
-                "Strongly Disagree": 1.0,
-                "Disagree": 2.0,
-                "Neutral": 3.0,
-                "Agree": 4.0,
-                "Strongly Agree": 5.0
-            ]
-   
-            for section in allAnswers {
-                for (qIndex, answer) in section.enumerated() {
-                    let points = scoreMap[answer] ?? 0.0
-                    let riasecIndex = qIndex % 6
-                    finalScores[riasecIndex] += points
+            let storyboard = UIStoryboard(name: "Main", bundle: nil)
+            if let analysisVC = storyboard.instantiateViewController(withIdentifier: "path") as? AnalysisTable {
+                
+                // 2. Assign the WHOLE ARRAY (This fixes the 'get-only' property error)
+                analysisVC.recommendations = top3
+                
+                let labels = ["Realistic", "Investigative", "Artistic", "Social", "Enterprising", "Conventional"]
+                let colors: [UIColor] = [.systemRed, .systemBlue, .systemPurple, .systemGreen, .systemOrange, .systemTeal]
+                
+                analysisVC.riasecData = scores.enumerated().map { (i, score) in
+                    return (label: labels[i], score: Float(score / 30.0), color: colors[i])
                 }
-            }
-
-            // Get ML Prediction
-            if let domain = CareerPredictionManager.shared.getRecommendation(scores: finalScores) {
-                let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                if let analysisVC = storyboard.instantiateViewController(withIdentifier: "path") as? AnalysisTable {
-                    
-                    analysisVC.recommendedPath = domain.replacingOccurrences(of: "_", with: " ")
-                    
-                    let labels = ["Realistic", "Investigative", "Artistic", "Social", "Enterprising", "Conventional"]
-                    let colors: [UIColor] = [.systemRed, .systemBlue, .systemPurple, .systemGreen, .systemOrange, .systemTeal]
-                    
-                    analysisVC.riasecData = finalScores.enumerated().map { (i, score) in
-                        return (label: labels[i], score: Float(score / 30.0), color: colors[i])
-                    }
-                    
-                    navigationController?.pushViewController(analysisVC, animated: true)
-                }
+                
+                navigationController?.pushViewController(analysisVC, animated: true)
             }
         }
+    }
     @IBAction func skipButtonTapped(_ sender: UIButton) {
        
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex

@@ -8,9 +8,9 @@ struct JourneyStats {
 
 struct JourneyModel {
     static var shared = JourneyStats(
-        days: 17,
-        quizzes: 5,
-        quests: 3
+        days: 0,
+        quizzes: 0,
+        quests: 0
     )
     
     static func incrementStatsAfterQuiz() {

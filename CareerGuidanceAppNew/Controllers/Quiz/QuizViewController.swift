@@ -26,6 +26,7 @@ class QuizViewController: UIViewController {
     @IBOutlet weak var optionButton4: UIButton!
     
     @IBOutlet weak var nextButton: UIButton!
+    
     private var selectedOptionIndices: [Int?] = []
     private var currentQuestionIndex = 0
     override func viewDidLoad() {

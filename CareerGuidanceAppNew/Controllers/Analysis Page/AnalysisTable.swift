@@ -10,9 +10,14 @@ import UIKit
 class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableViewAnalysis: UITableView!
-    var recommendedPath: String = "Calculating..."
-        var riasecData: [(label: String, score: Float, color: UIColor)] = []
-        
+    //var recommendedPath: String = "Calculating..."
+    // Updated properties
+        var recommendations: [(domain: String, confidence: Double)] = []
+        var selectedIndex: Int = 0
+    var recommendedPath: String {
+            return recommendations.indices.contains(selectedIndex) ? recommendations[selectedIndex].domain : "Calculating..."
+        }
+    var riasecData: [(label: String, score: Float, color: UIColor)] = []
         var interests: [String] = [
             "Problem Solving",
             "Technical Analysis",
@@ -24,6 +29,7 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
         navigationController?.navigationBar.prefersLargeTitles = true
         view.backgroundColor = .appBackground
         tableViewAnalysis.backgroundColor = .appBackground
+        tableViewAnalysis.contentInset = UIEdgeInsets(top: 10, left: 0, bottom: 20, right: 0)
         
         tableViewAnalysis.dataSource = self
         tableViewAnalysis.delegate = self
@@ -44,11 +50,9 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 { return 1 }
-        
+        if section == 0 { return recommendations.count } // Show 3 rows for 3 choices
         else if section == 1 { return riasecData.count }
-        else if section == 2 { return interests.count }
-        else{return 0 }
+        else { return interests.count }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -57,31 +61,92 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
         
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath)
-    -> UITableViewCell {
+    func tableView(_ tableView: UITableView,
+                   willDisplay cell: UITableViewCell,
+                   forRowAt indexPath: IndexPath) {
+
+        guard indexPath.section == 0 else { return }
+
+        let horizontalPadding: CGFloat = 16
+        let verticalPadding: CGFloat = 16
+
+        cell.contentView.frame = cell.contentView.frame.inset(
+            by: UIEdgeInsets(top: verticalPadding,
+                             left: horizontalPadding,
+                             bottom: verticalPadding,
+                             right: horizontalPadding)
+        )
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        tableView.deselectRow(at: indexPath, animated: true)
+        if indexPath.section == 0 {
+            selectedIndex = indexPath.row
+            tableView.reloadData()
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
+        if indexPath.section == 0 {
+            return 165
+        }
+        
+        return UITableView.automaticDimension
+    }
+    
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = indexPath.section
         
         if section == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as! AnalysisTableViewCell1
+            let item = recommendations[indexPath.row]
+            let isSelected = indexPath.row == selectedIndex
             
-            cell.domainName.text = recommendedPath
+            // Set text labels
+            cell.domainName.text = item.domain.replacingOccurrences(of: "_", with: " ")
+            cell.domainDescription.text = String(format: "Confidence Match: %.0f%%", item.confidence * 100)
             
-            cell.domainDescription.text = "Based on your RIASEC results, \(recommendedPath) is the best match for your skills and interests."
+            // FIX THE BUTTON ERROR: Use 'domainExplore' instead of 'btnExplore'
+            let btnTitle = isSelected ? "Confirm & Explore Path" : "Select This Path"
+            cell.domainExplore.setTitle(btnTitle, for: .normal)
             
-            // Inside AnalysisTable.swift -> cellForRowAt section 0
+            // visual feedback for selection
+            cell.backgroundColor = .clear
+            cell.contentView.backgroundColor = .white
+            
+
+            if isSelected {
+                cell.contentView.layer.borderWidth = 2
+                cell.contentView.layer.borderColor = UIColor(hex: "1fa5a1").cgColor
+            } else {
+                cell.contentView.layer.borderWidth = 0
+            }
             cell.onExploreTapped = { [weak self] in
-                // Save the recommended path globally before navigating
-                OnboardingManager.shared.recommendedDomain = self?.recommendedPath
-                
-                let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
-                if let homeVC = storyboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
-                    self?.navigationController?.pushViewController(homeVC, animated: true)
+                if isSelected {
+                    // 1. Save data and mark onboarding as truly finished
+                    OnboardingManager.shared.recommendedDomain = self?.recommendedPath
+                    OnboardingManager.shared.isOnboardingCompleted = true
+                    
+                    // 2. Set the alert flag for the Home Page
+                    OnboardingManager.shared.shouldShowCelebrationAlert = true
+                    
+                    // 3. Navigate directly to Home
+                    let storyboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
+                    if let homeVC = storyboard.instantiateViewController(withIdentifier: "HomePageViewController") as? HomePageViewController {
+                        self?.navigationController?.pushViewController(homeVC, animated: true)
+                    }
+                } else {
+                    self?.selectedIndex = indexPath.row
+                    tableView.reloadData()
                 }
             }
-            
-            cell.layer.cornerRadius = 16
-            cell.clipsToBounds = true
+            // Make card style
+            cell.contentView.layer.cornerRadius = 16
+            //cell.layer.masksToBounds = true
+            cell.contentView.layer.masksToBounds = true
             return cell
         }
         
@@ -161,35 +226,61 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
     
     
     
-    func tableView(_ tableView: UITableView,
-                    viewForHeaderInSection section: Int) -> UIView? {
-        
-        if section == 0 { return nil }
-        
+//    func tableView(_ tableView: UITableView,
+//                    viewForHeaderInSection section: Int) -> UIView? {
+//        
+//        if section == 0 { return nil }
+//        
+//        let headerView = UIView()
+//        let label = UILabel()
+//        
+//        label.font = UIFont.systemFont(ofSize: 22, weight: .semibold)
+//        label.textColor = .label
+//        
+//        if section == 1 { label.text = "RIASEC Analysis" }
+//        else { label.text = "Other Analysis" }
+//        
+//        headerView.addSubview(label)
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        
+//        NSLayoutConstraint.activate([
+//            label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 4),
+//            label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -20),
+//            label.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5)
+//        ])
+//        
+//        return headerView
+//    }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView()
         let label = UILabel()
-        
-        label.font = UIFont.systemFont(ofSize: 22, weight: .semibold)
+        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         label.textColor = .label
         
-        if section == 1 { label.text = "RIASEC Analysis" }
-        else { label.text = "Other Analysis" }
+        switch section {
+        case 0: label.text = "Top Career Matches"
+        case 1: label.text = "Your RIASEC Profile"
+        case 2: label.text = "Key Interests"
+        default: return nil
+        }
         
         headerView.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 4),
-            label.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -20),
-            label.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -5)
+            label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            label.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -8)
         ])
-        
         return headerView
     }
     
     
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return section == 2 ? 0 : 12 
+
+        if section == 0 {
+            return 10   // gap between cards
+        }
+
+        return section == 2 ? 0 : 16
     }
 
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {

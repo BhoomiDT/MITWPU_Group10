@@ -11,6 +11,54 @@ class OnboardingManager {
     private let kTechSkillsCompleted = "kTechSkillsCompleted"
     private let kCompletedSections = "kCompletedSections"
     private let kUserTechSkills = "kUserTechSkills"
+    var userSelectedAnswers: [[String]] = [[], [], []]
+        var userSelectedTechSkills: [String] = [] // Add this
+    // Inside your OnboardingManager class
+    var shouldShowCelebrationAlert: Bool = false
+        
+        // Helper to calculate RIASEC from the answers
+//        func calculateRIASEC() -> [Double] {
+//            var scores: [Double] = [0, 0, 0, 0, 0, 0]
+//            let scoreMap: [String: Double] = [
+//                "Strongly Disagree": 1.0, "Disagree": 2.0, "Neutral": 3.0, "Agree": 4.0, "Strongly Agree": 5.0
+//            ]
+//            
+//            for section in userSelectedAnswers {
+//                for (qIndex, answer) in section.enumerated() {
+//                    let points = scoreMap[answer] ?? 0.0
+//                    scores[qIndex % 6] += points
+//                }
+//            }
+//            return scores
+//        }
+    func calculateRIASEC() -> [Double] {
+        var scores: [Double] = [0, 0, 0, 0, 0, 0]
+        let scoreMap: [String: Double] = [
+            "Strongly Disagree": 1.0, "Disagree": 2.0, "Neutral": 3.0, "Agree": 4.0, "Strongly Agree": 5.0
+        ]
+        
+        for section in userSelectedAnswers {
+            for (qIndex, answer) in section.enumerated() {
+                let points = scoreMap[answer] ?? 0.0
+                scores[qIndex % 6] += points
+            }
+        }
+
+        // --- ADD DEBUG LOGS HERE ---
+        let labels = ["Realistic", "Investigative", "Artistic", "Social", "Enterprising", "Conventional"]
+        let skillsString = userSelectedTechSkills.joined(separator: ", ")
+
+        print("\n--- DEBUG MODEL INPUTS ---")
+        for (index, score) in scores.enumerated() {
+            print("\(labels[index]): \(score)")
+        }
+        print("Skills String: [\(skillsString)]")
+        print("-----------------------------\n")
+        // ---------------------------
+
+        return scores
+    }
+    
     // Add this to OnboardingManager.swift
     var recommendedDomain: String? {
         get { UserDefaults.standard.string(forKey: "saved_recommended_domain") }
@@ -35,7 +83,7 @@ class OnboardingManager {
         completedLessonIds = ids
     }
     // We need 3 slots for the question answers (one for each data section)
-    var userSelectedAnswers: [[String]] = [[], [], []]
+    //var userSelectedAnswers: [[String]] = [[], [], []]
     
     var lastVisitedSectionIndex: Int {
         get { defaults.integer(forKey: kLastVisitedSection) }
@@ -61,6 +109,9 @@ class OnboardingManager {
     
     // Updated: Logic to handle Technical Skills at index 1
     func saveTechSkills(_ skills: [String]) {
+        // FIX: Update the local variable so calculateRIASEC() can see it
+        self.userSelectedTechSkills = skills
+        
         defaults.set(skills, forKey: kUserTechSkills)
         isTechSkillsCompleted = true
         markSectionCompleted(index: 1)

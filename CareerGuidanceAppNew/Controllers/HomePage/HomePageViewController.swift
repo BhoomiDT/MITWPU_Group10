@@ -107,7 +107,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         // Map through other started roadmaps and calculate progress for EACH
         let otherStartedRoadmaps = allRoadmaps
             .filter { $0.isStarted && $0.title != personalised.title }
-            .map { getDynamicRoadmap(for: $0) } // <--- CRITICAL FIX
+            .map { getDynamicRoadmap(for: $0) }
 
         return [personalised] + otherStartedRoadmaps
     }
@@ -160,7 +160,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         navigationItem.hidesBackButton = true
         collectionView.delegate = self
         collectionView.dataSource = self
-        
+        UserStats.shared.updateStreak()
         ["StatsCard", "roadmapScrollCollectionViewCell", "homepageMyJourney", "showLeaderboard", "viewBadges", "trendingHomePage", "onboardingNotCompleted"].forEach {
             collectionView.register(UINib(nibName: $0, bundle: nil), forCellWithReuseIdentifier: $0)
         }
@@ -177,6 +177,52 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                 withConfiguration: config
             )
         floatingButton.setImage(image, for: .normal)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if OnboardingManager.shared.shouldShowCelebrationAlert {
+            let domain = OnboardingManager.shared.recommendedDomain?.replacingOccurrences(of: "_", with: " ") ?? "New Explorer"
+            
+            let popup = AchievementPopupView(domain: domain)
+            
+            popup.onDismiss = { [weak self] in
+                // Logic after dismissing
+                UserStats.shared.xp += 100
+                self?.collectionView.reloadSections(IndexSet(integer: 0))
+                
+                // Haptic Feedback
+                UIImpactFeedbackGenerator(style: .heavy).impactOccurred()
+            }
+            
+            popup.show(on: self.view)
+            
+            // Reset flag
+            OnboardingManager.shared.shouldShowCelebrationAlert = false
+        }
+    }
+    private func showCelebrationAlert() {
+        let domain = OnboardingManager.shared.recommendedDomain?.replacingOccurrences(of: "_", with: " ") ?? "your domain"
+        
+        let alert = UIAlertController(
+            title: "🎉 Congratulations!",
+            message: "You've successfully completed your onboarding!\n\n🏆 Earned: 100 XP\n🏅 Badge: Pathfinder\n🚀 Path: \(domain)",
+            preferredStyle: .alert
+        )
+        
+        alert.addAction(UIAlertAction(title: "Awesome!", style: .default, handler: { _ in
+            // Optional: Trigger a haptic feedback or confetti here
+            let generator = UIImpactFeedbackGenerator(style: .medium)
+            generator.impactOccurred()
+        }))
+        
+        self.present(alert, animated: true)
+        
+        // Update the UI/Stats immediately
+        UserStats.shared.xp += 100
+        // If you have a refresh function for your stats card, call it here:
+        collectionView.reloadSections(IndexSet(integer: 0))
     }
     
     override func viewDidLayoutSubviews() {

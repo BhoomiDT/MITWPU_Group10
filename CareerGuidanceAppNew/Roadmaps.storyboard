@@ -109,26 +109,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EIk-rN-dtP">
-                                <rect key="frame" x="345" y="134" width="32" height="32"/>
-                                <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="xmark" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="gUY-Qy-WVd">
-                                        <rect key="frame" x="6" y="8.6666666666666643" width="20" height="15"/>
-                                        <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="20" id="ES3-8s-nsc"/>
-                                            <constraint firstAttribute="height" constant="20" id="Tao-P1-pGg"/>
-                                        </constraints>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" systemColor="systemGray5Color"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="W93-Ky-Bfu"/>
-                                    <constraint firstAttribute="width" constant="32" id="eIw-bf-8Y0"/>
-                                    <constraint firstItem="gUY-Qy-WVd" firstAttribute="centerY" secondItem="EIk-rN-dtP" secondAttribute="centerY" id="vYO-Z2-WWn"/>
-                                    <constraint firstItem="gUY-Qy-WVd" firstAttribute="centerX" secondItem="EIk-rN-dtP" secondAttribute="centerX" id="xU4-A1-Wxo"/>
-                                </constraints>
-                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HK5-Kr-mbC">
                                 <rect key="frame" x="16" y="300" width="361" height="480"/>
                                 <subviews>
@@ -340,9 +320,7 @@
                         <viewLayoutGuide key="safeArea" id="wk2-Gj-gJT"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="EIk-rN-dtP" firstAttribute="top" secondItem="wk2-Gj-gJT" secondAttribute="top" constant="16" id="6FQ-sl-OED"/>
                             <constraint firstItem="HK5-Kr-mbC" firstAttribute="leading" secondItem="wk2-Gj-gJT" secondAttribute="leading" constant="16" id="BqG-QO-NYL"/>
-                            <constraint firstItem="wk2-Gj-gJT" firstAttribute="trailing" secondItem="EIk-rN-dtP" secondAttribute="trailing" constant="16" id="GUi-ca-X0x"/>
                             <constraint firstItem="wk2-Gj-gJT" firstAttribute="trailing" secondItem="HK5-Kr-mbC" secondAttribute="trailing" constant="16" id="GhM-3w-dwD"/>
                             <constraint firstItem="wk2-Gj-gJT" firstAttribute="bottom" secondItem="HK5-Kr-mbC" secondAttribute="bottom" constant="4" id="tvP-wg-HPk"/>
                         </constraints>
@@ -352,8 +330,6 @@
                         <outlet property="attemptsIconBackground" destination="neE-Kk-9kS" id="33X-Bc-UIF"/>
                         <outlet property="attemptsSubtitleLabel" destination="0rr-wk-8Q0" id="tW8-b6-jeU"/>
                         <outlet property="attemptsTitleLabel" destination="4JY-2S-ZmE" id="aVb-tH-ohq"/>
-                        <outlet property="closeButtonContainer" destination="EIk-rN-dtP" id="bqS-7d-Mcl"/>
-                        <outlet property="closeImageView" destination="gUY-Qy-WVd" id="G9N-YC-Ps8"/>
                         <outlet property="durationIcon" destination="59C-tk-Prw" id="j0F-uS-7do"/>
                         <outlet property="durationIconBackground" destination="FGg-EY-lw1" id="ctK-NC-hj4"/>
                         <outlet property="durationSubtitleLabel" destination="DL0-N7-84x" id="bNK-C8-Hzd"/>
@@ -883,15 +859,11 @@
         <image name="hand.thumbsup.fill" catalog="system" width="128" height="121"/>
         <image name="lightbulb.fill" catalog="system" width="92" height="128"/>
         <image name="list.clipboard.fill" catalog="system" width="98" height="128"/>
-        <image name="xmark" catalog="system" width="128" height="113"/>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411759999999" green="0.23529411759999999" blue="0.26274509800000001" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray5Color">
-            <color red="0.8980392157" green="0.8980392157" blue="0.91764705879999997" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="systemIndigoColor">
             <color red="0.34509803919999998" green="0.33725490200000002" blue="0.83921568629999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
