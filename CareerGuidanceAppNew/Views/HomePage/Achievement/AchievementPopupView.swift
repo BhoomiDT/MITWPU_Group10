@@ -55,7 +55,7 @@ class AchievementPopupView: UIView {
         
         // 4. Domain Name
         domainLabel.text = domain
-        domainLabel.font = .systemFont(ofSize: 14, weight: .semibold)
+        domainLabel.font = .systemFont(ofSize: 14, weight: .medium)
         domainLabel.textColor = .secondaryLabel
         domainLabel.textAlignment = .center
         

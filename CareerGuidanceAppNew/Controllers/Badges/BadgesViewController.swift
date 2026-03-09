@@ -34,11 +34,13 @@ class BadgesViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
         
         let screenTitle: String
-            if badge.isUnlocked {
-                screenTitle = "Unlocked New Badge"
-            } else {
-                screenTitle = "Not Yet Unlocked"
-            }
+        let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp)
+
+        if unlocked {
+            screenTitle = "Unlocked New Badge"
+        } else {
+            screenTitle = "Not Yet Unlocked"
+        }
         modalVC.badge = badge
         modalVC.modalTitleString = screenTitle
  

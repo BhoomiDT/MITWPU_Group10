@@ -168,38 +168,6 @@ class QuizViewController: UIViewController {
             }
         present(alert, animated: true)
     }
-    
-//    private func showSubmitConfirmation() {
-//        let alert = UIAlertController(
-//            title: "Submit Test?",
-//            message: "Your test is being submitted.",
-//            preferredStyle: .alert
-//        )
-//        
-//        self.onQuizCompleted?()
-//        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-//
-//        alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
-//            let completedQuiz = self.generateCompletedQuiz()
-//            
-//            let correctAnswers = completedQuiz.correctCount
-//            
-//            let earnedXP = correctAnswers * 10
-//            
-//            UserStats.shared.addXP(earnedXP)
-//            JourneyModel.incrementStatsAfterQuiz()
-//            
-//            QuizHistoryManager.shared.save(completedQuiz)
-//            
-//            if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
-//                self.onRoadmapStarted?()
-//            }
-//
-//            self.navigateToResults(completedQuiz: completedQuiz)
-//        })
-//
-//        present(alert, animated: true)
-//    }
 
     private func showSubmitConfirmation() {
         let alert = UIAlertController(
@@ -219,10 +187,45 @@ class QuizViewController: UIViewController {
 
             // 2. Existing logic
             let completedQuiz = self.generateCompletedQuiz()
-            UserStats.shared.addXP(completedQuiz.correctCount * 10)
+            let xpEarned = completedQuiz.correctCount * 10
+            UserStats.shared.addXP(xpEarned)
+
             JourneyModel.incrementStatsAfterQuiz()
+            JourneyModel.updateStreakAfterXP(totalXP: xpEarned)
+            JourneyModel.updateLearningDay()
             QuizHistoryManager.shared.save(completedQuiz)
-            
+
+            if let lessonId = self.lesson?.id,
+               let milestones = self.roadmapStatus?.milestones {
+
+                for milestone in milestones {
+
+                    let lessonIds = milestone.lessons.map { $0.id }
+
+                    // Check if THIS lesson belongs to THIS milestone
+                    if lessonIds.contains(lessonId) {
+
+                        let completed = lessonIds.filter {
+                            OnboardingManager.shared.completedLessonIds.contains($0)
+                        }.count
+
+                        print("Milestone:", milestone.title)
+                        print("Completed:", completed)
+                        print("Total:", lessonIds.count)
+
+                        if completed == lessonIds.count &&
+                           !JourneyModel.completedMilestones.contains(milestone.title) {
+
+                            JourneyModel.incrementQuest()
+                            JourneyModel.completedMilestones.insert(milestone.title)
+
+                            print("Milestone completed:", milestone.title)
+                        }
+
+                        break
+                    }
+                }
+            }
             self.onQuizCompleted?()
 
             if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
@@ -234,6 +237,7 @@ class QuizViewController: UIViewController {
 
         present(alert, animated: true)
     }
+    
     private func updateSelectionUI(selectedIndex: Int) {
         let buttons = [optionButton1, optionButton2, optionButton3, optionButton4]
         let selectedColor = UIColor(hex: "#1FA5A1")

@@ -299,9 +299,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "homepageMyJourney", for: indexPath) as! homepageMyJourney
             let currentStats = JourneyModel.shared
             cell.configure(
-                    days: "\(currentStats.days)",
-                    quizzes: "\(currentStats.quizzes)",
-                    quests: "\(currentStats.quests)"
+                    days: String(JourneyModel.shared.days),
+                    quizzes: String(JourneyModel.shared.quizzes),
+                    quests: String(JourneyModel.shared.quests)
                 )
             cell.onChevronTapped = {
                 let vc = UIStoryboard(name: "MyJourney", bundle: nil).instantiateViewController(withIdentifier: "MyJourneySbId")
