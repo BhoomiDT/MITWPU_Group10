@@ -24,7 +24,7 @@ class NewModuleScreen: UIViewController, StartTestModalDelegate {
 
         quizVC.onQuizCompleted = { [weak self] in
             DispatchQueue.main.async {
-                self?.collectionNewModules.reloadData()
+                self?.fetchCompletedLessons()
             }
         }
         
@@ -131,6 +131,20 @@ extension NewModuleScreen: UICollectionViewDelegate,
         ) as! ModuleCardCellCollectionViewCell
         
         let lesson = lessons[indexPath.item]
+        let firstIncompleteIndex = lessons.firstIndex(where: {
+            !completedLessonIds.contains($0.id)
+        }) ?? lessons.count
+
+        let isCompleted = completedLessonIds.contains(lesson.id)
+        let isCurrentActive = indexPath.item == firstIncompleteIndex
+        let isLocked = indexPath.item > firstIncompleteIndex
+        
+        cell.configure(
+            with: lesson,
+            isCompleted: isCompleted,
+            isCurrentActive: isCurrentActive,
+            isLocked: isLocked
+        )
         
 //        let firstIncompleteIndex = lessons.firstIndex(where: {
 //            !QuizHistoryManager.shared.hasCompletedQuiz(for: $0.id)
@@ -141,33 +155,35 @@ extension NewModuleScreen: UICollectionViewDelegate,
 //        let isLocked = indexPath.item > firstIncompleteIndex
 //        
 //        cell.configure(with: lesson, isCompleted: isCompleted, isCurrentActive: isCurrentActive, isLocked: isLocked)
-        cell.configure(
-            with: lesson,
-            isCompleted: false,
-            isCurrentActive: true,
-            isLocked: false
-        )
-
-        Task {
-            do {
-                let attempt = try await QuizAttemptService.shared
-                    .fetchLatestAttempt(lessonId: lesson.id)
-
-                let isCompleted = attempt != nil
-
-                DispatchQueue.main.async {
-                    cell.configure(
-                        with: lesson,
-                        isCompleted: isCompleted,
-                        isCurrentActive: true,
-                        isLocked: false
-                    )
-                }
-
-            } catch {
-                print("Failed to fetch attempt:", error)
-            }
-        }
+        
+        //RECENTLY COMMENTED
+//        cell.configure(
+//            with: lesson,
+//            isCompleted: false,
+//            isCurrentActive: true,
+//            isLocked: false
+//        )
+//
+//        Task {
+//            do {
+//                let attempt = try await QuizAttemptService.shared
+//                    .fetchLatestAttempt(lessonId: lesson.id)
+//
+//                let isCompleted = attempt != nil
+//
+//                DispatchQueue.main.async {
+//                    cell.configure(
+//                        with: lesson,
+//                        isCompleted: isCompleted,
+//                        isCurrentActive: true,
+//                        isLocked: false
+//                    )
+//                }
+//
+//            } catch {
+//                print("Failed to fetch attempt:", error)
+//            }
+//        }
         
         cell.onSeeResourcesTapped = { [weak self] in
             self?.navigateToResources(for: lesson)
@@ -195,26 +211,49 @@ extension NewModuleScreen: UICollectionViewDelegate,
 //                print("Done!!!")
 //            }
 //        }
+        //RECENTLY COMMENTED
+//        cell.onTestTapped = { [weak self] in
+//
+//            Task {
+//
+//                do {
+//
+//                    if let _ = try await QuizAttemptService.shared
+//                        .fetchLatestAttempt(lessonId: lesson.id) {
+//
+//                        self?.openResults(for: lesson)
+//
+//                    } else {
+//
+//                        self?.showStartTestModal(for: lesson)
+//
+//                    }
+//
+//                } catch {
+//                    print("Failed to check quiz attempt:", error)
+//                }
+//            }
+//        }
         cell.onTestTapped = { [weak self] in
 
-            Task {
+            if isCompleted {
 
-                do {
+                self?.openResults(for: lesson)
 
-                    if let _ = try await QuizAttemptService.shared
-                        .fetchLatestAttempt(lessonId: lesson.id) {
+            } else if isCurrentActive {
 
-                        self?.openResults(for: lesson)
+                self?.showStartTestModal(for: lesson)
 
-                    } else {
+            } else {
 
-                        self?.showStartTestModal(for: lesson)
+                let alert = UIAlertController(
+                    title: "Lesson Locked",
+                    message: "Please complete the previous lessons to unlock this one.",
+                    preferredStyle: .alert
+                )
 
-                    }
-
-                } catch {
-                    print("Failed to check quiz attempt:", error)
-                }
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                self?.present(alert, animated: true)
             }
         }
         return cell

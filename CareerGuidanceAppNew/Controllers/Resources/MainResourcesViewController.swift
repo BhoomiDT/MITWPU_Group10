@@ -1,5 +1,6 @@
 import UIKit
 import SafariServices
+import Supabase
 
 class MainResourcesViewController: UIViewController, StartTestModalDelegate {
     func didTapStartTest(quiz: Quiz, lesson: Lesson) {
@@ -14,7 +15,12 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
     
 
     @IBOutlet weak var collectionView: UICollectionView!
+    
     var selectedLesson: Lesson?
+    private var videos: [VideoDTO] = []
+    private var documents: [DocumentDTO] = []
+    
+    
     enum Section: Int {
             case videos = 0
             case documents = 1
@@ -24,6 +30,7 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
             super.viewDidLoad()
             title = selectedLesson?.name ?? "Resources"
             setupCollectionView()
+            fetchResources()
         }
 
         private func showStartTestModal(for lesson: Lesson) {
@@ -82,6 +89,32 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
             collectionView.contentInset.bottom = buttonHeight + spacing
             collectionView.verticalScrollIndicatorInsets.bottom = buttonHeight + spacing
         }
+    
+    private func fetchResources() {
+
+        guard let lessonId = selectedLesson?.id else { return }
+
+        Task {
+
+            do {
+
+                let fetchedVideos = try await ResourcesService.shared
+                    .fetchVideos(lessonId: lessonId)
+
+                let fetchedDocs = try await ResourcesService.shared
+                    .fetchDocuments(lessonId: lessonId)
+
+                DispatchQueue.main.async {
+                    self.videos = fetchedVideos
+                    self.documents = fetchedDocs
+                    self.collectionView.reloadData()
+                }
+
+            } catch {
+                print("Failed to load resources:", error)
+            }
+        }
+    }
     }
 
     extension MainResourcesViewController: UICollectionViewDataSource {
@@ -92,29 +125,29 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
 
         func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
                 if section == Section.videos.rawValue {
-                    return selectedLesson?.videos?.count ?? 0
+                    return videos.count
                 } else {
-                    return selectedLesson?.documents?.count ?? 0
+                    return documents.count
                 }
             }
         func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
                 if indexPath.section == Section.videos.rawValue {
-                    guard let video = selectedLesson?.videos?[indexPath.item] else { return UICollectionViewCell() }
+                    let video = videos[indexPath.item]
 
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "VideoCell", for: indexPath) as! VideoCollectionViewCell
                     cell.configure(
                         title: video.title,
                         meta: "\(video.duration) · YouTube",
-                        thumbnail: UIImage(named: video.thumbnailName)
+                        thumbnail: UIImage(named: video.thumbnail_name)
                     )
                     return cell
                 } else {
-                    guard let doc = selectedLesson?.documents?[indexPath.item] else { return UICollectionViewCell() }
+                    let doc = documents[indexPath.item]
 
                     let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "DocCell", for: indexPath) as! DocCollectionViewCell
                     cell.configure(
                         title: doc.title,
-                        meta: doc.readTime
+                        meta: "3 mins"
                     )
                     return cell
                 }
@@ -155,9 +188,9 @@ extension MainResourcesViewController: UICollectionViewDelegate {
         let urlString: String?
 
         if indexPath.section == Section.videos.rawValue {
-            urlString = selectedLesson?.videos?[indexPath.item].videoURL
+            urlString = videos[indexPath.item].video_url
         } else {
-            urlString = selectedLesson?.documents?[indexPath.item].docURL
+            urlString = documents[indexPath.item].doc_url
         }
 
         guard let urlStr = urlString, let url = URL(string: urlStr) else { return }

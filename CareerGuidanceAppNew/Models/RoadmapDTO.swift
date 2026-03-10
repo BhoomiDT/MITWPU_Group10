@@ -48,6 +48,21 @@ struct LessonDTO: Codable, Identifiable {
     let order_index: Int?
 }
 
+struct VideoDTO: Decodable {
+    let id: UUID
+    let lesson_id: String
+    let title: String
+    let duration: String
+    let thumbnail_name: String
+    let video_url: String
+}
+struct DocumentDTO: Decodable {
+    let id: UUID
+    let lesson_id: String
+    let title: String
+    let doc_url: String
+}
+
 //MAPPERS
 
 enum RoadmapMapper {
