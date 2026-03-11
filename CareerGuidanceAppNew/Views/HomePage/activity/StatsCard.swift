@@ -68,11 +68,13 @@ class StatsCard: UICollectionViewCell {
         }
     
     func configure(with stats: UserStats) {
+
         let isComplete = OnboardingManager.shared.isOnboardingCompleted
+
         let xp = isComplete ? stats.xp : 100
         let streak = isComplete ? stats.streak : 1
-        let badges = isComplete ? stats.badges : 1
-        
+        let badges = isComplete ? calculateUnlockedBadges() : 1
+
         setupValue(label: xpValue, val: "\(xp)", icon: "star.fill", color: .systemYellow)
         setupValue(label: streakValue, val: "\(streak)", icon: "flame.fill", color: .systemRed)
         setupValue(label: badgeValue, val: "\(badges)", icon: "shield.lefthalf.filled", color: .systemPurple)
@@ -88,5 +90,19 @@ class StatsCard: UICollectionViewCell {
         str.append(NSAttributedString(attachment: att))
         label.attributedText = str
         
+    }
+    private func calculateUnlockedBadges() -> Int {
+
+        var count = 0
+
+        for section in allBadgeSections {
+            for badge in section.badges {
+                if badge.isUnlocked(userXP: UserStats.shared.xp) {
+                    count += 1
+                }
+            }
+        }
+
+        return count
     }
 }

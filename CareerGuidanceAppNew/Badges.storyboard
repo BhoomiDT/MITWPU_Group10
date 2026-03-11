@@ -33,30 +33,14 @@
                                                         </constraints>
                                                         <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="16" minimumInteritemSpacing="16" id="Muk-gy-Prd">
                                                             <size key="itemSize" width="128" height="128"/>
-                                                            <size key="headerReferenceSize" width="50" height="50"/>
+                                                            <size key="headerReferenceSize" width="50" height="16"/>
                                                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                                             <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                                         </collectionViewFlowLayout>
                                                         <cells/>
                                                         <collectionReusableView key="sectionHeaderView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="SectionHeader" id="ge3-Bb-ed7" customClass="SectionHeaderView" customModule="CareerGuidanceAppNew" customModuleProvider="target">
-                                                            <rect key="frame" x="0.0" y="0.0" width="361" height="50"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="361" height="16"/>
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <subviews>
-                                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bpL-1x-awD">
-                                                                    <rect key="frame" x="7.9999999999999964" y="8" width="59.666666666666657" height="34"/>
-                                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="24"/>
-                                                                    <nil key="textColor"/>
-                                                                    <nil key="highlightedColor"/>
-                                                                </label>
-                                                            </subviews>
-                                                            <constraints>
-                                                                <constraint firstItem="bpL-1x-awD" firstAttribute="top" secondItem="ge3-Bb-ed7" secondAttribute="top" constant="8" id="YDp-BA-y8z"/>
-                                                                <constraint firstAttribute="bottom" secondItem="bpL-1x-awD" secondAttribute="bottom" constant="8" id="gJV-Hb-8ee"/>
-                                                                <constraint firstItem="bpL-1x-awD" firstAttribute="leading" secondItem="ge3-Bb-ed7" secondAttribute="leadingMargin" id="s6g-gr-eb8"/>
-                                                            </constraints>
-                                                            <connections>
-                                                                <outlet property="titleLabel" destination="bpL-1x-awD" id="NcT-qb-3y1"/>
-                                                            </connections>
                                                         </collectionReusableView>
                                                     </collectionView>
                                                 </subviews>
@@ -99,7 +83,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1060" y="131"/>
+            <point key="canvasLocation" x="1055.7251908396945" y="130.98591549295776"/>
         </scene>
         <!--Badge Unlocked Modal View Controller-->
         <scene sceneID="9yl-qw-fzl">

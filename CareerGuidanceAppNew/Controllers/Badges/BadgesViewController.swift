@@ -34,11 +34,13 @@ class BadgesViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
         
         let screenTitle: String
-            if badge.isUnlocked {
-                screenTitle = "Unlocked New Badge"
-            } else {
-                screenTitle = "Not Yet Unlocked"
-            }
+        let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp)
+
+        if unlocked {
+            screenTitle = "Unlocked New Badge"
+        } else {
+            screenTitle = "Not Yet Unlocked"
+        }
         modalVC.badge = badge
         modalVC.modalTitleString = screenTitle
  
@@ -53,21 +55,21 @@ class BadgesViewController: UIViewController, UICollectionViewDataSource, UIColl
         presentBadgeModal(with: selectedBadge)
     }
 
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        let headerHeight: CGFloat = 60
-        return CGSize(width: collectionView.bounds.width, height: headerHeight)
-    }
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
-        if kind == UICollectionView.elementKindSectionHeader {
-            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeaderView else {
-                fatalError("Could not dequeue SectionHeaderView")
-            }
-            header.titleLabel.text = dataSource[indexPath.section].title
-            return header
-        }
-        return UICollectionReusableView()
-    }
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        let headerHeight: CGFloat = 60
+//        return CGSize(width: collectionView.bounds.width, height: headerHeight)
+//    }
+//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//
+//        if kind == UICollectionView.elementKindSectionHeader {
+//            guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "SectionHeader", for: indexPath) as? SectionHeaderView else {
+//                fatalError("Could not dequeue SectionHeaderView")
+//            }
+//            header.titleLabel.text = dataSource[indexPath.section].title
+//            return header
+//        }
+//        return UICollectionReusableView()
+//    }
     
     let dataSource = allBadgeSections
     

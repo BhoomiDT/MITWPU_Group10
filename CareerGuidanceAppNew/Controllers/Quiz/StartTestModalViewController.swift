@@ -14,9 +14,6 @@ protocol StartTestModalDelegate: AnyObject {
 class StartTestModalViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
 
-    @IBOutlet weak var closeButtonContainer: UIView!
-    @IBOutlet weak var closeImageView: UIImageView!
-
     @IBOutlet weak var durationIconBackground: UIView!
     @IBOutlet weak var durationIcon: UIImageView!
     @IBOutlet weak var durationTitleLabel: UILabel!
@@ -54,8 +51,6 @@ class StartTestModalViewController: UIViewController {
 
 
     private func setupStyling() {
-        closeButtonContainer.layer.cornerRadius = closeButtonContainer.frame.height / 2
-        closeButtonContainer.backgroundColor = UIColor.systemGray5
         
         [durationIconBackground,
          questionsIconBackground,
@@ -162,10 +157,6 @@ class StartTestModalViewController: UIViewController {
             print("Modal dismissed, calling delegate")
             self.delegate?.didTapStartTest(quiz: quiz, lesson: self.lesson)
         }
-    }
-
-    @IBAction func cancelTapped(_ sender: UIButton) {
-        dismiss(animated: true)
     }
 }
 

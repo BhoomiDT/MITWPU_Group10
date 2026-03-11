@@ -19,20 +19,32 @@ class BadgeCell: UICollectionViewCell {
     }
     
     func configure(with badge: Badge) {
-            titleLabel.text = badge.title
-            iconImageView.image = UIImage(systemName: badge.iconName)
-            iconBackgroundView.backgroundColor = badge.color
+
+        titleLabel.text = badge.title
+
+        let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)
+        iconImageView.image = UIImage(systemName: badge.iconName, withConfiguration: config)
+
+        let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp)
+
+        iconBackgroundView.layoutIfNeeded()
+        iconBackgroundView.layer.cornerRadius = iconBackgroundView.frame.height / 2
+        iconBackgroundView.layer.masksToBounds = true
+
+        cardBackgroundView.layer.cornerRadius = 12
+
+        if unlocked {
+            iconBackgroundView.backgroundColor = UIColor(hex: "#1fa5a1")
             iconImageView.tintColor = .white
-            
-            let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)
-            let symbolImage = UIImage(systemName: badge.iconName, withConfiguration: config)
-        iconImageView.image = symbolImage
-            self.alpha = badge.isUnlocked ? 1.0 : 0.4
-            iconBackgroundView.layer.cornerRadius = iconBackgroundView.frame.height / 2
-            iconBackgroundView.layer.masksToBounds = true
-            if let cardView = cardBackgroundView {
-                 cardView.layer.cornerRadius = 12
-            }
+            titleLabel.textColor = .label
+            cardBackgroundView.alpha = 1.0
+
+        } else {
+            iconBackgroundView.backgroundColor = UIColor(hex: "#7C7C7C") // darker gray
+            iconImageView.tintColor = .white
+            titleLabel.textColor = UIColor(hex: "#3A3A3A")
+            cardBackgroundView.alpha = 0.6
         }
+    }
 
 }

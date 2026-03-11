@@ -26,6 +26,7 @@ class QuizViewController: UIViewController {
     @IBOutlet weak var optionButton4: UIButton!
     
     @IBOutlet weak var nextButton: UIButton!
+    
     private var selectedOptionIndices: [Int?] = []
     private var currentQuestionIndex = 0
     override func viewDidLoad() {
@@ -167,6 +168,7 @@ class QuizViewController: UIViewController {
             }
         present(alert, animated: true)
     }
+
     
 //    private func showSubmitConfirmation() {
 //        let alert = UIAlertController(
@@ -199,6 +201,7 @@ class QuizViewController: UIViewController {
 //
 //        present(alert, animated: true)
 //    }
+
     private func showSubmitConfirmation() {
         let alert = UIAlertController(
             title: "Submit Test?",
@@ -215,7 +218,7 @@ class QuizViewController: UIViewController {
 
                     print("🚀 submitQuiz() CALLED")
 
-                    // 1️⃣ Save quiz and receive attemptId
+                    // 1️⃣ Store quiz attempt in Supabase
                     let attemptId = try await QuizAttemptService.shared.submitQuiz(
                         quiz: self.quiz!,
                         lesson: self.lesson!,
@@ -226,6 +229,24 @@ class QuizViewController: UIViewController {
 
                     DispatchQueue.main.async {
 
+                        // Local completion logic
+                        var correctCount = 0
+
+                        if let quiz = self.quiz {
+                            for (index, question) in quiz.questions.enumerated() {
+                                if self.selectedOptionIndices[index] == question.correctIndex {
+                                    correctCount += 1
+                                }
+                            }
+                        }
+
+                        let xpEarned = correctCount * 10
+
+                        UserStats.shared.addXP(xpEarned)
+
+                        JourneyModel.incrementStatsAfterQuiz()
+                        JourneyModel.updateStreakAfterXP(totalXP: xpEarned)
+                        JourneyModel.updateLearningDay()
                         self.onQuizCompleted?()
 
                         if let roadmap = self.roadmapStatus,
@@ -233,13 +254,13 @@ class QuizViewController: UIViewController {
                             self.onRoadmapStarted?()
                         }
 
-                        // 2️⃣ Open results screen with attemptId
+                        // Navigate to results screen
                         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
 
                         guard let resultsVC =
-                                storyboard.instantiateViewController(
-                                    withIdentifier: "TestResultsVC"
-                                ) as? TestResultsViewController
+                            storyboard.instantiateViewController(
+                                withIdentifier: "TestResultsVC"
+                            ) as? TestResultsViewController
                         else { return }
 
                         resultsVC.quizAttemptId = attemptId
@@ -254,39 +275,10 @@ class QuizViewController: UIViewController {
                     print("❌ Failed to store quiz attempt:", error)
                 }
             }
-        }
-        )
+        })
 
         present(alert, animated: true)
     }
-//    private func openResultsScreen() {
-//
-//        Task {
-//
-//            guard let lesson = self.lesson else { return }
-//
-//            do {
-//
-//                guard let attempt = try await QuizAttemptService.shared
-//                    .fetchLatestAttempt(lessonId: lesson.id) else { return }
-//
-//                DispatchQueue.main.async {
-//
-//                    let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-//
-//                    guard let resultsVC = storyboard.instantiateViewController(
-//                        withIdentifier: "TestResultsVC"
-//                    ) as? TestResultsViewController else { return }
-//
-//                    resultsVC.quizAttemptId = attempt.id
-//                    self.navigationController?.pushViewController(resultsVC, animated: true)
-//                }
-//
-//            } catch {
-//                print("Failed to fetch attempt:", error)
-//            }
-//        }
-//    }
     private func updateSelectionUI(selectedIndex: Int) {
         let buttons = [optionButton1, optionButton2, optionButton3, optionButton4]
         let selectedColor = UIColor(hex: "#1FA5A1")

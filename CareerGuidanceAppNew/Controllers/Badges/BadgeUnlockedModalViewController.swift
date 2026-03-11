@@ -133,7 +133,7 @@ class BadgeUnlockedModalViewController: UIViewController {
         flipAnim.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
         
         let scaleAnim = CAKeyframeAnimation(keyPath: "transform.scale")
-        scaleAnim.values = [1.0, 1.2, 1.0]
+        scaleAnim.values = [1.0, 1.08, 1.0]
         scaleAnim.keyTimes = [0, 0.5, 1.0]
         scaleAnim.duration = 1.2
         
@@ -143,7 +143,7 @@ class BadgeUnlockedModalViewController: UIViewController {
         
         largeIconBackgroundView.layer.add(group, forKey: "fitnessFlip")
         
-        if badge.isUnlocked {
+        if badge.isUnlocked(userXP: UserStats.shared.xp) {
             createConfetti()
         }
         
@@ -157,14 +157,19 @@ class BadgeUnlockedModalViewController: UIViewController {
                 return
             }
             headerLabel.text = modalTitleString ?? "Badge Status"
-            
-            if !badge.isUnlocked {
-                    titleLabel.alpha = 0.5
-                    subtitleLabel.alpha = 0.5
+            titleLabel.text = badge.title
+            let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp)
 
-                }
-            subtitleLabel.text = badge.subtitle
-            largeIconBackgroundView.backgroundColor = badge.color
+            if !unlocked {
+                titleLabel.alpha = 0.5
+                subtitleLabel.alpha = 0.5
+                largeIconBackgroundView.backgroundColor = badge.color
+            }
+            if !unlocked {
+                subtitleLabel.text = "Unlocks at \(badge.requiredXP) XP"
+            } else {
+                largeIconBackgroundView.backgroundColor = UIColor(hex: "#1fa5a1")
+            }
             let config = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
             largeIconImageView.image = UIImage(systemName: badge.iconName, withConfiguration: config)
             largeIconImageView.tintColor = .white

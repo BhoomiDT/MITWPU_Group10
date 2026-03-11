@@ -20,18 +20,16 @@ class SkillsViewController: UIViewController {
     ]
 
     private var suggestions: [String] = [
-        "NLP",
-        "Objective-C",
-        "PHP",
-        "PLSQL",
-        "PySpark",
-        "PyTorch",
-        "Python",
-        "React Native",
-        "SQL Database",
-        "Django",
-        "Kotlin",
-        "CPP"
+        "Adobe XD", "Agile", "Angular", "ASP.NET", "AWS", "Azure",
+        "C", "CPP", "Django", "Docker",
+        "Figma", "Flutter", "GCP", "Go", "GraphQL",
+        "Hadoop", "HTML", "CSS", "Java", "JavaScript", "Jenkins",
+        "Jetpack Compose", "Kotlin", "Kubernetes", "Linux",
+        "NLP", "Node.js", "NumPy", "Pandas", "Python", "PyTorch",
+        "React", "React Native", "REST API", "Ruby", "Rust",
+        "Scikit-Learn", "Scrum", "Spark", "Spring Boot", "SQL",
+        "Swift", "SwiftUI", "System Design", "Tableau", "TensorFlow",
+        "Terraform", "TypeScript", "Unit Testing", "Vue"
     ]
 
     private var filteredSuggestions: [String] = []
