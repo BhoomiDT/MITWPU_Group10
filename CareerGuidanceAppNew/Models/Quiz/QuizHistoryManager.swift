@@ -24,7 +24,4 @@ class QuizHistoryManager {
     func hasCompletedQuiz(for lessonId: String) -> Bool {
         completedLessonIds.contains(lessonId)
     }
-    func completedQuizCount(for lessonIds: [String]) -> Int {
-        return completedQuizzes.filter { lessonIds.contains($0.lessonId) }.count
-    }
 }

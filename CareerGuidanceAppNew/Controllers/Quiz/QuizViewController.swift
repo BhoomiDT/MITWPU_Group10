@@ -97,10 +97,14 @@ class QuizViewController: UIViewController {
     }
     private func loadQuestion() {
         guard let quiz = quiz else { return }
+        
         self.title = String("Question \(currentQuestionIndex+1)")
-
+        
         let question = quiz.questions[currentQuestionIndex]
-
+        print("Questions count:", quiz.questions.count)
+        print("Current index:", currentQuestionIndex)
+        print("Options:", question.options)
+        print("Options count:", question.options.count)
         QuestionTextLabel.text = question.question
 
         optionButton1.setTitle(question.options[0], for: .normal)

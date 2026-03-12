@@ -10,32 +10,44 @@ class aiCellView: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
         bubbleView.layer.cornerRadius = 16
         bubbleView.layer.masksToBounds = true
-        
+
         self.backgroundColor = .clear
         self.contentView.backgroundColor = .clear
+
         messageLabel.numberOfLines = 0
-        bubbleLeadingConstraint.constant = 16
-        bubbleTrailingConstraint.constant = 16
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        bubbleLeadingConstraint.isActive = false
+        bubbleTrailingConstraint.isActive = false
     }
 
     func configure(with message: ChatMessage) {
+
         messageLabel.text = message.text
-        
+
         if message.isUser {
+
             bubbleView.backgroundColor = UIColor(hex: "C4ECEB")
             messageLabel.textColor = .label
-            
+
             bubbleLeadingConstraint.isActive = false
             bubbleTrailingConstraint.isActive = true
+
         } else {
+
             bubbleView.backgroundColor = .systemGray5
             messageLabel.textColor = .label
-            
+
             bubbleTrailingConstraint.isActive = false
             bubbleLeadingConstraint.isActive = true
         }
+
+        layoutIfNeeded()
     }
 }

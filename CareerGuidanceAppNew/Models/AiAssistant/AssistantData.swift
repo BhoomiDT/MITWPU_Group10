@@ -1,3 +1,5 @@
+//AssistantData.swift
+
 import Foundation
 
 struct ChatMessage {
