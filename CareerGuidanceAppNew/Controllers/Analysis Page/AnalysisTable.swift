@@ -89,7 +89,7 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         
         if indexPath.section == 0 {
-            return 165
+            return 185
         }
         
         return UITableView.automaticDimension
@@ -116,6 +116,8 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
             cell.backgroundColor = .clear
             cell.contentView.backgroundColor = .white
             
+            cell.contentView.layer.masksToBounds = true
+            cell.contentView.layer.cornerRadius = 16
 
             if isSelected {
                 cell.contentView.layer.borderWidth = 2
@@ -142,10 +144,6 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
                     tableView.reloadData()
                 }
             }
-            // Make card style
-            cell.contentView.layer.cornerRadius = 16
-            //cell.layer.masksToBounds = true
-            cell.contentView.layer.masksToBounds = true
             return cell
         }
         
