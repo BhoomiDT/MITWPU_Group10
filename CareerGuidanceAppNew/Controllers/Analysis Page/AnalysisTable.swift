@@ -68,12 +68,11 @@ class AnalysisTable: UIViewController, UITableViewDataSource, UITableViewDelegat
         guard indexPath.section == 0 else { return }
 
         let horizontalPadding: CGFloat = 16
-        let verticalPadding: CGFloat = 16
 
         cell.contentView.frame = cell.contentView.frame.inset(
-            by: UIEdgeInsets(top: verticalPadding,
+            by: UIEdgeInsets(top: 0,
                              left: horizontalPadding,
-                             bottom: verticalPadding,
+                             bottom: 0,
                              right: horizontalPadding)
         )
     }
