@@ -25,6 +25,8 @@ class AssistantViewController: UIViewController, UITableViewDelegate, UITableVie
         tableView.backgroundColor = .appBackground
         tableView.transform = CGAffineTransform(scaleX: 1, y: -1)
         tableView.register(UINib(nibName: "aiCellView", bundle: nil), forCellReuseIdentifier: "aiCellView")
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 60
         tableView.sectionHeaderTopPadding = 0
         navigationController!.navigationBar.prefersLargeTitles = true
         NotificationCenter.default.addObserver(self, selector: #selector(kbMove), name: UIResponder.keyboardWillShowNotification, object: nil)

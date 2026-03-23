@@ -4,9 +4,9 @@ import UIKit
 class aiCellView: UITableViewCell {
     @IBOutlet weak var bubbleView: UIView!
     @IBOutlet weak var messageLabel: UILabel!
-    @IBOutlet weak var bubbleWidthConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bubbleLeadingConstraint: NSLayoutConstraint!
-    @IBOutlet weak var bubbleTrailingConstraint: NSLayoutConstraint!
+    @IBOutlet var bubbleWidthConstraint: NSLayoutConstraint!
+    @IBOutlet var bubbleLeadingConstraint: NSLayoutConstraint!
+    @IBOutlet var bubbleTrailingConstraint: NSLayoutConstraint!
 
     override func awakeFromNib() {
         super.awakeFromNib()
