@@ -49,11 +49,11 @@ final class QuizResultsService {
         let insights = computeInsights(from: answers)
         
         let strengths = insights.strengths.isEmpty
-            ? [StrengthItem(title: "Great performance overall 🎉")]
+            ? [StrengthItem(title: "Great performance overall")]
             : insights.strengths.map { StrengthItem(title: formatTopic($0)) }
 
         let improvements = insights.weaknesses.isEmpty
-            ? [ImprovementItem(title: "No major weak areas 🙌")]
+            ? [ImprovementItem(title: "No major weak areas")]
             : insights.weaknesses.map { ImprovementItem(title: formatTopic($0)) }
 
         return TestResult(

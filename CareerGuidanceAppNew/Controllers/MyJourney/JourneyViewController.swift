@@ -14,6 +14,8 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
     @IBOutlet weak var tableView: UITableView!
     
     private var sections: [JourneySection] = JourneyData.milestones
+    private var fetchingMilestones: [JourneySection] = []
+    private var isLoading = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,6 +23,28 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
         tableView.backgroundColor = .systemGroupedBackground
         setupUI()
         setupTableView()
+        fetchMilestones()
+    }
+    
+    private func fetchMilestones() {
+        Task {
+            do {
+                let fetchedSections = try await MyJourneyService.shared.fetchCompletedMilestonesHistory()
+                DispatchQueue.main.async {
+                    self.fetchingMilestones = fetchedSections
+                    self.isLoading = false
+                    if self.segmentedControl.selectedSegmentIndex == 0 {
+                        self.sections = self.fetchingMilestones
+                        self.tableView.reloadData()
+                    }
+                }
+            } catch {
+                print("Error fetching milestones: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                }
+            }
+        }
     }
 
   
@@ -53,7 +77,7 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
 
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
-            sections = JourneyData.milestones
+            sections = fetchingMilestones.isEmpty && isLoading ? JourneyData.milestones : fetchingMilestones
         } else {
             sections = JourneyData.skills
         }
