@@ -122,7 +122,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         }.count
         
         let calculatedPercentage = totalQuizzes > 0 ? (completedCount * 100) / totalQuizzes : 0
-        
+        print("Completed lessons:", QuizHistoryManager.shared.completedLessonIds)
         return Roadmap(
             id: baseRoadmap.id,
             title: baseRoadmap.title,
@@ -192,7 +192,6 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         collectionView.setCollectionViewLayout(createLayout(), animated: false)
         view.bringSubviewToFront(floatingButton)
     }
-    
     override func viewDidLoad() {
         
         super.viewDidLoad()

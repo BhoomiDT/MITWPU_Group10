@@ -149,7 +149,11 @@ extension TestResultsViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 3
+        guard let result = testResult else { return 0 }
+
+        return section == 0
+            ? result.strengths.count
+            : result.improvements.count
     }
 
     func tableView(_ tableView: UITableView,

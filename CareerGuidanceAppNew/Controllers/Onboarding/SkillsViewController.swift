@@ -152,12 +152,24 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
         let item = selected.remove(at: ip.row)
         suggestions.insert(item, at: 0)
 
-        tableView.beginUpdates()
-        tableView.deleteRows(at: [ip], with: .automatic)
-        tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
-        tableView.endUpdates()
-
-        if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+//        tableView.beginUpdates()
+//        tableView.deleteRows(at: [ip], with: .automatic)
+//        tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
+//        tableView.endUpdates()
+//
+//        if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+        
+        if isFiltering {
+                if let text = searchBar.text {
+                    filterSuggestions(with: text)
+                }
+                tableView.reloadData()
+            } else {
+                tableView.beginUpdates()
+                tableView.deleteRows(at: [ip], with: .automatic)
+                tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                tableView.endUpdates()
+            }
     }
 
     func suggestionCellDidTapAdd(_ cell: SuggestionSkillCell) {
@@ -168,12 +180,23 @@ extension SkillsViewController: SelectedSkillCellDelegate, SuggestionSkillCellDe
         }
         selected.insert(item, at: 0)
 
-        tableView.beginUpdates()
-        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-        tableView.deleteRows(at: [ip], with: .automatic)
-        tableView.endUpdates()
-
-        if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+//        tableView.beginUpdates()
+//        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+//        tableView.deleteRows(at: [ip], with: .automatic)
+//        tableView.endUpdates()
+//
+//        if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+        if isFiltering {
+            if let text = searchBar.text {
+                filterSuggestions(with: text)
+            }
+            tableView.reloadData()
+        } else {
+            tableView.beginUpdates()
+            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+            tableView.deleteRows(at: [ip], with: .automatic)
+            tableView.endUpdates()
+        }
     }
 }
 
@@ -183,20 +206,46 @@ extension SkillsViewController: UITableViewDelegate {
             let item = selected[indexPath.row]
             selected.remove(at: indexPath.row)
             suggestions.insert(item, at: 0)
-            tableView.beginUpdates()
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
-            tableView.endUpdates()
-            if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+//            tableView.beginUpdates()
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
+//            tableView.insertRows(at: [IndexPath(row: 0, section: 1)], with: .automatic)
+//            tableView.endUpdates()
+//            if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+            
+            if isFiltering {
+                        if let text = searchBar.text {
+                            filterSuggestions(with: text)
+                        }
+                        tableView.reloadData()
+                    } else {
+                        tableView.beginUpdates()
+                        tableView.deleteRows(at: [indexPath], with: .automatic)
+                        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                        tableView.endUpdates()
+                    }
         } else {
             let item = suggestionsArray()[indexPath.row]
             if let real = suggestions.firstIndex(of: item) { suggestions.remove(at: real) }
             selected.insert(item, at: 0)
-            tableView.beginUpdates()
-            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            tableView.endUpdates()
-            if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+            
+            if isFiltering {
+                        if let text = searchBar.text {
+                            filterSuggestions(with: text)
+                        }
+                        tableView.reloadData()
+                    } else {
+                        tableView.beginUpdates()
+                        tableView.deleteRows(at: [indexPath], with: .automatic)
+                        tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+                        tableView.endUpdates()
+                    }
+//            tableView.beginUpdates()
+//            tableView.insertRows(at: [IndexPath(row: 0, section: 0)], with: .automatic)
+//            tableView.deleteRows(at: [indexPath], with: .automatic)
+//            tableView.endUpdates()
+            
+            //if isFiltering { filterSuggestions(with: searchBar.text ?? "") }
+            
         }
     }
 }
@@ -220,6 +269,7 @@ extension SkillsViewController: UISearchBarDelegate {
         } else {
             filteredSuggestions = suggestions.filter { $0.lowercased().contains(q) }
         }
-        tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
+        tableView.reloadData()
+        //tableView.reloadSections(IndexSet(integer: 1), with: .automatic)
     }
 }

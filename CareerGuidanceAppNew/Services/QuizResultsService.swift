@@ -32,17 +32,29 @@ final class QuizResultsService {
         )
 
         // Temporary insights (same structure as your model)
-        let strengths = [
-            StrengthItem(title: "Good understanding of concepts"),
-            StrengthItem(title: "Strong logical reasoning"),
-            StrengthItem(title: "Accurate answer selection")
-        ]
+//        let strengths = [
+//            StrengthItem(title: "Good understanding of concepts"),
+//            StrengthItem(title: "Strong logical reasoning"),
+//            StrengthItem(title: "Accurate answer selection")
+//        ]
+//
+//        let improvements = [
+//            ImprovementItem(title: "Review incorrect answers"),
+//            ImprovementItem(title: "Practice more advanced questions"),
+//            ImprovementItem(title: "Focus on tricky concepts")
+//        ]
+        
+        let answers = try await fetchAnswerResults(attemptId: attemptId)
+        
+        let insights = computeInsights(from: answers)
+        
+        let strengths = insights.strengths.isEmpty
+            ? [StrengthItem(title: "Great performance overall 🎉")]
+            : insights.strengths.map { StrengthItem(title: formatTopic($0)) }
 
-        let improvements = [
-            ImprovementItem(title: "Review incorrect answers"),
-            ImprovementItem(title: "Practice more advanced questions"),
-            ImprovementItem(title: "Focus on tricky concepts")
-        ]
+        let improvements = insights.weaknesses.isEmpty
+            ? [ImprovementItem(title: "No major weak areas 🙌")]
+            : insights.weaknesses.map { ImprovementItem(title: formatTopic($0)) }
 
         return TestResult(
             score: attempt.score_percent ?? 0,
@@ -65,7 +77,8 @@ final class QuizResultsService {
                 quiz_questions (
                     question,
                     options,
-                    correct_index
+                    correct_index,
+                    question_topic
                 )
             """)
             .eq("attempt_id", value: attemptId)
@@ -82,15 +95,49 @@ final class QuizResultsService {
                 let questionObj = row["quiz_questions"] as? [String: Any],
                 let question = questionObj["question"] as? String,
                 let options = questionObj["options"] as? [String],
-                let correct = questionObj["correct_index"] as? Int
+                let correct = questionObj["correct_index"] as? Int,
+                let topic = questionObj["question_topic"] as? String
             else { return nil }
 
             return QuestionResult(
                 questionText: question,
                 options: options,
                 userSelectedIndex: selected,
-                correctIndex: correct
+                correctIndex: correct,
+                topic: topic
             )
         }
+    }
+    
+    func computeInsights(from results: [QuestionResult]) -> (strengths: [String], weaknesses: [String]) {
+
+        var correctMap: [String: Int] = [:]
+        var wrongMap: [String: Int] = [:]
+
+        for r in results {
+            if r.userSelectedIndex == r.correctIndex {
+                correctMap[r.topic, default: 0] += 1
+            } else {
+                wrongMap[r.topic, default: 0] += 1
+            }
+        }
+
+        let topStrengths = correctMap
+            .sorted { $0.value > $1.value }
+            .prefix(3)
+            .map { $0.key }
+
+        let topWeaknesses = wrongMap
+            .sorted { $0.value > $1.value }
+            .prefix(3)
+            .map { $0.key }
+
+        return (topStrengths, topWeaknesses)
+    }
+    
+    func formatTopic(_ topic: String) -> String {
+        return topic
+            .replacingOccurrences(of: "_", with: " ")
+            .capitalized
     }
 }

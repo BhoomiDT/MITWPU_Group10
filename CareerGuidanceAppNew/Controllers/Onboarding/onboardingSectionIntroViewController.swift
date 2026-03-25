@@ -28,7 +28,7 @@ class onboardingSectionIntroViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureContent()
-        navigationItem.hidesBackButton = true
+        navigationItem.hidesBackButton = (sectionIndex != 1)
         
     }
     

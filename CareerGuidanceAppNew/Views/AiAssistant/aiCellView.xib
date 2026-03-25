@@ -44,9 +44,9 @@
                 </subviews>
                 <color key="tintColor" red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="calibratedRGB"/>
                 <constraints>
-                    <constraint firstItem="nxw-7Z-f3b" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" id="NPy-ma-M6Z"/>
+                    <constraint firstItem="nxw-7Z-f3b" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="12" id="NPy-ma-M6Z"/>
                     <constraint firstAttribute="bottom" secondItem="nxw-7Z-f3b" secondAttribute="bottom" constant="5" id="f1D-HG-z8f"/>
-                    <constraint firstAttribute="trailing" secondItem="nxw-7Z-f3b" secondAttribute="trailing" id="h4U-eN-wic"/>
+                    <constraint firstAttribute="trailing" secondItem="nxw-7Z-f3b" secondAttribute="trailing" constant="12" id="h4U-eN-wic"/>
                     <constraint firstItem="nxw-7Z-f3b" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="5" id="pwm-HL-E9c"/>
                 </constraints>
                 <userDefinedRuntimeAttributes>

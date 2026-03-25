@@ -14,6 +14,7 @@ struct QuestionResult {
 
     let userSelectedIndex: Int?
     let correctIndex: Int
+    let topic: String
 
     var isCorrect: Bool {
         guard let selected = userSelectedIndex else { return false }
