@@ -42,7 +42,7 @@ struct MilestoneDTO: Decodable {
 struct LessonDTO: Codable, Identifiable {
     let id: String
     let milestone_id: UUID
-    let name: String
+    let title: String
     let subtitle: String?
     let due_date: String?
     let order_index: Int?
@@ -102,7 +102,7 @@ enum LessonMapper {
     static func fromDTO(_ dto: LessonDTO) -> Lesson {
         Lesson(
             id: dto.id,
-            name: dto.name,
+            name: dto.title,
             subtitle: dto.subtitle ?? "",
             dueDate: dto.due_date ?? "",
             status: .startTest,

@@ -145,7 +145,16 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
             let dtos = try JSONDecoder().decode([RoadmapDTO].self, from: response.data)
 
-            let mapped = dtos.map { RoadmapMapper.fromDTO($0) }
+            var mapped: [Roadmap] = []
+            for dto in dtos {
+                var roadmap = RoadmapMapper.fromDTO(dto)
+                do {
+                    roadmap.milestones = try await RoadmapService.shared.fetchMilestonesWithLessons(for: roadmap.id)
+                } catch {
+                    print("Failed to fetch nested milestones for \(roadmap.title):", error)
+                }
+                mapped.append(roadmap)
+            }
 
             RoadmapStore.shared.setRoadmaps(mapped)
             print("FETCHED FROM SUPABASE");
@@ -187,7 +196,11 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                OnboardingManager.shared.isOnboardingCompleted)
         
         collectionView.backgroundColor = .appBackground
-        collectionView.reloadData()
+        Task {
+            await UserStats.shared.syncXpFromSupabase()
+            await hydrateQuizHistory()
+        }
+        
         collectionView.collectionViewLayout.invalidateLayout()
         collectionView.setCollectionViewLayout(createLayout(), animated: false)
         view.bringSubviewToFront(floatingButton)
@@ -197,13 +210,9 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         super.viewDidLoad()
         
         Task {
-                await loadRoadmapsFromSupabase()
-                collectionView.reloadData()
-            }
-        Task {
-            await hydrateQuizHistory()
+            await loadRoadmapsFromSupabase()
+            collectionView.reloadData()
         }
-        
         
         navigationController!.navigationBar.prefersLargeTitles = true
         navigationItem.hidesBackButton = true
@@ -255,8 +264,8 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         let domain = OnboardingManager.shared.recommendedDomain?.replacingOccurrences(of: "_", with: " ") ?? "your domain"
         
         let alert = UIAlertController(
-            title: "🎉 Congratulations!",
-            message: "You've successfully completed your onboarding!\n\n🏆 Earned: 100 XP\n🏅 Badge: Pathfinder\n🚀 Path: \(domain)",
+            title: "Congratulations!",
+            message: "You've successfully completed your onboarding!\n\n🏆 Earned: 100 XP\n🏅 Badge: Path Finder\n🚀 Path: \(domain)",
             preferredStyle: .alert
         )
         

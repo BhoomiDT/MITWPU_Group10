@@ -138,7 +138,7 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
                     cell.configure(
                         title: video.title,
                         meta: "\(video.duration) · YouTube",
-                        thumbnail: UIImage(named: video.thumbnail_name)
+                        thumbnail: UIImage(systemName: "play.rectangle.fill")
                     )
                     return cell
                 } else {

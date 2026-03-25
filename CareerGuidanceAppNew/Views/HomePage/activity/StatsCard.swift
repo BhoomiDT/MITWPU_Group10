@@ -37,7 +37,7 @@ class StatsCard: UICollectionViewCell {
         activityTitle.textColor = .appTeal
         activityIcon.image = UIImage(systemName: "flag.pattern.checkered")
         activityIcon.tintColor = .appTeal
-        xpTitle.text = "Total XP"
+        xpTitle.text = "Learn Points"
         streakTitle.text = "Day Streaks"
         badgeTitle.text = "Badges"
         

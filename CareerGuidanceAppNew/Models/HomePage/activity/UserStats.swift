@@ -8,6 +8,7 @@
 
 
 import Foundation
+import Supabase
 
 struct UserStats {
     
@@ -68,5 +69,36 @@ struct UserStats {
             streak: defaults.integer(forKey: streakKey),
             badges: defaults.integer(forKey: badgesKey)
         )
+    }
+
+    mutating func syncXpFromSupabase() async {
+        guard let userId = UserSessionManager.shared.userId else { return }
+        do {
+            struct Attempt: Decodable {
+                let correct_count: Int?
+            }
+            
+            let response = try await SupabaseManager.shared.client
+                .from("quiz_attempts")
+                .select("correct_count")
+                .eq("user_id", value: userId.uuidString)
+                .execute()
+                
+            let attempts = try JSONDecoder().decode([Attempt].self, from: response.data)
+            
+            var calculatedXP = 100 // ONBOARDING BASE XP
+            for att in attempts {
+                let correctCount = att.correct_count ?? 0
+                calculatedXP += (correctCount * 10)
+            }
+            
+            // Re-save so it is persistently available fast.
+            DispatchQueue.main.async {
+                self.xp = calculatedXP
+                self.save()
+            }
+        } catch {
+            print("Failed to sync XP from Supabase:", error)
+        }
     }
 }

@@ -37,7 +37,7 @@ class CelebrationViewController: UIViewController {
         titleLabel.font = .systemFont(ofSize: 28, weight: .bold)
         
         let subtitleLabel = UILabel()
-        subtitleLabel.text = "You've completed the onboarding!\nYou earned 100 XP and the 'Pathfinder' badge."
+        subtitleLabel.text = "You've completed the onboarding!\nYou earned 100 XP and the 'Path Finder' badge."
         subtitleLabel.numberOfLines = 0
         subtitleLabel.textAlignment = .center
         subtitleLabel.font = .systemFont(ofSize: 18, weight: .medium)

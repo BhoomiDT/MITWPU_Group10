@@ -30,9 +30,9 @@ let allBadgeSections: [BadgeSection] = [
     BadgeSection(title: " ", badges: [
         
         Badge(id: 1,
-              title: "Active Starter",
+              title: "Path Finder",
               subtitle: "You conquered your first badge!",
-              iconName: "crown.fill",
+              iconName: "map.fill",
               color: UIColor(hex: "#1fa5a1"),
               requiredXP: 0),
 

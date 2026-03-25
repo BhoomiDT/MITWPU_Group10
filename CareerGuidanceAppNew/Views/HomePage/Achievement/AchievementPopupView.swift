@@ -48,7 +48,7 @@ class AchievementPopupView: UIView {
         badgeImageView.translatesAutoresizingMaskIntoConstraints = false
         
         // 3. Badge Name
-        badgeNameLabel.text = "PATHFINDER"
+        badgeNameLabel.text = "PATH FINDER"
         badgeNameLabel.font = .systemFont(ofSize: 18, weight: .bold)
         badgeNameLabel.textColor = UIColor(hex: "#EF9026")
         badgeNameLabel.textAlignment = .center
