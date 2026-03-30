@@ -18,7 +18,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     }
     
 //    let personalisedRoadmap = allRoadmapsData.last
-//    
+//
 //    var visibleRoadmaps: [Roadmap] {
 //        guard let personalised = personalisedRoadmap else { return [] }
 //
@@ -36,25 +36,25 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 //            // Fallback 1: If no recommendation yet, just show the last roadmap
 //            return allRoadmaps.last
 //        }
-//        
+//
 //        // 2. Try to find the actual roadmap object that matches that title
 //        // We search the store to see if we have "Web Development", "AI", etc.
 //        let matchedRoadmap = allRoadmaps.first { $0.title.lowercased() == recommendedTitle.lowercased() }
-//        
+//
 //        // 3. Define which base data to use (the match OR the fallback last one)
 //        let baseRoadmap = matchedRoadmap ?? allRoadmaps.last
-//        
+//
 //        guard let roadmapToUse = baseRoadmap else { return nil }
-//        
+//
 //        // 4. CALCULATE DYNAMIC PERCENTAGE (Specific to the chosen roadmap)
 //        let allLessons = roadmapToUse.milestones.flatMap { $0.lessons }
 //        let totalQuizzes = allLessons.count
 //        let completedCount = allLessons.filter {
 //            OnboardingManager.shared.completedLessonIds.contains($0.id)
 //        }.count
-//        
+//
 //        let calculatedPercentage = totalQuizzes > 0 ? (completedCount * 100) / totalQuizzes : 0
-//        
+//
 //        // 5. Return the final roadmap
 //        // Note: We keep the recommendedTitle as the title even if we fall back
 //        // to the last roadmap's milestones/content.

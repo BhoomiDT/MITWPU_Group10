@@ -51,7 +51,7 @@ struct Roadmap {
     let description: String
     let imageName: String
     let percentage: Int
-    let milestones: [Milestone]
+    var milestones: [Milestone]
     var isStarted: Bool
 }
 

@@ -92,11 +92,9 @@ struct UserStats {
                 calculatedXP += (correctCount * 10)
             }
             
-            // Re-save so it is persistently available fast.
-            DispatchQueue.main.async {
                 self.xp = calculatedXP
                 self.save()
-            }
+            
         } catch {
             print("Failed to sync XP from Supabase:", error)
         }
