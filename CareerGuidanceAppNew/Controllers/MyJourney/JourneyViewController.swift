@@ -25,6 +25,10 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
         setupTableView()
         fetchMilestones()
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchMilestones()
+    }
     
     private func fetchMilestones() {
         Task {
@@ -77,7 +81,28 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
 
     @IBAction func segmentChanged(_ sender: UISegmentedControl) {
         if sender.selectedSegmentIndex == 0 {
-            sections = fetchingMilestones.isEmpty && isLoading ? JourneyData.milestones : fetchingMilestones
+
+            if isLoading {
+                sections = JourneyData.milestones
+            } else if fetchingMilestones.isEmpty {
+                sections = [
+                    JourneySection(
+                        title: "Start Your Journey",
+                        items: [
+                            JourneyItem(
+                                iconName: "sparkles",
+                                iconColor: .systemTeal,
+                                iconBackgroundColor: .systemTeal.withAlphaComponent(0.2),
+                                title: "No Milestones Yet",
+                                subtitle: "Complete lessons to unlock milestones"
+                            )
+                        ]
+                    )
+                ]
+            } else {
+                sections = fetchingMilestones
+            }
+
         } else {
             sections = JourneyData.skills
         }

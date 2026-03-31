@@ -22,119 +22,107 @@ final class MyJourneyService {
     
     /// Fetches all completed milestones for the current user and groups them by month.
     func fetchCompletedMilestonesHistory() async throws -> [JourneySection] {
+        
         guard let userId = UserSessionManager.shared.userId else {
             return []
         }
         
-        // 1. Fetch user's completed lessons
-        let progressResponse = try await SupabaseManager.shared.client
+        let client = SupabaseManager.shared.client
+        
+        // 1️⃣ Fetch completed lessons
+        let progressResponse = try await client
             .from("user_lesson_progress")
-            .select("lesson_id, is_completed, completed_at")
+            .select("lesson_id, completed_at")
             .eq("user_id", value: userId.uuidString)
             .eq("is_completed", value: true)
             .execute()
         
-        let completedLessons = try JSONDecoder().decode([LessonProgressFetchDTO].self, from: progressResponse.data)
+        let progressRows = try JSONSerialization.jsonObject(
+            with: progressResponse.data
+        ) as? [[String: Any]] ?? []
         
-        var completedLessonDict: [String: LessonProgressFetchDTO] = [:]
-        for prog in completedLessons {
-            completedLessonDict[prog.lesson_id] = prog
+        if progressRows.isEmpty { return [] }
+        
+        let completedLessonIds = progressRows.compactMap {
+            $0["lesson_id"] as? String
         }
         
-        // 2. Fetch all milestones
-        let milestonesResponse = try await SupabaseManager.shared.client
-            .from("milestones")
-            .select()
-            .execute()
-        let allMilestones = try JSONDecoder().decode([MilestoneDTO].self, from: milestonesResponse.data)
-        
-        // 3. Fetch all lessons
-        let lessonsResponse = try await SupabaseManager.shared.client
+        // 2️⃣ Fetch lessons (to map milestone)
+        let lessonsResponse = try await client
             .from("lessons")
-            .select()
+            .select("id, milestone_id")
+            .in("id", values: completedLessonIds)
             .execute()
-        let allLessons = try JSONDecoder().decode([LessonDTO].self, from: lessonsResponse.data)
         
-        var lessonsByMilestone: [UUID: [LessonDTO]] = [:]
-        for lesson in allLessons {
-            lessonsByMilestone[lesson.milestone_id, default: []].append(lesson)
+        let lessonRows = try JSONSerialization.jsonObject(
+            with: lessonsResponse.data
+        ) as? [[String: Any]] ?? []
+        
+        var completedCount: [String: Int] = [:]
+        
+        for row in lessonRows {
+            if let milestoneId = row["milestone_id"] as? String {
+                completedCount[milestoneId, default: 0] += 1
+            }
         }
         
-        // 4. Determine completed milestones and their completion date
-        var completedMilestoneItems: [(item: JourneyItem, date: Date)] = []
+        // 3️⃣ Fetch all lessons (for total count per milestone)
+        let allLessonsResponse = try await client
+            .from("lessons")
+            .select("milestone_id")
+            .execute()
         
-        let dateFormatter = ISO8601DateFormatter()
-        dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        let fallbackFormatter = ISO8601DateFormatter()
+        let allLessonRows = try JSONSerialization.jsonObject(
+            with: allLessonsResponse.data
+        ) as? [[String: Any]] ?? []
         
-        for milestone in allMilestones {
-            guard let lessonsForMilestone = lessonsByMilestone[milestone.id], !lessonsForMilestone.isEmpty else {
-                continue // Skip milestones without lessons
+        var totalCount: [String: Int] = [:]
+        
+        for row in allLessonRows {
+            if let milestoneId = row["milestone_id"] as? String {
+                totalCount[milestoneId, default: 0] += 1
             }
+        }
+        
+        // 4️⃣ Find completed milestones
+        var completedMilestoneIds: [String] = []
+        
+        for (milestoneId, count) in completedCount {
+            if count == totalCount[milestoneId] {
+                completedMilestoneIds.append(milestoneId)
+            }
+        }
+        
+        if completedMilestoneIds.isEmpty { return [] }
+        
+        // 5️⃣ Fetch milestone UI data
+        let milestoneResponse = try await client
+            .from("milestones")
+            .select("id, title, subtitle, icon_name, icon_color, icon_background_color")
+            .in("id", values: completedMilestoneIds)
+            .execute()
+        
+        let milestoneRows = try JSONSerialization.jsonObject(
+            with: milestoneResponse.data
+        ) as? [[String: Any]] ?? []
+        
+        let items: [JourneyItem] = milestoneRows.map { row in
             
-            var isCompleted = true
-            var latestDate: Date?
-            
-            for lesson in lessonsForMilestone {
-                if let progress = completedLessonDict[lesson.id] {
-                    if let dateString = progress.completed_at {
-                        let date = dateFormatter.date(from: dateString) ?? fallbackFormatter.date(from: dateString)
-                        if let validDate = date {
-                            if latestDate == nil || validDate > latestDate! {
-                                latestDate = validDate
-                            }
-                        }
-                    }
-                } else {
-                    isCompleted = false
-                    break
-                }
-            }
-            
-            if isCompleted {
-                let finalDate = latestDate ?? Date() // Fallback to now if no date available
-                
-                let journeyItem = JourneyItem(
-                    iconName: milestone.iconName,
-                    iconColor: UIColor(hex: milestone.iconColor) ?? .systemBlue,
-                    iconBackgroundColor: UIColor(hex: milestone.iconBackgroundColor) ?? .systemBlue.withAlphaComponent(0.2),
-                    title: milestone.title,
-                    subtitle: milestone.subtitle
-                )
-                
-                completedMilestoneItems.append((item: journeyItem, date: finalDate))
-            }
+            JourneyItem(
+                iconName: row["icon_name"] as? String ?? "star",
+                iconColor: UIColor(hex: row["icon_color"] as? String ?? "#000000") ?? .black,
+                iconBackgroundColor: UIColor(hex: row["icon_background_color"] as? String ?? "#E0E0E0") ?? .systemGray5,
+                title: row["title"] as? String ?? "",
+                subtitle: row["subtitle"] as? String ?? "Milestone Completed"
+            )
         }
+        return [
+            JourneySection(
+                title: "Completed Milestones",
+                items: items
+            )
+        ]
         
-        // 5. Group by month
-        // We want to sort them descending by date first
-        completedMilestoneItems.sort { $0.date > $1.date }
-        
-        var sectionsDict: [String: [JourneyItem]] = [:]
-        var monthOrder: [String] = [] // to retain sorted order of months
-        
-        let monthFormatter = DateFormatter()
-        monthFormatter.dateFormat = "MMMM yyyy" // e.g. "December 2023"
-        // Wait, the mock uses just "December", but year is better or maybe just month name if within same year. We'll use "MMMM yyyy" to be safe.
-        // Let's use "MMMM" to match mock UI if we only care about month.
-        monthFormatter.dateFormat = "MMMM"
-        
-        for entry in completedMilestoneItems {
-            let monthString = monthFormatter.string(from: entry.date)
-            if sectionsDict[monthString] == nil {
-                sectionsDict[monthString] = []
-                monthOrder.append(monthString)
-            }
-            sectionsDict[monthString]?.append(entry.item)
-        }
-        
-        var finalSections: [JourneySection] = []
-        for month in monthOrder {
-            if let items = sectionsDict[month] {
-                finalSections.append(JourneySection(title: month, items: items))
-            }
-        }
-        
-        return finalSections
     }
+    
 }
