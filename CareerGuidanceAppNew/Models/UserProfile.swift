@@ -9,6 +9,13 @@ struct UserProfile: Codable {
     var onboarding_completed: Bool
     var recommended_domain: String?
     
+    // Stats
+    var learning_streak: Int
+    var completed_quizzes: Int
+    var learning_days: Int
+    var quests_completed: Int
+    var xp: Int
+    
     enum CodingKeys: String, CodingKey {
         case id
         case email
@@ -17,5 +24,10 @@ struct UserProfile: Codable {
         case riasec_scores
         case onboarding_completed
         case recommended_domain
+        case learning_streak
+        case completed_quizzes
+        case learning_days
+        case quests_completed
+        case xp
     }
 }

@@ -106,7 +106,7 @@ class QuizViewController: UIViewController {
         print("Options:", question.options)
         print("Options count:", question.options.count)
         QuestionTextLabel.text = question.question
-
+        
         optionButton1.setTitle(question.options[0], for: .normal)
         optionButton2.setTitle(question.options[1], for: .normal)
         optionButton3.setTitle(question.options[2], for: .normal)
@@ -173,39 +173,6 @@ class QuizViewController: UIViewController {
         present(alert, animated: true)
     }
 
-    
-//    private func showSubmitConfirmation() {
-//        let alert = UIAlertController(
-//            title: "Submit Test?",
-//            message: "Your test is being submitted.",
-//            preferredStyle: .alert
-//        )
-//        
-//        self.onQuizCompleted?()
-//        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-//
-//        alert.addAction(UIAlertAction(title: "Submit", style: .default) { _ in
-//            let completedQuiz = self.generateCompletedQuiz()
-//            
-//            let correctAnswers = completedQuiz.correctCount
-//            
-//            let earnedXP = correctAnswers * 10
-//            
-//            UserStats.shared.addXP(earnedXP)
-//            JourneyModel.incrementStatsAfterQuiz()
-//            
-//            QuizHistoryManager.shared.save(completedQuiz)
-//            
-//            if let roadmap = self.roadmapStatus, roadmap.isStarted == false {
-//                self.onRoadmapStarted?()
-//            }
-//
-//            self.navigateToResults(completedQuiz: completedQuiz)
-//        })
-//
-//        present(alert, animated: true)
-//    }
-
     private func showSubmitConfirmation() {
         let alert = UIAlertController(
             title: "Submit Test?",
@@ -219,7 +186,6 @@ class QuizViewController: UIViewController {
 
             Task {
                 do {
-
                     print("🚀 submitQuiz() CALLED")
 
                     // 1️⃣ Store quiz attempt in Supabase
@@ -231,9 +197,8 @@ class QuizViewController: UIViewController {
 
                     print("✅ Quiz attempt stored in Supabase")
 
+                    // 2️⃣ Perform local logic and navigation on Main Thread
                     DispatchQueue.main.async {
-
-                        // Local completion logic
                         var correctCount = 0
 
                         if let quiz = self.quiz {
@@ -245,12 +210,10 @@ class QuizViewController: UIViewController {
                         }
 
                         let xpEarned = correctCount * 10
-
                         UserStats.shared.addXP(xpEarned)
-
                         JourneyModel.incrementStatsAfterQuiz()
-                        JourneyModel.updateStreakAfterXP(totalXP: xpEarned)
                         JourneyModel.updateLearningDay()
+                        
                         self.onQuizCompleted?()
 
                         if let roadmap = self.roadmapStatus,
@@ -260,20 +223,13 @@ class QuizViewController: UIViewController {
 
                         // Navigate to results screen
                         let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-
-                        guard let resultsVC =
-                            storyboard.instantiateViewController(
-                                withIdentifier: "TestResultsVC"
-                            ) as? TestResultsViewController
-                        else { return }
-
+                        guard let resultsVC = storyboard.instantiateViewController(withIdentifier: "TestResultsVC") as? TestResultsViewController else { return }
                         resultsVC.quizAttemptId = attemptId
-
-                        self.navigationController?.pushViewController(
-                            resultsVC,
-                            animated: true
-                        )
+                        self.navigationController?.pushViewController(resultsVC, animated: true)
                     }
+
+                    // 3️⃣ Sync all stats to Supabase in background
+                    await ProfileService.shared.syncLocalToRemote()
 
                 } catch {
                     print("❌ Failed to store quiz attempt:", error)
@@ -283,6 +239,7 @@ class QuizViewController: UIViewController {
 
         present(alert, animated: true)
     }
+
     private func updateSelectionUI(selectedIndex: Int) {
         let buttons = [optionButton1, optionButton2, optionButton3, optionButton4]
         let selectedColor = UIColor(hex: "#1FA5A1")
@@ -311,60 +268,5 @@ class QuizViewController: UIViewController {
             $0?.setTitleColor(.label, for: .normal)
         }
     }
-//    func calculateScore() -> Int {
-//        guard let quiz = quiz else { return 0 }
-//
-//        var correct = 0
-//        for (index, question) in quiz.questions.enumerated() {
-//            if selectedOptionIndices[index] == question.correctIndex {
-//                correct += 1
-//            }
-//        }
-//
-//        return Int(
-//            (Double(correct) / Double(quiz.questions.count)) * 100
-//        )
-//    }
 
-//    private func generateCompletedQuiz() -> CompletedQuiz {
-//        guard let quiz = quiz else {
-//            fatalError("Quiz missing")
-//        }
-//        
-//        guard let lesson = lesson else {
-//            fatalError("Lesson missing")
-//        }
-//
-//        var results: [QuestionResult] = []
-//
-//        for (index, question) in quiz.questions.enumerated() {
-//
-//            let result = QuestionResult(
-//                questionText: question.question,
-//                options: question.options,
-//                userSelectedIndex: selectedOptionIndices[index],
-//                correctIndex: question.correctIndex
-//            )
-//            results.append(result)
-//        }
-//
-//        return CompletedQuiz(
-//            domainTitle: "Data Analytics", 
-//            moduleTitle: "Module 1: Foundations of Data",
-//            lessonId: lesson.id,
-//            lessonName: lesson.name,
-//            completedAt: Date(),
-//            questionResults: results
-//        )
-//    }
-
-//    private func navigateToResults(completedQuiz: CompletedQuiz) {
-//        let storyboard = UIStoryboard(name: "Roadmaps", bundle: nil)
-//        let vc = storyboard.instantiateViewController(
-//            withIdentifier: "TestResultsVC"
-//        ) as! TestResultsViewController
-//
-//        vc.completedQuiz = completedQuiz
-//        self.navigationController?.pushViewController(vc, animated: true)
-//    }
 }

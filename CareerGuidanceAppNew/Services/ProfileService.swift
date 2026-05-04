@@ -31,12 +31,17 @@ class ProfileService {
         
         let profile = UserProfile(
             id: userId,
-            email: nil, // Auth handles this mostly
-            full_name: nil, // Can be added later
+            email: nil,
+            full_name: nil,
             technical_skills: OnboardingManager.shared.technicalSkills,
             riasec_scores: OnboardingManager.shared.riasecScoresMap,
             onboarding_completed: OnboardingManager.shared.isOnboardingCompleted,
-            recommended_domain: UserDefaults.standard.string(forKey: "kRecommendedDomainName")
+            recommended_domain: UserDefaults.standard.string(forKey: "kRecommendedDomainName"),
+            learning_streak: UserStats.shared.streak,
+            completed_quizzes: JourneyModel.shared.quizzes,
+            learning_days: JourneyModel.shared.days,
+            quests_completed: JourneyModel.shared.quests,
+            xp: UserStats.shared.xp
         )
         
         do {
@@ -59,6 +64,13 @@ class ProfileService {
             if let domain = profile.recommended_domain {
                 UserDefaults.standard.set(domain, forKey: "kRecommendedDomainName")
             }
+            
+            // Sync Stats back to local managers
+            UserStats.shared.xp = profile.xp
+            UserStats.shared.streak = profile.learning_streak
+            JourneyModel.shared.quizzes = profile.completed_quizzes
+            JourneyModel.shared.days = profile.learning_days
+            JourneyModel.shared.quests = profile.quests_completed
             
             print("✅ Profile synced from Supabase")
         } catch {

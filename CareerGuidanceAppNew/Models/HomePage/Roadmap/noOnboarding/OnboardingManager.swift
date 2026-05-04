@@ -34,20 +34,6 @@ class OnboardingManager {
     var shouldShowCelebrationAlert: Bool = false
         
         // Helper to calculate RIASEC from the answers
-//        func calculateRIASEC() -> [Double] {
-//            var scores: [Double] = [0, 0, 0, 0, 0, 0]
-//            let scoreMap: [String: Double] = [
-//                "Strongly Disagree": 1.0, "Disagree": 2.0, "Neutral": 3.0, "Agree": 4.0, "Strongly Agree": 5.0
-//            ]
-//            
-//            for section in userSelectedAnswers {
-//                for (qIndex, answer) in section.enumerated() {
-//                    let points = scoreMap[answer] ?? 0.0
-//                    scores[qIndex % 6] += points
-//                }
-//            }
-//            return scores
-//        }
     func calculateRIASEC() -> [Double] {
         var scores: [Double] = [0, 0, 0, 0, 0, 0]
         let scoreMap: [String: Double] = [
