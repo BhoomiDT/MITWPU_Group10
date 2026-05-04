@@ -66,6 +66,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //
 
 import UIKit
+internal import Auth
+import Supabase
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -91,22 +93,49 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
-
         let window = UIWindow(windowScene: windowScene)
 
-
-        // Instantiate the initial view controller from Extra.storyboard
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) // "Extra" is the filename (case-sensitive)
-        guard let initialVC = storyboard.instantiateInitialViewController() else {
-            print("⚠️ ERROR: Could not instantiate initial VC from storyboard. Check 'Is Initial View Controller'.")
-            return
+        Task {
+            let client = SupabaseManager.shared.client
+            do {
+                let session = try await client.auth.session
+                UserSessionManager.shared.setUserId(session.user.id)
+                
+                // Sync profile from Supabase
+                await ProfileService.shared.syncRemoteToLocal()
+                
+                // User is logged in, decide where to go
+                DispatchQueue.main.async {
+                    if !OnboardingManager.shared.isOnboardingCompleted {
+                        // Go to Onboarding
+                        if let onboardingVC = OnboardingManager.shared.getNextViewController() {
+                            let nav = UINavigationController(rootViewController: onboardingVC)
+                            window.rootViewController = nav
+                            window.makeKeyAndVisible()
+                            return
+                        }
+                    }
+                    
+                    // Go to Home
+                    let homeStoryboard = UIStoryboard(name: "HomePageProfileNew", bundle: nil)
+                    if let homeVC = homeStoryboard.instantiateInitialViewController() {
+                        window.rootViewController = homeVC
+                        window.makeKeyAndVisible()
+                    }
+                }
+            } catch {
+                // No session, go to Welcome/Login
+                DispatchQueue.main.async {
+                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                    if let initialVC = storyboard.instantiateInitialViewController() {
+                        window.rootViewController = initialVC
+                        window.makeKeyAndVisible()
+                    }
+                }
+            }
         }
-
-        window.rootViewController = initialVC
-        self.window = window
-        window.makeKeyAndVisible()
         
-
+        self.window = window
     }
 
     func sceneDidDisconnect(_ scene: UIScene) { }

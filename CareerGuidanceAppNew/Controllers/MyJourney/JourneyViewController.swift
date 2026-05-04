@@ -13,7 +13,7 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
     @IBOutlet weak var segmentedControl: UISegmentedControl!
     @IBOutlet weak var tableView: UITableView!
     
-    private var sections: [JourneySection] = JourneyData.milestones
+    private var sections: [JourneySection] = []
     private var fetchingMilestones: [JourneySection] = []
     private var isLoading = true
 
@@ -37,15 +37,13 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
                 DispatchQueue.main.async {
                     self.fetchingMilestones = fetchedSections
                     self.isLoading = false
-                    if self.segmentedControl.selectedSegmentIndex == 0 {
-                        self.sections = self.fetchingMilestones
-                        self.tableView.reloadData()
-                    }
+                    self.updateDisplayedSections()
                 }
             } catch {
                 print("Error fetching milestones: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.isLoading = false
+                    self.updateDisplayedSections()
                 }
             }
         }
@@ -79,34 +77,30 @@ class JourneyViewController: UIViewController,UITableViewDelegate{
     }
 
 
-    @IBAction func segmentChanged(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 0 {
-
-            if isLoading {
-                sections = JourneyData.milestones
-            } else if fetchingMilestones.isEmpty {
-                sections = [
-                    JourneySection(
-                        title: "Start Your Journey",
-                        items: [
-                            JourneyItem(
-                                iconName: "sparkles",
-                                iconColor: .systemTeal,
-                                iconBackgroundColor: .systemTeal.withAlphaComponent(0.2),
-                                title: "No Milestones Yet",
-                                subtitle: "Complete lessons to unlock milestones"
-                            )
-                        ]
-                    )
-                ]
-            } else {
-                sections = fetchingMilestones
+    private func updateDisplayedSections() {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            self.sections = self.fetchingMilestones.filter { $0.title == "Milestone History" }
+            if self.sections.isEmpty && !isLoading {
+                self.sections = [createEmptySection(title: "No Milestones Yet", subtitle: "Complete lessons to unlock milestones", icon: "sparkles")]
             }
-
         } else {
-            sections = JourneyData.skills
+            self.sections = self.fetchingMilestones.filter { $0.title == "Skills Learned" }
+            if self.sections.isEmpty && !isLoading {
+                self.sections = [createEmptySection(title: "No Skills Yet", subtitle: "Finish milestones to earn skills", icon: "book.fill")]
+            }
         }
-        tableView.reloadData()
+        self.tableView.reloadData()
+    }
+
+    private func createEmptySection(title: String, subtitle: String, icon: String) -> JourneySection {
+        return JourneySection(
+            title: title,
+            items: [JourneyItem(iconName: icon, iconColor: .systemTeal, iconBackgroundColor: .systemTeal.withAlphaComponent(0.1), title: title, subtitle: subtitle)]
+        )
+    }
+
+    @IBAction func segmentChanged(_ sender: UISegmentedControl) {
+        updateDisplayedSections()
     }
 }
 

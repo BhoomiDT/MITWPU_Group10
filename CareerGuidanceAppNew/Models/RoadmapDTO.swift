@@ -21,11 +21,11 @@ struct MilestoneDTO: Decodable {
     let id: UUID
     let roadmapId: UUID
     let title: String
-    let subtitle: String
-    let orderIndex: Int
-    let iconName: String
-    let iconColor: String
-    let iconBackgroundColor: String
+    let subtitle: String?
+    let orderIndex: Int?
+    let iconName: String?
+    let iconColor: String?
+    let iconBackgroundColor: String?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -46,6 +46,15 @@ struct LessonDTO: Codable, Identifiable {
     let subtitle: String?
     let due_date: String?
     let order_index: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case milestone_id
+        case title = "name" // Matches 'name' in SQL
+        case subtitle
+        case due_date
+        case order_index
+    }
 }
 
 struct VideoDTO: Decodable {
@@ -88,10 +97,10 @@ enum MilestoneMapper {
             id: dto.id,
             roadmapId: dto.roadmapId,
             title: dto.title,
-            subtitle: dto.subtitle,
-            iconName: dto.iconName,
-            iconColor: UIColor(hex: dto.iconColor),
-            iconBackgroundColor: UIColor(hex: dto.iconBackgroundColor),
+            subtitle: dto.subtitle ?? "",
+            iconName: dto.iconName ?? "star",
+            iconColor: UIColor(hex: dto.iconColor ?? "#000000"),
+            iconBackgroundColor: UIColor(hex: dto.iconBackgroundColor ?? "#FFFFFF"),
             lessons: []
         )
     }

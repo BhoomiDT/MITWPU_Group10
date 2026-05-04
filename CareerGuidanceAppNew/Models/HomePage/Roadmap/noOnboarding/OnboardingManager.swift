@@ -6,13 +6,30 @@ class OnboardingManager {
     private let defaults = UserDefaults.standard
     
     // Keys
-    private let kOnboardingCompleted = "kOnboardingCompleted"
-    private let kLastVisitedSection = "kLastVisitedSection"
-    private let kTechSkillsCompleted = "kTechSkillsCompleted"
-    private let kCompletedSections = "kCompletedSections"
-    private let kUserTechSkills = "kUserTechSkills"
+    private func userKey(_ base: String) -> String {
+        if let userId = UserSessionManager.shared.userId?.uuidString {
+            return "\(base)_\(userId)"
+        }
+        return base
+    }
+
+    private var kOnboardingCompleted: String { userKey("kOnboardingCompleted") }
+    private var kLastVisitedSection: String { userKey("kLastVisitedSection") }
+    private var kTechSkillsCompleted: String { userKey("kTechSkillsCompleted") }
+    private var kCompletedSections: String { userKey("kCompletedSections") }
+    private var kUserTechSkills: String { userKey("kUserTechSkills") }
     var userSelectedAnswers: [[String]] = [[], [], []]
-        var userSelectedTechSkills: [String] = [] // Add this
+    var userSelectedTechSkills: [String] = [] 
+    
+    var technicalSkills: [String] {
+        get { defaults.stringArray(forKey: kUserTechSkills) ?? [] }
+        set { defaults.set(newValue, forKey: kUserTechSkills) }
+    }
+    
+    var riasecScoresMap: [String: Double] {
+        get { defaults.dictionary(forKey: userKey("kRIASECScores")) as? [String: Double] ?? [:] }
+        set { defaults.set(newValue, forKey: userKey("kRIASECScores")) }
+    }
     // Inside your OnboardingManager class
     var shouldShowCelebrationAlert: Bool = false
         
@@ -61,19 +78,19 @@ class OnboardingManager {
     
     // Add this to OnboardingManager.swift
     var recommendedDomain: String? {
-        get { UserDefaults.standard.string(forKey: "saved_recommended_domain") }
-        set { UserDefaults.standard.set(newValue, forKey: "saved_recommended_domain") }
+        get { UserDefaults.standard.string(forKey: userKey("saved_recommended_domain")) }
+        set { UserDefaults.standard.set(newValue, forKey: userKey("saved_recommended_domain")) }
     }
     // The questionnaire only contains the 3 question sets
     let questionnaire = Questionnaire()
     // Add this to your OnboardingManager.swift
     var completedLessonIds: Set<String> {
         get {
-            let array = UserDefaults.standard.stringArray(forKey: "completed_lessons") ?? []
+            let array = UserDefaults.standard.stringArray(forKey: userKey("completed_lessons")) ?? []
             return Set(array)
         }
         set {
-            UserDefaults.standard.set(Array(newValue), forKey: "completed_lessons")
+            UserDefaults.standard.set(Array(newValue), forKey: userKey("completed_lessons"))
         }
     }
 
@@ -131,6 +148,19 @@ class OnboardingManager {
         if index == 4 {
             isOnboardingCompleted = true
             print("Onboarding fully marked as complete.")
+            
+            // Sync to Supabase
+            let scores = calculateRIASEC()
+            let labels = ["Realistic", "Investigative", "Artistic", "Social", "Enterprising", "Conventional"]
+            var scoreMap: [String: Double] = [:]
+            for (idx, score) in scores.enumerated() {
+                scoreMap[labels[idx]] = score
+            }
+            self.riasecScoresMap = scoreMap
+            
+            Task {
+                await ProfileService.shared.syncLocalToRemote()
+            }
         }
     }
 

@@ -95,10 +95,10 @@ final class MyJourneyService {
         
         if completedMilestoneIds.isEmpty { return [] }
         
-        // 5️⃣ Fetch milestone UI data
+        // 5️⃣ Fetch milestone UI data (including skills_gained)
         let milestoneResponse = try await client
             .from("milestones")
-            .select("id, title, subtitle, icon_name, icon_color, icon_background_color")
+            .select("id, title, subtitle, icon_name, icon_color, icon_background_color, skills_gained")
             .in("id", values: completedMilestoneIds)
             .execute()
         
@@ -106,9 +106,15 @@ final class MyJourneyService {
             with: milestoneResponse.data
         ) as? [[String: Any]] ?? []
         
-        let items: [JourneyItem] = milestoneRows.map { row in
+        var allSkills: Set<String> = []
+        let milestoneItems: [JourneyItem] = milestoneRows.map { row in
             
-            JourneyItem(
+            // Collect skills
+            if let skills = row["skills_gained"] as? [String] {
+                skills.forEach { allSkills.insert($0) }
+            }
+            
+            return JourneyItem(
                 iconName: row["icon_name"] as? String ?? "star",
                 iconColor: UIColor(hex: row["icon_color"] as? String ?? "#000000") ?? .black,
                 iconBackgroundColor: UIColor(hex: row["icon_background_color"] as? String ?? "#E0E0E0") ?? .systemGray5,
@@ -116,13 +122,32 @@ final class MyJourneyService {
                 subtitle: row["subtitle"] as? String ?? "Milestone Completed"
             )
         }
-        return [
-            JourneySection(
-                title: "Completed Milestones",
-                items: items
-            )
-        ]
         
+        var sections: [JourneySection] = []
+        
+        // Add Milestone History Section
+        sections.append(JourneySection(
+            title: "Milestone History",
+            items: milestoneItems
+        ))
+        
+        // Add Skills Learned Section
+        if !allSkills.isEmpty {
+            let skillItems = allSkills.sorted().map { skillName in
+                JourneyItem(
+                    iconName: "checkmark.seal.fill",
+                    iconColor: .systemGreen,
+                    iconBackgroundColor: .systemGreen.withAlphaComponent(0.1),
+                    title: skillName,
+                    subtitle: "Skill Mastered"
+                )
+            }
+            sections.append(JourneySection(
+                title: "Skills Learned",
+                items: skillItems
+            ))
+        }
+        
+        return sections
     }
-    
 }

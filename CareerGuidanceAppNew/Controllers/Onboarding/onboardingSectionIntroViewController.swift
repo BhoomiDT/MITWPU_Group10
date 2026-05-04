@@ -180,6 +180,14 @@ class onboardingSectionIntroViewController: UIViewController {
                     return (label: labels[i], score: Float(score / 30.0), color: colors[i])
                 }
                 
+                // Save and sync
+                if let topPath = top3.first {
+                    OnboardingManager.shared.recommendedDomain = topPath.domain
+                    Task {
+                        await ProfileService.shared.syncLocalToRemote()
+                    }
+                }
+                
                 navigationController?.pushViewController(analysisVC, animated: true)
             }
         }

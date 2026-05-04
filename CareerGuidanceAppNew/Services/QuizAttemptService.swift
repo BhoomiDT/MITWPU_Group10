@@ -58,10 +58,14 @@ final class QuizAttemptService {
         
         // 3️⃣ Insert quiz_answers
         for (index, question) in quiz.questions.enumerated() {
+            let selectedIndex = selectedOptionIndices[index] ?? -1
+            let isCorrect = selectedIndex == question.correctIndex
+            
             let answerDTO = QuizAnswerInsertDTO(
                 attempt_id: attempt.id,
                 question_id: question.id,
-                selected_index: selectedOptionIndices[index] ?? -1,
+                selected_index: selectedIndex,
+                is_correct: isCorrect
             )
             
             try await client

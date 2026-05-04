@@ -52,45 +52,31 @@ class SignUpViewController: UIViewController {
         
     }
     func registerUser() {
-        guard let username = nameInput.text, !username.isEmpty,
+        guard let _ = nameInput.text, !nameInput.text!.isEmpty,
               let email = emailInput.text, !email.isEmpty,
               let password = passwordTextField.text, !password.isEmpty,
               let confirmPassword = confirmPasswordTextField.text, !confirmPassword.isEmpty
         else {
-            showAlert("Error", "All fields are required")
+            showAppAlert(title: "Error", message: "All fields are required")
             return
         }
         
         guard password == confirmPassword else {
-            showAlert("Error", "Passwords do not match")
+            showAppAlert(title: "Error", message: "Passwords do not match")
             return
         }
         
-        let newUser = User(
-            username: username,
-            email: email,
-            password: password,
-            confirmPassword: confirmPassword
-        )
-        
-        UserStore.shared.addUser(newUser)
-        
-        print(UserStore.shared.users) // DEBUG
-        
-        showAlert("Success", "Registration successful")
+        Task {
+            do {
+                try await AuthService.shared.signUp(email: email, password: password)
+                // Optionally save the profile name to a 'profiles' table here if you have one
+                self.navigateToHome()
+            } catch {
+                showAppAlert(title: "Sign Up Failed", message: error.localizedDescription)
+            }
+        }
     }
-    func saveUser(password: String) {
-        UserDefaults.standard.set(password, forKey: "userPassword")
-        
-        showAlert("Success", "User registered successfully")
-    }
-    func showAlert(_ title: String, _ message: String) {
-        let alert = UIAlertController(title: title,
-                                      message: message,
-                                      preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
+
     @objc func togglePasswordVisibility(_ sender: UIButton) {
         sender.isSelected.toggle()
         passwordTextField.isSecureTextEntry.toggle()
@@ -102,6 +88,19 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func registerButtonTapped(_ sender: UIButton) {
+        print("🚀 Register button tapped")
         registerUser()
+    }
+    
+    @IBAction func socialLoginTapped(_ sender: UIButton) {
+        showAppAlert(title: "Coming Soon", message: "Social login is not implemented yet.")
+    }
+    
+    @IBAction func switchToLogin(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "SignUpLogIn", bundle: nil)
+        if let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+            loginVC.modalPresentationStyle = .fullScreen
+            self.present(loginVC, animated: true)
+        }
     }
 }

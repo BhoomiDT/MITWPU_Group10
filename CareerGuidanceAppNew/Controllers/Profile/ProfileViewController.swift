@@ -6,6 +6,8 @@
 //
 
 import UIKit
+internal import Auth
+import Supabase
 
 class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
@@ -16,12 +18,32 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     @IBOutlet weak var tableView: UITableView!
 
     private let sections = ProfileSection.sampleData
-    private let user = UserProfile.currentUser
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
         setupCloseButton()
+        fetchUserData()
+    }
+    
+    private func fetchUserData() {
+        Task {
+            if let user = try? await SupabaseManager.shared.client.auth.session.user {
+                DispatchQueue.main.async {
+                    self.emailLabel.text = user.email
+                    // If we have a profile with a name, use it
+                    Task {
+                        if let profile = try? await ProfileService.shared.fetchProfile() {
+                            DispatchQueue.main.async {
+                                if let name = profile.full_name {
+                                    self.nameLabel.text = name
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private func setupCloseButton() {
@@ -61,10 +83,10 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     private func setupUI() {
         view.backgroundColor = .systemGroupedBackground
         
-        nameLabel.text = user.name
-        emailLabel.text = user.email
+        nameLabel.text = "User"
+        emailLabel.text = "Loading..."
         let config = UIImage.SymbolConfiguration(pointSize: 40, weight: .regular)
-        profileImage.image = UIImage(systemName: user.imageName, withConfiguration: config)
+        profileImage.image = UIImage(systemName: "person.crop.circle.fill", withConfiguration: config)
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -101,7 +123,24 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if sections[indexPath.section].options[indexPath.row] == "Log Out" {
-            print("Logout Tapped")
+            Task {
+                do {
+                    try await AuthService.shared.signOut()
+                    DispatchQueue.main.async {
+                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+                        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
+                        
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                           let window = windowScene.windows.first {
+                            window.rootViewController = initialVC
+                            window.makeKeyAndVisible()
+                            UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
+                        }
+                    }
+                } catch {
+                    showAppAlert(title: "Error", message: "Failed to sign out: \(error.localizedDescription)")
+                }
+            }
         }
     }
 }

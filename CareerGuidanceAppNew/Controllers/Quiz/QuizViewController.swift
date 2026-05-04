@@ -159,7 +159,7 @@ class QuizViewController: UIViewController {
             loadQuestion()
         }
     }
-    private func showAlert(title: String, message: String) {
+    internal func showAlert(title: String, message: String) {
         let alert = UIAlertController(
             title: title,
             message: message,
