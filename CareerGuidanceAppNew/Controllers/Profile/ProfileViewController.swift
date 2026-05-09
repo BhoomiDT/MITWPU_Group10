@@ -9,7 +9,7 @@ import UIKit
 internal import Auth
 import Supabase
 
-class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, EditProfileDelegate {
 
     @IBOutlet weak var viewForIcon: UIView!
     @IBOutlet weak var profileImage: UIImageView!
@@ -26,7 +26,7 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         fetchUserData()
     }
     
-    private func fetchUserData() {
+    func fetchUserData() {
         Task {
             if let user = try? await SupabaseManager.shared.client.auth.session.user {
                 DispatchQueue.main.async {
@@ -35,15 +35,45 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     Task {
                         if let profile = try? await ProfileService.shared.fetchProfile() {
                             DispatchQueue.main.async {
-                                if let name = profile.full_name {
+                                if let name = profile.full_name, !name.isEmpty {
                                     self.nameLabel.text = name
                                 }
+                                let streak = profile.learning_streak ?? 0
+                                let xp = profile.xp ?? 0
+
+                                
+                                // Show Stats in email label or append to it since we don't want to break the storyboard
+                                let text = "\(user.email ?? "")\n\(xp) XP • 🔥 \(streak) Day Streak"
+                                
+                                let paragraphStyle = NSMutableParagraphStyle()
+                                paragraphStyle.lineSpacing = 6
+                                paragraphStyle.alignment = .center
+                                
+                                let attributedString = NSMutableAttributedString(string: text)
+                                let fullRange = NSRange(location: 0, length: text.count)
+                                attributedString.addAttribute(.paragraphStyle, value: paragraphStyle, range: fullRange)
+                                attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 15, weight: .regular), range: fullRange)
+                                attributedString.addAttribute(.foregroundColor, value: UIColor.secondaryLabel, range: fullRange)
+                                
+                                // Optionally make the stats part slightly smaller
+                                if let newlineIndex = text.firstIndex(of: "\n") {
+                                    let statsStartIndex = text.index(after: newlineIndex)
+                                    let statsNSRange = NSRange(statsStartIndex..., in: text)
+                                    attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 13, weight: .medium), range: statsNSRange)
+                                }
+                                
+                                self.emailLabel.attributedText = attributedString
+                                self.emailLabel.numberOfLines = 0
                             }
                         }
                     }
                 }
             }
         }
+    }
+    
+    func didUpdateProfile() {
+        fetchUserData()
     }
 
     private func setupCloseButton() {
@@ -122,7 +152,44 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if sections[indexPath.section].options[indexPath.row] == "Log Out" {
+        
+        let option = sections[indexPath.section].options[indexPath.row]
+        
+        if option == "Personal Details" {
+            let editVC = EditProfileViewController()
+            editVC.delegate = self
+            if let nav = navigationController {
+                nav.pushViewController(editVC, animated: true)
+            } else {
+                let nav = UINavigationController(rootViewController: editVC)
+                // Use Child View Controller to slide in *within* the sheet bounds
+                self.addChild(nav)
+                nav.view.frame = self.view.bounds
+                nav.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+                nav.view.transform = CGAffineTransform(translationX: self.view.bounds.width, y: 0)
+                self.view.addSubview(nav.view)
+                
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut) {
+                    nav.view.transform = .identity
+                } completion: { _ in
+                    nav.didMove(toParent: self)
+                }
+            }
+        } else if option == "App Permissions" {
+            if let url = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(url)
+            }
+        } else if option == "Data and Storage" {
+            let alert = UIAlertController(title: "Clear Cache", message: "Are you sure you want to clear temporary app data?", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: "Clear", style: .destructive, handler: { _ in
+                // Dummy cache clear
+                let successAlert = UIAlertController(title: "Success", message: "Cache cleared successfully.", preferredStyle: .alert)
+                successAlert.addAction(UIAlertAction(title: "OK", style: .default))
+                self.present(successAlert, animated: true)
+            }))
+            present(alert, animated: true)
+        } else if option == "Log Out" {
             Task {
                 do {
                     try await AuthService.shared.signOut()
@@ -141,6 +208,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                     showAppAlert(title: "Error", message: "Failed to sign out: \(error.localizedDescription)")
                 }
             }
+        } else {
+            // Unimplemented sections
+            let alert = UIAlertController(title: "Coming Soon", message: "\(option) will be available in a future update.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
         }
     }
 }

@@ -57,20 +57,20 @@ class ProfileService {
             let profile = try await fetchProfile()
             
             // Sync to OnboardingManager/UserDefaults
-            OnboardingManager.shared.technicalSkills = profile.technical_skills
-            OnboardingManager.shared.riasecScoresMap = profile.riasec_scores
-            OnboardingManager.shared.isOnboardingCompleted = profile.onboarding_completed
+            OnboardingManager.shared.technicalSkills = profile.technical_skills ?? []
+            OnboardingManager.shared.riasecScoresMap = profile.riasec_scores ?? [:]
+            OnboardingManager.shared.isOnboardingCompleted = profile.onboarding_completed ?? false
             
             if let domain = profile.recommended_domain {
                 UserDefaults.standard.set(domain, forKey: "kRecommendedDomainName")
             }
             
             // Sync Stats back to local managers
-            UserStats.shared.xp = profile.xp
-            UserStats.shared.streak = profile.learning_streak
-            JourneyModel.shared.quizzes = profile.completed_quizzes
-            JourneyModel.shared.days = profile.learning_days
-            JourneyModel.shared.quests = profile.quests_completed
+            UserStats.shared.xp = profile.xp ?? 0
+            UserStats.shared.streak = profile.learning_streak ?? 0
+            JourneyModel.shared.quizzes = profile.completed_quizzes ?? 0
+            JourneyModel.shared.days = profile.learning_days ?? 0
+            JourneyModel.shared.quests = profile.quests_completed ?? 0
             
             print("✅ Profile synced from Supabase")
         } catch {

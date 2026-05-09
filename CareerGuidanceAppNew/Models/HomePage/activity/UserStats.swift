@@ -75,8 +75,8 @@ struct UserStats {
         do {
             // We can now fetch the direct XP from the profile instead of re-calculating
             let profile = try await ProfileService.shared.fetchProfile()
-            self.xp = profile.xp
-            self.streak = profile.learning_streak
+            self.xp = profile.xp ?? 0
+            self.streak = profile.learning_streak ?? 0
             self.save()
         } catch {
             print("Failed to sync stats from Supabase:", error)
