@@ -85,8 +85,27 @@ class LoginViewController: UIViewController {
         
         Task {
             do {
+                // 1. Sign in normally
                 try await AuthService.shared.signIn(email: email, password: password)
-                self.navigateToHome()
+                
+                // 2. Get the user ID from session
+                guard let userId = UserSessionManager.shared.userId else {
+                    showAppAlert(title: "Error", message: "Could not retrieve user session.")
+                    return
+                }
+                
+                // 3. Trigger MFA OTP via Edge Function
+                try await AuthService.shared.sendMFAOTP(email: email, userId: userId)
+                
+                // 4. Navigate to OTP Screen
+                DispatchQueue.main.async {
+                    let otpVC = OTPViewController()
+                    otpVC.email = email
+                    otpVC.userId = userId
+                    otpVC.modalPresentationStyle = .fullScreen
+                    self.present(otpVC, animated: true)
+                }
+                
             } catch {
                 showAppAlert(title: "Login Failed", message: error.localizedDescription)
             }

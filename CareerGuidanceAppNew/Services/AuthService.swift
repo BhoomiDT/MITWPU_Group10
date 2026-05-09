@@ -1,15 +1,24 @@
 import Supabase
-
+import Foundation
 final class AuthService {
 
     static let shared = AuthService()
     private init() {}
 
-    func signUp(email: String, password: String) async throws {
+    func signUp(email: String, password: String, fullName: String? = nil) async throws {
         let client = SupabaseManager.shared.client
-        let response = try await client.auth.signUp(email: email, password: password)
+        var data: [String: AnyJSON] = [:]
+        if let name = fullName {
+            data["full_name"] = .string(name)
+        }
+        
+        let response = try await client.auth.signUp(
+            email: email,
+            password: password,
+            data: data
+        )
         UserSessionManager.shared.setUserId(response.user.id)
-        print("✅ User signed up successfully: \(response.user.id)")
+        print("✅ User signed up successfully with name: \(fullName ?? "None")")
     }
 
     func signIn(email: String, password: String) async throws {
@@ -26,20 +35,34 @@ final class AuthService {
         print("✅ User signed out")
     }
 
-    func ensureAnonymousUser() async {
+    func sendMFAOTP(email: String, userId: Foundation.UUID) async throws {
         let client = SupabaseManager.shared.client
+        let payload = [
+            "action": "send",
+            "email": email,
+            "userId": userId.uuidString.lowercased()
+        ]
+        
+        // Invoke the Edge Function
+        _ = try await client.functions.invoke("mfa-otp", options: FunctionInvokeOptions(body: payload))
+        print("📲 OTP request sent to Edge Function")
+    }
 
+    func verifyMFAOTP(email: String, otp: String) async throws -> Bool {
+        let client = SupabaseManager.shared.client
+        let payload = [
+            "action": "verify",
+            "email": email,
+            "otp": otp
+        ]
+        
         do {
-            // 1️⃣ Try to get existing session
-            let session = try await client.auth.session
-
-            UserSessionManager.shared.setUserId(session.user.id)
-            print("✅ Existing session found: \(session.user.id)")
-
+            _ = try await client.functions.invoke("mfa-otp", options: FunctionInvokeOptions(body: payload))
+            print("✅ OTP Verified successfully")
+            return true
         } catch {
-            // 2️⃣ No session → we don't automatically create anonymous user anymore
-            // as the user wants specific data for signed users.
-            print("ℹ️ No active session found. User needs to login.")
+            print("❌ OTP Verification failed: \(error)")
+            throw error
         }
     }
 }

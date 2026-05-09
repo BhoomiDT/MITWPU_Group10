@@ -27,12 +27,17 @@ class ProfileService {
     }
     
     func syncLocalToRemote() async {
-        guard let userId = try? await client.auth.session.user.id else { return }
+        guard let session = try? await client.auth.session else { return }
+        let userId = session.user.id
+        
+        // Try to get name from session metadata if available
+        let metadata = session.user.userMetadata
+        let name = metadata["full_name"]?.description.replacingOccurrences(of: "\"", with: "")
         
         let profile = UserProfile(
             id: userId,
-            email: nil,
-            full_name: nil,
+            email: session.user.email,
+            full_name: name,
             technical_skills: OnboardingManager.shared.technicalSkills,
             riasec_scores: OnboardingManager.shared.riasecScoresMap,
             onboarding_completed: OnboardingManager.shared.isOnboardingCompleted,

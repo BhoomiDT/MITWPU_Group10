@@ -101,9 +101,28 @@ class SignUpViewController: UIViewController {
         
         Task {
             do {
-                try await AuthService.shared.signUp(email: email, password: password)
-                // Optionally save the profile name to a 'profiles' table here if you have one
-                self.navigateToHome()
+                // 1. Sign up normally with full name
+                let fullName = nameInput.text
+                try await AuthService.shared.signUp(email: email, password: password, fullName: fullName)
+                
+                // 2. Get user ID
+                guard let userId = UserSessionManager.shared.userId else {
+                    showAppAlert(title: "Error", message: "Could not retrieve user session.")
+                    return
+                }
+                
+                // 3. Trigger MFA OTP
+                try await AuthService.shared.sendMFAOTP(email: email, userId: userId)
+                
+                // 4. Navigate to OTP Screen
+                DispatchQueue.main.async {
+                    let otpVC = OTPViewController()
+                    otpVC.email = email
+                    otpVC.userId = userId
+                    otpVC.modalPresentationStyle = .fullScreen
+                    self.present(otpVC, animated: true)
+                }
+                
             } catch {
                 showAppAlert(title: "Sign Up Failed", message: error.localizedDescription)
             }
