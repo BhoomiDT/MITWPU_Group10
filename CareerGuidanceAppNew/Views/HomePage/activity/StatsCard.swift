@@ -97,7 +97,7 @@ class StatsCard: UICollectionViewCell {
 
         for section in allBadgeSections {
             for badge in section.badges {
-                if badge.isUnlocked(userXP: UserStats.shared.xp) {
+                if badge.isUnlocked(userXP: UserStats.shared.xp, stats: JourneyModel.shared) {
                     count += 1
                 }
             }

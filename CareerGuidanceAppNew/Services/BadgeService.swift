@@ -34,4 +34,19 @@ class BadgeService {
             print("Could not award badge or badge already exists: \(error)")
         }
     }
+    
+    func fetchEarnedDate(badgeName: String) async -> Date? {
+        do {
+            let badges = try await fetchUserBadges()
+            if let userBadge = badges.first(where: { $0.badge_name == badgeName }),
+               let earnedAt = userBadge.earned_at {
+                let formatter = ISO8601DateFormatter()
+                formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+                return formatter.date(from: earnedAt)
+            }
+        } catch {
+            print("Failed to fetch earned date for \(badgeName): \(error)")
+        }
+        return nil
+    }
 }

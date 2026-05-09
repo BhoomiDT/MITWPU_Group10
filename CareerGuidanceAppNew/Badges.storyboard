@@ -145,9 +145,9 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
                                     <constraint firstItem="stW-Cm-lYG" firstAttribute="centerX" secondItem="3fs-qw-MfX" secondAttribute="centerX" id="2kQ-2U-YhX"/>
-                                    <constraint firstItem="stW-Cm-lYG" firstAttribute="centerY" secondItem="3fs-qw-MfX" secondAttribute="centerY" id="aol-Hl-Pjh"/>
-                                    <constraint firstAttribute="width" constant="300" id="jSJ-d0-0ly"/>
-                                    <constraint firstAttribute="height" constant="400" id="o1y-DA-cOT"/>
+                                    <constraint firstItem="stW-Cm-lYG" firstAttribute="top" secondItem="3fs-qw-MfX" secondAttribute="top" constant="40" id="m9z-p0-Qpq"/>
+                                    <constraint firstItem="stW-Cm-lYG" firstAttribute="bottom" secondItem="3fs-qw-MfX" secondAttribute="bottom" constant="-40" id="b9z-p0-Qq4"/>
+                                    <constraint firstAttribute="width" constant="340" id="jSJ-d0-0ly"/>
                                 </constraints>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -167,6 +167,7 @@
                         <outlet property="headerLabel" destination="cO0-hz-GvU" id="Cel-bN-jZz"/>
                         <outlet property="largeIconBackgroundView" destination="c9d-Ag-yle" id="7Si-lQ-cNd"/>
                         <outlet property="largeIconImageView" destination="cPa-0A-Epx" id="TdF-jc-lnl"/>
+                        <outlet property="mainStackView" destination="stW-Cm-lYG" id="xYv-9b-Pqr"/>
                         <outlet property="modalCardCenterYConstraint" destination="8rp-uk-Gk7" id="6ds-w1-v9d"/>
                         <outlet property="modalCardView" destination="3fs-qw-MfX" id="TXD-5x-8rj"/>
                         <outlet property="subtitleLabel" destination="otE-xH-vJn" id="Jfw-iL-Q79"/>

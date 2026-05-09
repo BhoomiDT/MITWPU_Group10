@@ -70,14 +70,21 @@ struct UserStats {
         )
     }
 
-    mutating func syncXpFromSupabase() async {
-        guard let userId = UserSessionManager.shared.userId else { return }
+    mutating func syncFromSupabase() async {
         do {
-            // We can now fetch the direct XP from the profile instead of re-calculating
+            // Fetch profile for XP and Streak
             let profile = try await ProfileService.shared.fetchProfile()
             self.xp = profile.xp ?? 0
             self.streak = profile.learning_streak ?? 0
+            
+            // Fetch badge count
+            let userBadges = try await BadgeService.shared.fetchUserBadges()
+            self.badges = userBadges.count
+            
             self.save()
+            
+            // Also sync JourneyModel while we have the profile
+            JourneyModel.syncWithProfile(profile)
         } catch {
             print("Failed to sync stats from Supabase:", error)
         }

@@ -15,6 +15,9 @@ struct UserProfile: Codable {
     var learning_days: Int?
     var quests_completed: Int?
     var xp: Int?
+    var daily_xp: Int?
+    var weekly_xp: Int?
+    var monthly_xp: Int?
     
     // New Fields
     var phone: String?
@@ -41,6 +44,9 @@ struct UserProfile: Codable {
         case learning_days
         case quests_completed
         case xp
+        case daily_xp
+        case weekly_xp
+        case monthly_xp
         case phone
         case dob
         case gender

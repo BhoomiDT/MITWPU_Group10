@@ -25,7 +25,7 @@ class BadgeCell: UICollectionViewCell {
         let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .bold)
         iconImageView.image = UIImage(systemName: badge.iconName, withConfiguration: config)
 
-        let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp)
+        let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp, stats: JourneyModel.shared)
 
         iconBackgroundView.layoutIfNeeded()
         iconBackgroundView.layer.cornerRadius = iconBackgroundView.frame.height / 2

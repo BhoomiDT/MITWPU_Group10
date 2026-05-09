@@ -198,7 +198,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         collectionView.backgroundColor = .appBackground
         Task {
             await ProfileService.shared.syncRemoteToLocal()
-            await UserStats.shared.syncXpFromSupabase()
+            await UserStats.shared.syncFromSupabase()
             await hydrateQuizHistory()
             
             DispatchQueue.main.async {

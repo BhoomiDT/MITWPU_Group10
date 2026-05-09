@@ -41,16 +41,9 @@ class homepageMyJourney: UICollectionViewCell {
             onChevronTapped?()
         }
     func configure(days: String, quizzes: String, quests: String) {
-       
-        let isComplete = OnboardingManager.shared.isOnboardingCompleted
-        
-        let displayDays = isComplete ? days : "0"
-        let displayQuizzes = isComplete ? quizzes : "0"
-        let displayQuests = isComplete ? quests : "0"
-        
-        setupValue(label: row1ValueLabel, value: displayDays)
-        setupValue(label: row2ValueLabel, value: displayQuizzes)
-        setupValue(label: row3ValueLabel, value: displayQuests)
+        setupValue(label: row1ValueLabel, value: days)
+        setupValue(label: row2ValueLabel, value: quizzes)
+        setupValue(label: row3ValueLabel, value: quests)
     }
 
     

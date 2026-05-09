@@ -211,7 +211,7 @@ class QuizViewController: UIViewController {
 
                         let xpEarned = correctCount * 10
                         UserStats.shared.addXP(xpEarned)
-                        JourneyModel.incrementStatsAfterQuiz()
+                        JourneyModel.incrementQuizzes()
                         JourneyModel.updateLearningDay()
                         
                         self.onQuizCompleted?()

@@ -20,6 +20,13 @@ class BadgeUnlockedModalViewController: UIViewController {
     @IBOutlet weak var largeIconImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var subtitleLabel: UILabel!
+    @IBOutlet weak var mainStackView: UIStackView!
+    
+    // Programmatic UI Elements
+    private let progressView = UIProgressView(progressViewStyle: .default)
+    private let progressLabel = UILabel()
+    private let reasonLabel = UILabel()
+    private let earnedDateLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,40 +41,95 @@ class BadgeUnlockedModalViewController: UIViewController {
             modalCardCenterYConstraint.constant = view.bounds.height
             view.layoutIfNeeded()
         
+        setupAdditionalUI()
         setupCloseButton()
         setupTapToDismiss()
-                configureUI()
+        configureUI()
     }
+    
+    private func setupAdditionalUI() {
+        // Configure new labels and progress view
+        headerLabel.font = .systemFont(ofSize: 12, weight: .bold)
+        headerLabel.textColor = .secondaryLabel
+        headerLabel.alpha = 0.8
+        
+        titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        titleLabel.textColor = .label
+        
+        subtitleLabel.font = .systemFont(ofSize: 15, weight: .regular)
+        subtitleLabel.textColor = .secondaryLabel
+        subtitleLabel.numberOfLines = 0
+        subtitleLabel.textAlignment = .center
+        
+        reasonLabel.font = .systemFont(ofSize: 13, weight: .regular)
+        reasonLabel.textColor = .tertiaryLabel
+        reasonLabel.textAlignment = .center
+        reasonLabel.numberOfLines = 0
+        
+        progressView.progressTintColor = UIColor(hex: "#1fa5a1")
+        progressView.trackTintColor = .systemGray6
+        progressView.layer.cornerRadius = 3
+        progressView.clipsToBounds = true
+        
+        progressLabel.font = .systemFont(ofSize: 13, weight: .bold)
+        progressLabel.textColor = .label
+        progressLabel.textAlignment = .center
+        
+        earnedDateLabel.font = .systemFont(ofSize: 11, weight: .semibold)
+        earnedDateLabel.textColor = .secondaryLabel
+        earnedDateLabel.textAlignment = .center
+        
+        // Progress container to add padding
+        let progressContainer = UIStackView(arrangedSubviews: [progressView, progressLabel])
+        progressContainer.axis = .vertical
+        progressContainer.spacing = 6
+        progressContainer.alignment = .fill
+        
+        // Add to existing mainStackView
+        mainStackView.addArrangedSubview(reasonLabel)
+        mainStackView.addArrangedSubview(progressContainer)
+        mainStackView.addArrangedSubview(earnedDateLabel)
+        
+        // Refined spacing
+        mainStackView.spacing = 20
+        mainStackView.setCustomSpacing(40, after: largeIconBackgroundView)
+        mainStackView.setCustomSpacing(10, after: titleLabel)
+        mainStackView.setCustomSpacing(30, after: reasonLabel)
+        
+        // Hide redundant labels for a minimal look
+        headerLabel.isHidden = true
+        subtitleLabel.isHidden = true
+        earnedDateLabel.isHidden = true
+        
+        NSLayoutConstraint.activate([
+            progressView.heightAnchor.constraint(equalToConstant: 6),
+            progressContainer.widthAnchor.constraint(equalTo: mainStackView.widthAnchor, constant: -60)
+        ])
+    }
+
     private func setupCloseButton() {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
         
-        let config = UIImage.SymbolConfiguration(pointSize: 17, weight: .medium)
-        
-        let image = UIImage(
-            systemName: "xmark",
-            withConfiguration: config
-        )
+        let config = UIImage.SymbolConfiguration(pointSize: 12, weight: .bold)
+        let image = UIImage(systemName: "xmark", withConfiguration: config)
         
         button.setImage(image, for: .normal)
-        button.tintColor = .label
-        button.backgroundColor = UIColor.systemBackground.withAlphaComponent(0.85)
-        button.layer.cornerRadius = 20
-        button.layer.shadowColor = UIColor.black.cgColor
-        button.layer.shadowOpacity = 0.08
-        button.layer.shadowRadius = 6
-        button.layer.shadowOffset = CGSize(width: 0, height: 2)
+        button.tintColor = .secondaryLabel
+        button.backgroundColor = .systemGray6
+        button.layer.cornerRadius = 14
         button.alpha = 0
+        
         self.floatingCloseButton = button
         modalCardView.addSubview(button)
         button.addTarget(self, action: #selector(dismissTapped), for: .touchUpInside)
         
-    NSLayoutConstraint.activate([
-        button.topAnchor.constraint(equalTo: modalCardView.topAnchor, constant: 16),
-        button.leadingAnchor.constraint(equalTo: modalCardView.leadingAnchor, constant: 16),
-        button.widthAnchor.constraint(equalToConstant: 40),
-        button.heightAnchor.constraint(equalToConstant: 40)
-    ])
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: modalCardView.topAnchor, constant: 16),
+            button.trailingAnchor.constraint(equalTo: modalCardView.trailingAnchor, constant: -16),
+            button.widthAnchor.constraint(equalToConstant: 28),
+            button.heightAnchor.constraint(equalToConstant: 28)
+        ])
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
@@ -143,7 +205,7 @@ class BadgeUnlockedModalViewController: UIViewController {
         
         largeIconBackgroundView.layer.add(group, forKey: "fitnessFlip")
         
-        if badge.isUnlocked(userXP: UserStats.shared.xp) {
+        if badge.isUnlocked(userXP: UserStats.shared.xp, stats: JourneyModel.shared) {
             createConfetti()
         }
         
@@ -156,20 +218,24 @@ class BadgeUnlockedModalViewController: UIViewController {
                 print("ERROR: Badge data is missing for modal configuration.")
                 return
             }
-            headerLabel.text = modalTitleString ?? "Badge Status"
             titleLabel.text = badge.title
-            let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp)
+            reasonLabel.text = badge.unlockReason
+            
+            let userXP = UserStats.shared.xp
+            let journeyStats = JourneyModel.shared
+            let unlocked = badge.isUnlocked(userXP: userXP, stats: journeyStats)
 
+            let progress = badge.calculateProgress(userXP: userXP, stats: journeyStats)
+            progressView.setProgress(progress, animated: false)
+            progressLabel.text = badge.getProgressText(userXP: userXP, stats: journeyStats)
+            
             if !unlocked {
                 titleLabel.alpha = 0.5
-                subtitleLabel.alpha = 0.5
-                largeIconBackgroundView.backgroundColor = badge.color
-            }
-            if !unlocked {
-                subtitleLabel.text = "Unlocks at \(badge.requiredXP) XP"
+                largeIconBackgroundView.backgroundColor = .systemGray4
             } else {
                 largeIconBackgroundView.backgroundColor = UIColor(hex: "#1fa5a1")
             }
+            
             let config = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
             largeIconImageView.image = UIImage(systemName: badge.iconName, withConfiguration: config)
             largeIconImageView.tintColor = .white

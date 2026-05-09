@@ -34,7 +34,7 @@ class BadgesViewController: UIViewController, UICollectionViewDataSource, UIColl
         }
         
         let screenTitle: String
-        let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp)
+        let unlocked = badge.isUnlocked(userXP: UserStats.shared.xp, stats: JourneyModel.shared)
 
         if unlocked {
             screenTitle = "Unlocked New Badge"
