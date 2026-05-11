@@ -12,17 +12,10 @@ enum BadgeType: String, Codable {
 }
 
 enum MilestoneType: String, Codable {
-    case goalsCompleted
-    case articlesRead
-    case modulesCompleted
+    case learningDays
     case quizzesPassed
-    case bugsFixed
-    case fastAnswers
-    case sharedActivities
-    case creativeSolutions
-    case codingChallenges
-    case bugsSolved
-    case systemArchitectures
+    case articlesRead
+    case roadmapProgress
 }
 
 struct Badge {
@@ -30,6 +23,8 @@ struct Badge {
     let title: String
     let subtitle: String?
     let iconName: String
+    let systemIconName: String
+    let isCustomImage: Bool
     let color: UIColor?
     let badgeType: BadgeType
     let milestoneType: MilestoneType?
@@ -79,34 +74,20 @@ struct Badge {
     private func getCurrentMilestoneCount(stats: JourneyStats) -> Int {
         guard let type = milestoneType else { return 0 }
         switch type {
-        case .goalsCompleted: return stats.quests
-        case .articlesRead: return stats.articlesRead
-        case .modulesCompleted: return stats.modulesCompleted
+        case .learningDays: return stats.days
         case .quizzesPassed: return stats.quizzes
-        case .bugsFixed: return stats.bugsFixed
-        case .fastAnswers: return stats.fastAnswers
-        case .sharedActivities: return stats.sharedActivities
-        case .creativeSolutions: return stats.creativeSolutions
-        case .codingChallenges: return stats.codingChallenges
-        case .bugsSolved: return stats.bugsSolved
-        case .systemArchitectures: return stats.systemArchitectures
+        case .articlesRead: return stats.articlesRead
+        case .roadmapProgress: return stats.quests
         }
     }
     
     private func getUnitText() -> String {
         guard let type = milestoneType else { return "" }
         switch type {
-        case .goalsCompleted: return "Goals"
-        case .articlesRead: return "Articles"
-        case .modulesCompleted: return "Modules"
+        case .learningDays: return "Days"
         case .quizzesPassed: return "Quizzes"
-        case .bugsFixed: return "Bugs Fixed"
-        case .fastAnswers: return "Fast Answers"
-        case .sharedActivities: return "Activities"
-        case .creativeSolutions: return "Solutions"
-        case .codingChallenges: return "Challenges"
-        case .bugsSolved: return "Bugs Solved"
-        case .systemArchitectures: return "Architectures"
+        case .articlesRead: return "Articles"
+        case .roadmapProgress: return "Quests"
         }
     }
 }
@@ -125,7 +106,9 @@ let allBadgeSections: [BadgeSection] = [
         Badge(id: 1,
               title: "Path Finder",
               subtitle: "The journey begins!",
-              iconName: "map.fill",
+              iconName: "pathfinder",
+              systemIconName: "map.fill",
+              isCustomImage: true,
               color: UIColor(hex: "#1fa5a1"),
               badgeType: .xpBased,
               milestoneType: nil,
@@ -134,113 +117,135 @@ let allBadgeSections: [BadgeSection] = [
 
         Badge(id: 2,
               title: "High Achiever",
-              subtitle: "Sky-high productivity!",
-              iconName: "airplane.up.right",
+              subtitle: "Consistency is key!",
+              iconName: "highachiever",
+              systemIconName: "airplane.up.right",
+              isCustomImage: true,
               color: .systemGray,
               badgeType: .milestoneBased,
-              milestoneType: .goalsCompleted,
+              milestoneType: .learningDays,
               requiredCount: 5,
-              unlockReason: "Awarded for completing 5 goals in a single day."),
+              unlockReason: "Awarded for staying active for 5 learning days."),
 
         Badge(id: 3,
               title: "Eager Learner",
               subtitle: "Thirst for knowledge!",
-              iconName: "book.fill",
+              iconName: "eagerlearner",
+              systemIconName: "book.fill",
+              isCustomImage: true,
               color: .systemGray,
               badgeType: .milestoneBased,
               milestoneType: .articlesRead,
-              requiredCount: 10,
-              unlockReason: "Awarded for reading 10 career guidance articles."),
+              requiredCount: 5,
+              unlockReason: "Awarded for reading 5 career guidance articles."),
 
         Badge(id: 4,
               title: "Serious Learner",
-              subtitle: "Mastering the fundamentals!",
-              iconName: "wrench.and.screwdriver.fill",
-              color: .systemGray,
-              badgeType: .milestoneBased,
-              milestoneType: .modulesCompleted,
-              requiredCount: 1,
-              unlockReason: "Awarded for finishing your first complete module."),
-
-        Badge(id: 5,
-              title: "Confident Reader",
               subtitle: "Knowledge verified!",
-              iconName: "flag.fill",
+              iconName: "seriouslearner",
+              systemIconName: "wrench.and.screwdriver.fill",
+              isCustomImage: true,
               color: .systemGray,
               badgeType: .milestoneBased,
               milestoneType: .quizzesPassed,
-              requiredCount: 5,
-              unlockReason: "Awarded for passing 5 module knowledge checks."),
+              requiredCount: 3,
+              unlockReason: "Awarded for passing 3 module quizzes."),
+
+        Badge(id: 5,
+              title: "Confident Reader",
+              subtitle: "Mastering the material!",
+              iconName: "confidentreader",
+              systemIconName: "flag.fill",
+              isCustomImage: true,
+              color: .systemGray,
+              badgeType: .milestoneBased,
+              milestoneType: .quizzesPassed,
+              requiredCount: 10,
+              unlockReason: "Awarded for passing 10 knowledge checks."),
 
         Badge(id: 6,
               title: "Error Police",
-              subtitle: "No bug left behind!",
-              iconName: "shield.lefthalf.fill",
+              subtitle: "Milestone reached!",
+              iconName: "errorpolice",
+              systemIconName: "shield.lefthalf.fill",
+              isCustomImage: true,
               color: .systemGray,
               badgeType: .milestoneBased,
-              milestoneType: .bugsFixed,
-              requiredCount: 3,
-              unlockReason: "Awarded for finding and fixing 3 system bugs."),
+              milestoneType: .roadmapProgress,
+              requiredCount: 5,
+              unlockReason: "Awarded for completing 5 roadmap milestones."),
         
         Badge(id: 7,
               title: "Fast Thinker",
-              subtitle: "Lightning-fast responses!",
-              iconName: "bolt.fill",
+              subtitle: "Gaining momentum!",
+              iconName: "fastthinker",
+              systemIconName: "bolt.fill",
+              isCustomImage: true,
               color: .systemGray,
-              badgeType: .milestoneBased,
-              milestoneType: .fastAnswers,
-              requiredCount: 10,
-              unlockReason: "Awarded for answering 10 questions within time limits."),
+              badgeType: .xpBased,
+              milestoneType: nil,
+              requiredCount: 200,
+              unlockReason: "Awarded for reaching 200 total XP."),
 
         Badge(id: 8,
               title: "Team Player",
-              subtitle: "Stronger together!",
-              iconName: "person.3.fill",
+              subtitle: "Rising through the ranks!",
+              iconName: "teamplayer",
+              systemIconName: "person.3.fill",
+              isCustomImage: true,
               color: .systemGray,
-              badgeType: .milestoneBased,
-              milestoneType: .sharedActivities,
-              requiredCount: 3,
-              unlockReason: "Awarded for participating in 3 collaborative activities."),
+              badgeType: .xpBased,
+              milestoneType: nil,
+              requiredCount: 500,
+              unlockReason: "Awarded for reaching 500 total XP."),
 
         Badge(id: 9,
               title: "Creative Mind",
-              subtitle: "Outside the box thinker!",
-              iconName: "paintbrush.fill",
+              subtitle: "The visionary!",
+              iconName: "creativemind",
+              systemIconName: "paintbrush.fill",
+              isCustomImage: true,
               color: .systemGray,
               badgeType: .milestoneBased,
-              milestoneType: .creativeSolutions,
-              requiredCount: 1,
-              unlockReason: "Awarded for proposing your first creative career solution."),
+              milestoneType: .roadmapProgress,
+              requiredCount: 15,
+              unlockReason: "Awarded for completing 15 roadmap tasks."),
 
         Badge(id: 10,
               title: "Code Master",
-              subtitle: "Algorithmically gifted!",
+              subtitle: "Elite status!",
               iconName: "chevron.left.slash.chevron.right",
+              systemIconName: "chevron.left.slash.chevron.right",
+              isCustomImage: false,
               color: .systemGray,
-              badgeType: .milestoneBased,
-              milestoneType: .codingChallenges,
-              requiredCount: 1,
-              unlockReason: "Awarded for successfully finishing a coding challenge."),
+              badgeType: .xpBased,
+              milestoneType: nil,
+              requiredCount: 1000,
+              unlockReason: "Awarded for reaching 1000 total XP."),
 
         Badge(id: 11,
               title: "Bug Hunter",
-              subtitle: "Tracker of the unseen!",
+              subtitle: "The dedicated student!",
               iconName: "ladybug.fill",
+              systemIconName: "ladybug.fill",
+              isCustomImage: false,
               color: .systemGray,
               badgeType: .milestoneBased,
-              milestoneType: .bugsSolved,
-              requiredCount: 5,
-              unlockReason: "Awarded for solving 5 complex technical bugs."),
+              milestoneType: .learningDays,
+              requiredCount: 20,
+              unlockReason: "Awarded for reaching 20 learning days."),
 
         Badge(id: 12,
               title: "System Architect",
-              subtitle: "Designing for the future!",
+              subtitle: "Grandmaster of career planning!",
               iconName: "cpu.fill",
+              systemIconName: "cpu.fill",
+              isCustomImage: false,
               color: .systemGray,
               badgeType: .xpBased,
-              milestoneType: .systemArchitectures,
-              requiredCount: 1200,
-              unlockReason: "Awarded for reaching 1200 XP and designing a system architecture."),
+              milestoneType: nil,
+              requiredCount: 2500,
+              unlockReason: "Awarded for reaching 2500 XP and mastering your roadmap."),
     ])
 ]
 

@@ -213,46 +213,139 @@ class BadgeUnlockedModalViewController: UIViewController {
         generator.prepare()
         generator.impactOccurred()
     }
-        func configureUI() {
-            guard let badge = badge else {
-                print("ERROR: Badge data is missing for modal configuration.")
-                return
-            }
-            titleLabel.text = badge.title
-            reasonLabel.text = badge.unlockReason
-            
-            let userXP = UserStats.shared.xp
-            let journeyStats = JourneyModel.shared
-            let unlocked = badge.isUnlocked(userXP: userXP, stats: journeyStats)
-
-            let progress = badge.calculateProgress(userXP: userXP, stats: journeyStats)
-            progressView.setProgress(progress, animated: false)
-            progressLabel.text = badge.getProgressText(userXP: userXP, stats: journeyStats)
-            
-            if !unlocked {
-                titleLabel.alpha = 0.5
-                largeIconBackgroundView.backgroundColor = .systemGray4
-            } else {
-                largeIconBackgroundView.backgroundColor = UIColor(hex: "#1fa5a1")
-            }
-            
-            let config = UIImage.SymbolConfiguration(pointSize: 100, weight: .bold)
-            largeIconImageView.image = UIImage(systemName: badge.iconName, withConfiguration: config)
-            largeIconImageView.tintColor = .white
-            // Adds depth to the badge for the flip animation
-            largeIconBackgroundView.layer.shadowColor = UIColor.black.cgColor
-            largeIconBackgroundView.layer.shadowOpacity = 0.3
-            largeIconBackgroundView.layer.shadowOffset = CGSize(width: 0, height: 10)
-            largeIconBackgroundView.layer.shadowRadius = 10
-            largeIconBackgroundView.layer.shouldRasterize = true
-            largeIconBackgroundView.layer.rasterizationScale = UIScreen.main.scale
-
-            // Optional: Rotate the icon slightly during the slide up for more energy
-            largeIconBackgroundView.transform = CGAffineTransform(rotationAngle: -0.2)
-            UIView.animate(withDuration: 0.5) {
-                self.largeIconBackgroundView.transform = .identity
-            }
+    func configureUI() {
+        guard let badge = badge else {
+            print("ERROR: Badge data is missing for modal configuration.")
+            return
         }
+        titleLabel.text = badge.title
+        reasonLabel.text = badge.unlockReason
+        
+        let userXP = UserStats.shared.xp
+        let journeyStats = JourneyModel.shared
+        let unlocked = badge.isUnlocked(userXP: userXP, stats: journeyStats)
+
+        let progress = badge.calculateProgress(userXP: userXP, stats: journeyStats)
+        progressView.setProgress(progress, animated: false)
+        progressLabel.text = badge.getProgressText(userXP: userXP, stats: journeyStats)
+        
+        // Large Icon Handling
+        if badge.isCustomImage {
+            let originalImage = UIImage(named: badge.iconName)
+            if !unlocked {
+                largeIconImageView.image = originalImage?.grayscale()
+                largeIconImageView.alpha = 0.6
+            } else {
+                largeIconImageView.image = originalImage
+                largeIconImageView.alpha = 1.0
+            }
+            largeIconImageView.tintColor = nil
+            largeIconImageView.contentMode = .scaleAspectFit
+            
+            // Standardized scale to prevent layout distortion
+            largeIconImageView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        } else {
+            // Standard symbols should be centered and not too huge
+            let config = UIImage.SymbolConfiguration(pointSize: 60, weight: .bold)
+            largeIconImageView.image = UIImage(systemName: badge.systemIconName, withConfiguration: config)
+            largeIconImageView.tintColor = unlocked ? .white : .systemGray2
+            largeIconImageView.contentMode = .center
+            largeIconImageView.transform = .identity
+        }
+        
+        largeIconImageView.clipsToBounds = false
+        largeIconBackgroundView.clipsToBounds = false
+        
+        stylePremiumBadgeContainer(isUnlocked: unlocked)
+        
+        if unlocked {
+            startPremiumAnimations()
+            titleLabel.alpha = 1.0
+            reasonLabel.alpha = 1.0
+            largeIconBackgroundView.alpha = 1.0
+        } else {
+            largeIconImageView.layer.removeAllAnimations()
+            largeIconBackgroundView.layer.removeAllAnimations()
+            titleLabel.alpha = 0.5
+            reasonLabel.alpha = 0.5
+            largeIconBackgroundView.alpha = 0.7
+        }
+    }
+
+    private func stylePremiumBadgeContainer(isUnlocked: Bool) {
+        largeIconBackgroundView.layer.cornerRadius = largeIconBackgroundView.frame.height / 2
+        largeIconBackgroundView.layer.cornerCurve = .continuous
+        
+        if badge.isCustomImage {
+            // Completely transparent container for custom assets
+            largeIconBackgroundView.backgroundColor = .clear
+            largeIconBackgroundView.layer.shadowOpacity = 0
+            return 
+        }
+        
+        if isUnlocked {
+            // Gradient Background only for standard symbols
+            let gradient = CAGradientLayer()
+            gradient.frame = largeIconBackgroundView.bounds
+            gradient.colors = [
+                UIColor(hex: "#1fa5a1").cgColor,
+                UIColor(hex: "#15716E").cgColor
+            ]
+            gradient.startPoint = CGPoint(x: 0, y: 0)
+            gradient.endPoint = CGPoint(x: 1, y: 1)
+            gradient.cornerRadius = largeIconBackgroundView.frame.height / 2
+            largeIconBackgroundView.layer.insertSublayer(gradient, at: 0)
+            
+            largeIconBackgroundView.layer.shadowColor = UIColor(hex: "#1fa5a1").cgColor
+            largeIconBackgroundView.layer.shadowOpacity = 0.5
+            largeIconBackgroundView.layer.shadowOffset = CGSize(width: 0, height: 12)
+            largeIconBackgroundView.layer.shadowRadius = 16
+        } else {
+            largeIconBackgroundView.backgroundColor = .systemGray4
+            largeIconBackgroundView.layer.shadowOpacity = 0.1
+        }
+    }
+
+    private func startPremiumAnimations() {
+        // Clear any existing animations first
+        largeIconImageView.layer.removeAllAnimations()
+        largeIconBackgroundView.layer.removeAllAnimations()
+        
+        startFloatingAnimation()
+        startPulseGlow()
+        startSlowRotation() // New 360 rotation
+    }
+
+    private func startFloatingAnimation() {
+        let animation = CABasicAnimation(keyPath: "transform.translation.y")
+        animation.fromValue = 0
+        animation.toValue = -20
+        animation.duration = 2.5
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        largeIconImageView.layer.add(animation, forKey: "floating")
+    }
+
+    private func startPulseGlow() {
+        let animation = CABasicAnimation(keyPath: "transform.scale")
+        animation.fromValue = 1.0
+        animation.toValue = 1.05
+        animation.duration = 1.5
+        animation.autoreverses = true
+        animation.repeatCount = .infinity
+        animation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        largeIconImageView.layer.add(animation, forKey: "pulse")
+    }
+
+    private func startSlowRotation() {
+        let animation = CABasicAnimation(keyPath: "transform.rotation.z")
+        animation.fromValue = 0
+        animation.toValue = CGFloat.pi * 2
+        animation.duration = 12.0 // Very slow and elegant
+        animation.repeatCount = .infinity
+        largeIconImageView.layer.add(animation, forKey: "slowRotation")
+    }
 
     func setupTapToDismiss() {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture(_:)))
@@ -271,4 +364,18 @@ class BadgeUnlockedModalViewController: UIViewController {
         @IBAction func dismissTapped(_ sender: Any) {
             dismiss(animated: true, completion: nil)
         }
+}
+
+// MARK: - UIImage Extension for Grayscale
+extension UIImage {
+    func grayscale() -> UIImage? {
+        let context = CIContext(options: nil)
+        guard let currentFilter = CIFilter(name: "CIPhotoEffectMono") else { return nil }
+        currentFilter.setValue(CIImage(image: self), forKey: kCIInputImageKey)
+        if let output = currentFilter.outputImage,
+           let cgImage = context.createCGImage(output, from: output.extent) {
+            return UIImage(cgImage: cgImage)
+        }
+        return nil
+    }
 }
