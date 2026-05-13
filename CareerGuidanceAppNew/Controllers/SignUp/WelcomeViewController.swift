@@ -9,8 +9,6 @@ import UIKit
 
 class WelcomeViewController: UIViewController {
 
-    @IBOutlet weak var continueOnboarding: UIButton!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupSheetPresentation()
@@ -26,13 +24,13 @@ class WelcomeViewController: UIViewController {
         
         let loginBtn = UIButton(type: .system)
         loginBtn.setTitle("Login", for: .normal)
-        loginBtn.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        loginBtn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         loginBtn.setTitleColor(.appTeal, for: .normal)
         loginBtn.addTarget(self, action: #selector(loginTapped), for: .touchUpInside)
         
         let signUpBtn = UIButton(type: .system)
         signUpBtn.setTitle("Sign Up", for: .normal)
-        signUpBtn.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        signUpBtn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         signUpBtn.setTitleColor(.appTeal, for: .normal)
         signUpBtn.addTarget(self, action: #selector(signUpTapped), for: .touchUpInside)
         
@@ -42,9 +40,9 @@ class WelcomeViewController: UIViewController {
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            stackView.bottomAnchor.constraint(equalTo: continueOnboarding.topAnchor, constant: -16),
-            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24),
+            stackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -50),
+            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            stackView.widthAnchor.constraint(equalToConstant: 280),
             stackView.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
@@ -68,15 +66,11 @@ class WelcomeViewController: UIViewController {
     private func setupSheetPresentation() {
         if let sheet = self.sheetPresentationController {
             let customDetent = UISheetPresentationController.Detent.custom { context in
-                return context.maximumDetentValue * 0.85
+                return context.maximumDetentValue * 0.75
             }
             sheet.detents = [customDetent]
-            sheet.prefersGrabberVisible = false
-            sheet.preferredCornerRadius = 24
+            sheet.prefersGrabberVisible = true
+            sheet.preferredCornerRadius = 32
         }
-    }
-
-    @IBAction func continueTapped(_ sender: UIButton) {
-        self.dismiss(animated: true, completion: nil)
     }
 }

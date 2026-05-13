@@ -21,12 +21,39 @@ class SignUpViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        addCircularBackButton()
         setUpPasswordToggle()
         styleTextField(nameInput)
         styleTextField(emailInput)
         styleTextField(passwordTextField)
         styleTextField(confirmPasswordTextField)
         stylePrimaryButton(registerButton)
+    }
+    
+    private func addCircularBackButton() {
+        let backBtn = UIButton(type: .system)
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
+        backBtn.setImage(image, for: .normal)
+        backBtn.tintColor = .appTeal
+        backBtn.backgroundColor = .systemGray5
+        backBtn.layer.cornerRadius = 20
+        backBtn.clipsToBounds = true
+        backBtn.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+        
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(backBtn)
+        
+        NSLayoutConstraint.activate([
+            backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
+            backBtn.widthAnchor.constraint(equalToConstant: 40),
+            backBtn.heightAnchor.constraint(equalToConstant: 40)
+        ])
+    }
+    
+    @objc private func backTapped() {
+        self.dismiss(animated: true)
     }
     
     override func viewDidLayoutSubviews() {
@@ -44,13 +71,21 @@ class SignUpViewController: UIViewController {
     
     private func styleTextField(_ textField: UITextField) {
         textField.borderStyle = .none
-        textField.backgroundColor = .secondarySystemBackground
-        textField.layer.cornerRadius = 10
+        textField.backgroundColor = .systemGray6
+        textField.layer.cornerRadius = 12
         textField.layer.cornerCurve = .continuous
         
-        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: textField.frame.height))
+        // Height constraint
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.heightAnchor.constraint(equalToConstant: 52).isActive = true
+        
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 16, height: 52))
         textField.leftView = paddingView
         textField.leftViewMode = .always
+        
+        // Add a subtle border to make it pop
+        textField.layer.borderWidth = 1
+        textField.layer.borderColor = UIColor.systemGray5.cgColor
     }
     
     private func stylePrimaryButton(_ button: UIButton) {

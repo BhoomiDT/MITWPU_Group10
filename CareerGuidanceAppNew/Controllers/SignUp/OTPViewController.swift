@@ -23,8 +23,12 @@ class OTPViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         // Back Button
-        backButton.setImage(UIImage(systemName: "chevron.left"), for: .normal)
-        backButton.tintColor = .label
+        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
+        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: config), for: .normal)
+        backButton.tintColor = themeColor
+        backButton.backgroundColor = .systemGray5
+        backButton.layer.cornerRadius = 20
+        backButton.clipsToBounds = true
         backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)

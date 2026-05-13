@@ -115,45 +115,22 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="About Translation &amp; Privacy..." textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ahX-bD-rIc">
-                                <rect key="frame" x="107.66666666666667" y="726" width="177.66666666666663" height="15.666666666666629"/>
-                                <color key="tintColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <color key="textColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qHI-UC-DiO">
-                                <rect key="frame" x="72" y="749.66666666666663" width="249" height="34.333333333333371"/>
-                                <color key="tintColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Continue">
-                                    <color key="baseBackgroundColor" red="0.1215686275" green="0.64705882349999999" blue="0.63137254899999995" alpha="1" colorSpace="calibratedRGB"/>
-                                </buttonConfiguration>
-                                <connections>
-                                    <action selector="continueTapped:" destination="Fce-Q1-lhY" eventType="touchUpInside" id="Bad-Nd-W3h"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="PV6-RE-a5n"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="Mm7-dF-PgI" secondAttribute="trailing" constant="24" id="7sU-9l-ilG"/>
                             <constraint firstItem="Mm7-dF-PgI" firstAttribute="leading" secondItem="cUq-lr-EoM" secondAttribute="leading" constant="24" id="9t4-TZ-EYi"/>
-                            <constraint firstItem="qHI-UC-DiO" firstAttribute="leading" secondItem="PV6-RE-a5n" secondAttribute="leading" constant="72" id="Bkz-xV-LNM"/>
-                            <constraint firstItem="ahX-bD-rIc" firstAttribute="centerX" secondItem="cUq-lr-EoM" secondAttribute="centerX" id="CR5-91-lIE"/>
-                            <constraint firstItem="Mm7-dF-PgI" firstAttribute="top" secondItem="YlT-Sm-wk2" secondAttribute="bottom" constant="32" id="DIs-UP-sFp"/>
-                            <constraint firstItem="H5U-Sl-XSB" firstAttribute="top" secondItem="PV6-RE-a5n" secondAttribute="top" constant="72" id="GE9-Wv-DgQ"/>
-                            <constraint firstItem="H5U-Sl-XSB" firstAttribute="leading" secondItem="PV6-RE-a5n" secondAttribute="leading" constant="24" id="OAg-72-sRF"/>
+                            <constraint firstItem="Mm7-dF-PgI" firstAttribute="top" secondItem="YlT-Sm-wk2" secondAttribute="bottom" constant="24" id="DIs-UP-sFp"/>
+                            <constraint firstItem="H5U-Sl-XSB" firstAttribute="top" secondItem="PV6-RE-a5n" secondAttribute="top" constant="60" id="GE9-Wv-DgQ"/>
+                            <constraint firstItem="H5U-Sl-XSB" firstAttribute="leading" secondItem="PV6-RE-a5n" secondAttribute="leading" constant="32" id="OAg-72-sRF"/>
                             <constraint firstItem="g7F-p8-QhU" firstAttribute="leading" secondItem="PV6-RE-a5n" secondAttribute="leading" constant="24" id="TYC-RG-gok"/>
                             <constraint firstAttribute="trailing" secondItem="YlT-Sm-wk2" secondAttribute="trailing" constant="24" id="Vga-R8-B6x"/>
-                            <constraint firstItem="PV6-RE-a5n" firstAttribute="trailing" secondItem="H5U-Sl-XSB" secondAttribute="trailing" constant="24" id="ZSD-Kr-Kq2"/>
-                            <constraint firstItem="g7F-p8-QhU" firstAttribute="top" secondItem="Mm7-dF-PgI" secondAttribute="bottom" constant="28" id="jjI-Gs-hxt"/>
+                            <constraint firstItem="PV6-RE-a5n" firstAttribute="trailing" secondItem="H5U-Sl-XSB" secondAttribute="trailing" constant="32" id="ZSD-Kr-Kq2"/>
+                            <constraint firstItem="g7F-p8-QhU" firstAttribute="top" secondItem="Mm7-dF-PgI" secondAttribute="bottom" constant="24" id="jjI-Gs-hxt"/>
                             <constraint firstAttribute="trailing" secondItem="g7F-p8-QhU" secondAttribute="trailing" constant="24" id="ma0-GY-Cnp"/>
-                            <constraint firstItem="PV6-RE-a5n" firstAttribute="bottom" secondItem="qHI-UC-DiO" secondAttribute="bottom" id="mtd-qu-HB1"/>
-                            <constraint firstItem="qHI-UC-DiO" firstAttribute="top" secondItem="ahX-bD-rIc" secondAttribute="bottom" constant="8" id="oPL-yX-yzd"/>
                             <constraint firstItem="YlT-Sm-wk2" firstAttribute="leading" secondItem="PV6-RE-a5n" secondAttribute="leading" constant="24" id="sXK-99-i4G"/>
-                            <constraint firstItem="PV6-RE-a5n" firstAttribute="trailing" secondItem="qHI-UC-DiO" secondAttribute="trailing" constant="72" id="svt-uc-GSz"/>
-                            <constraint firstItem="YlT-Sm-wk2" firstAttribute="top" secondItem="H5U-Sl-XSB" secondAttribute="bottom" constant="32" id="xrz-Nr-MLY"/>
+                            <constraint firstItem="YlT-Sm-wk2" firstAttribute="top" secondItem="H5U-Sl-XSB" secondAttribute="bottom" constant="40" id="xrz-Nr-MLY"/>
                         </constraints>
                     </view>
                     <connections>
