@@ -49,7 +49,11 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func backTapped() {
-        self.dismiss(animated: true)
+        if let nav = self.navigationController {
+            nav.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
     }
 
     private func styleSecondaryActions() {
@@ -143,8 +147,12 @@ class LoginViewController: UIViewController {
                     let otpVC = OTPViewController()
                     otpVC.email = email
                     otpVC.userId = userId
-                    otpVC.modalPresentationStyle = .fullScreen
-                    self.present(otpVC, animated: true)
+                    if let nav = self.navigationController {
+                        nav.pushViewController(otpVC, animated: true)
+                    } else {
+                        otpVC.modalPresentationStyle = .fullScreen
+                        self.present(otpVC, animated: true)
+                    }
                 }
                 
             } catch {
@@ -160,8 +168,19 @@ class LoginViewController: UIViewController {
     @IBAction func switchToSignup(_ sender: Any) {
         let storyboard = UIStoryboard(name: "SignUpLogIn", bundle: nil)
         if let signupVC = storyboard.instantiateViewController(withIdentifier: "SignUpViewController") as? SignUpViewController {
-            signupVC.modalPresentationStyle = .fullScreen
-            self.present(signupVC, animated: true)
+            if let nav = self.navigationController {
+                var vcs = nav.viewControllers
+                if vcs.last == self {
+                    vcs.removeLast()
+                    vcs.append(signupVC)
+                    nav.setViewControllers(vcs, animated: true)
+                } else {
+                    nav.pushViewController(signupVC, animated: true)
+                }
+            } else {
+                signupVC.modalPresentationStyle = .fullScreen
+                self.present(signupVC, animated: true)
+            }
         }
     }
 }

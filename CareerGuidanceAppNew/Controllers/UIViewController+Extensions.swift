@@ -6,7 +6,6 @@ extension UIViewController {
             // Check if onboarding is completed for this user
             if !OnboardingManager.shared.isOnboardingCompleted {
                 // Route to Onboarding
-                let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
                 if let onboardingVC = OnboardingManager.shared.getNextViewController() {
                     let nav = UINavigationController(rootViewController: onboardingVC)
                     self.setRootViewController(nav)

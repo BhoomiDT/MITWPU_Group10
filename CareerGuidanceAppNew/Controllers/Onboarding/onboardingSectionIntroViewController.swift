@@ -39,24 +39,7 @@ class onboardingSectionIntroViewController: UIViewController {
         iconBackgroundView.layer.cornerRadius = iconBackgroundView.frame.height / 2
         iconBackgroundView.layer.masksToBounds = true
     }
-    private var hasShownWelcomeModal = false
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if sectionIndex == 0 && !hasShownWelcomeModal {
-            presentWelcomePage()
-        }
-    }
 
-    private func presentWelcomePage() {
-        let storyboard = UIStoryboard(name: "WelcomePage", bundle: nil)
-        if let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
-            welcomeVC.modalPresentationStyle = .pageSheet
-            hasShownWelcomeModal = true
-            
-            self.present(welcomeVC, animated: true, completion: nil)
-        }
-    }
     
     func configureContent() {
         let questionnaire = OnboardingManager.shared.questionnaire

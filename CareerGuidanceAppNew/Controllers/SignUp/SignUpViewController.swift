@@ -53,7 +53,11 @@ class SignUpViewController: UIViewController {
     }
     
     @objc private func backTapped() {
-        self.dismiss(animated: true)
+        if let nav = self.navigationController {
+            nav.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -154,8 +158,12 @@ class SignUpViewController: UIViewController {
                     let otpVC = OTPViewController()
                     otpVC.email = email
                     otpVC.userId = userId
-                    otpVC.modalPresentationStyle = .fullScreen
-                    self.present(otpVC, animated: true)
+                    if let nav = self.navigationController {
+                        nav.pushViewController(otpVC, animated: true)
+                    } else {
+                        otpVC.modalPresentationStyle = .fullScreen
+                        self.present(otpVC, animated: true)
+                    }
                 }
                 
             } catch {
@@ -186,8 +194,19 @@ class SignUpViewController: UIViewController {
     @IBAction func switchToLogin(_ sender: Any) {
         let storyboard = UIStoryboard(name: "SignUpLogIn", bundle: nil)
         if let loginVC = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
-            loginVC.modalPresentationStyle = .fullScreen
-            self.present(loginVC, animated: true)
+            if let nav = self.navigationController {
+                var vcs = nav.viewControllers
+                if vcs.last == self {
+                    vcs.removeLast()
+                    vcs.append(loginVC)
+                    nav.setViewControllers(vcs, animated: true)
+                } else {
+                    nav.pushViewController(loginVC, animated: true)
+                }
+            } else {
+                loginVC.modalPresentationStyle = .fullScreen
+                self.present(loginVC, animated: true)
+            }
         }
     }
 }

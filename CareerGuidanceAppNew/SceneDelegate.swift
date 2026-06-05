@@ -128,13 +128,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                     }
                 }
             } catch {
-                // No session, go to Welcome/Login
+                // No session, go to Welcome/Login (full-screen, non-bypassable)
                 DispatchQueue.main.async {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    if let initialVC = storyboard.instantiateInitialViewController() {
-                        window.rootViewController = initialVC
-                        window.makeKeyAndVisible()
-                    }
+                    let welcomeVC = WelcomeViewController()
+                    let nav = UINavigationController(rootViewController: welcomeVC)
+                    nav.isNavigationBarHidden = true
+                    window.rootViewController = nav
+                    window.makeKeyAndVisible()
                 }
             }
         }

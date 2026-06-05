@@ -101,7 +101,11 @@ class OTPViewController: UIViewController {
     }
     
     @objc private func backTapped() {
-        self.dismiss(animated: true)
+        if let nav = self.navigationController {
+            nav.popViewController(animated: true)
+        } else {
+            self.dismiss(animated: true)
+        }
     }
     
     @objc private func verifyTapped() {
