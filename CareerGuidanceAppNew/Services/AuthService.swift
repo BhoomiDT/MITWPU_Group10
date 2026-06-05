@@ -18,6 +18,9 @@ final class AuthService {
             data: data
         )
         UserSessionManager.shared.setUserId(response.user.id)
+        if let name = fullName {
+            ProfileService.shared.cachedName = name
+        }
         print("✅ User signed up successfully with name: \(fullName ?? "None")")
     }
 

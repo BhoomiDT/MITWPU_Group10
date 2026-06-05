@@ -14,15 +14,107 @@ class BadgesViewController: UIViewController, UICollectionViewDataSource, UIColl
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         let nib = UINib(nibName: "BadgeCell", bundle: nil)
         badgesCollectionView.register(nib, forCellWithReuseIdentifier: "BadgeCell")
         badgesCollectionView.dataSource = self
         badgesCollectionView.delegate = self
-        badgesCollectionView.layoutIfNeeded()
-        let contentHeight = badgesCollectionView.contentSize.height
-        collectionViewHeightConstraint.constant = contentHeight
-        view.layoutIfNeeded()
-        collectionViewHeightConstraint.constant = badgesCollectionView.contentSize.height
+        
+        // Reparent collection view to view and pin it to safe area so it scrolls natively
+        if let stackView = badgesCollectionView.superview,
+           let contentView = stackView.superview,
+           let scrollView = contentView.superview as? UIScrollView {
+            
+            badgesCollectionView.removeFromSuperview()
+            view.addSubview(badgesCollectionView)
+            
+            badgesCollectionView.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                badgesCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+                badgesCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                badgesCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                badgesCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            ])
+            
+            scrollView.removeFromSuperview()
+        }
+        
+        // Disable the hardcoded height constraint
+        collectionViewHeightConstraint.isActive = false
+        
+        // Configure collection view flow layout programmatically to bypass storyboard self-sizing issue
+        let flowLayout = UICollectionViewFlowLayout()
+        flowLayout.estimatedItemSize = .zero
+        flowLayout.sectionInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
+        flowLayout.minimumInteritemSpacing = 16
+        flowLayout.minimumLineSpacing = 16
+        badgesCollectionView.collectionViewLayout = flowLayout
+        
+        setupNavigationItem()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.extendedLayoutIncludesOpaqueBars = true
+        view.backgroundColor = .themeBg
+        badgesCollectionView.backgroundColor = .themeBg
+        
+        setupNavigationBarAppearance()
+    }
+    
+    private func setupNavigationBarAppearance() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .navBarBg
+        appearance.shadowColor = .clear
+        appearance.shadowImage = nil
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.textPrimary]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.textPrimary]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.tintColor = .accentTeal
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        self.title = "Badges"
+        
+        navigationController?.navigationBar.setNeedsLayout()
+        navigationController?.navigationBar.layoutIfNeeded()
+    }
+    
+    private func setupNavigationItem() {
+        navigationItem.hidesBackButton = true
+        
+        let backBtn = UIButton(type: .custom)
+        backBtn.backgroundColor = UIColor.textPrimary.withAlphaComponent(0.08)
+        backBtn.layer.cornerRadius = 18
+        backBtn.tintColor = .textPrimary
+        let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
+        backBtn.setImage(UIImage(systemName: "chevron.left", withConfiguration: config), for: .normal)
+        backBtn.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+        backBtn.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            backBtn.widthAnchor.constraint(equalToConstant: 36),
+            backBtn.heightAnchor.constraint(equalToConstant: 36)
+        ])
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
+    }
+    
+    @objc private func backTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            setupNavigationBarAppearance()
+            setupNavigationItem()
+        }
     }
     
     func presentBadgeModal(with badge: Badge) {
@@ -98,10 +190,11 @@ extension BadgesViewController: UICollectionViewDelegateFlowLayout {
         
         let columns: CGFloat = 3
         let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
-        let totalSpacing = flowLayout.minimumInteritemSpacing * (columns - 1)
+        let leftRightInsets = flowLayout.sectionInset.left + flowLayout.sectionInset.right
+        let totalSpacing = (flowLayout.minimumInteritemSpacing * (columns - 1)) + leftRightInsets
         let availableWidth = collectionView.bounds.width - totalSpacing
         
         let widthPerItem = floor(availableWidth / columns)
-        return CGSize(width: widthPerItem, height: widthPerItem)
+        return CGSize(width: widthPerItem, height: widthPerItem * 1.15)
     }
 }

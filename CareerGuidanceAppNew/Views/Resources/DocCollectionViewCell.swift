@@ -19,7 +19,18 @@ class DocCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
 
         contentView.layer.cornerRadius = 12
-        contentView.backgroundColor = .secondarySystemBackground
+        contentView.backgroundColor = .clear
+        
+        if let containerView = contentView.subviews.first {
+            containerView.backgroundColor = .cardBg
+            containerView.layer.cornerRadius = 12
+            containerView.layer.borderColor = UIColor.cardBorder.cgColor
+            containerView.layer.borderWidth = 1
+            containerView.clipsToBounds = true
+        }
+        
+        titleLabel.textColor = .textPrimary
+        metaLabel.textColor = .textSecondary
     }
 
     func configure(title: String, meta: String) {

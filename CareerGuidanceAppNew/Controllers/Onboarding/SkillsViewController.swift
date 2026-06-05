@@ -38,6 +38,10 @@ class SkillsViewController: UIViewController {
         return !t.isEmpty
     }
 
+    private let sheetView = UIView()
+    private let bottomCurveView = UIView()
+    private let bottomContinueBtn = UIButton(type: .system)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -48,36 +52,107 @@ class SkillsViewController: UIViewController {
         tableView.estimatedRowHeight = 56
         tableView.rowHeight = UITableView.automaticDimension
         tableView.tableFooterView = UIView()
-        tableView.backgroundColor = UIColor(hex: "F2F2F7")
+        tableView.backgroundColor = .clear // will be over sheetView
         
         if #available(iOS 11.0, *) {
-                tableView.contentInsetAdjustmentBehavior = .automatic
-            }
+            tableView.contentInsetAdjustmentBehavior = .automatic
+        }
         if #available(iOS 15.0, *) {
-                tableView.sectionHeaderTopPadding = 10
-            }
+            tableView.sectionHeaderTopPadding = 10
+        }
 
-        searchContainerView.layer.cornerRadius = 28
-        searchContainerView.layer.masksToBounds = false
-        searchContainerView.layer.shadowColor = UIColor.black.cgColor
-        searchContainerView.layer.shadowOpacity = 0.06
-        searchContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
-        searchContainerView.layer.shadowRadius = 8
+        setupCustomUI()
+    }
+    
+    private func setupCustomUI() {
+        view.backgroundColor = .themeBg
+        navigationItem.rightBarButtonItem = nil // Hide old bar button
         
-            searchContainerView.backgroundColor = .clear
-            searchContainerView.layer.masksToBounds = false
-            searchContainerView.layer.shadowColor = UIColor.black.cgColor
-            searchContainerView.layer.shadowOpacity = 0.06
-            searchContainerView.layer.shadowOffset = CGSize(width: 0, height: 4)
-            searchContainerView.layer.shadowRadius = 8
-
-
+        // Sheet View
+        sheetView.backgroundColor = .cardBg
+        sheetView.layer.cornerRadius = 40
+        sheetView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.insertSubview(sheetView, belowSubview: tableView)
+        sheetView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Custom search container styling
+        searchContainerView.backgroundColor = UIColor.progressTrackBg
+        searchContainerView.layer.cornerRadius = 24
+        searchContainerView.layer.masksToBounds = true
+        sheetView.addSubview(searchContainerView)
+        searchContainerView.translatesAutoresizingMaskIntoConstraints = false
+        
         searchBar.backgroundImage = UIImage()
         searchBar.barTintColor = .clear
         searchBar.backgroundColor = .clear
-
-        view.layoutIfNeeded()
-        tableView.contentInset.bottom = searchContainerView.frame.height + 12
+        searchBar.searchTextField.backgroundColor = .clear
+        searchBar.searchTextField.textColor = .textPrimary
+        searchBar.searchTextField.leftView?.tintColor = .lightGray
+        searchBar.pin(to: searchContainerView)
+        
+        // Bottom Curve
+        bottomCurveView.backgroundColor = .themeBg
+        bottomCurveView.layer.cornerRadius = 40
+        bottomCurveView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        view.addSubview(bottomCurveView)
+        bottomCurveView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Bottom Continue Button
+        bottomContinueBtn.setTitleColor(.white, for: .normal)
+        bottomContinueBtn.setTitle("Continue", for: .normal)
+        bottomContinueBtn.titleLabel?.font = .boldSystemFont(ofSize: 18)
+        bottomContinueBtn.addTarget(self, action: #selector(bottomContinueTapped), for: .touchUpInside)
+        bottomCurveView.addSubview(bottomContinueBtn)
+        bottomContinueBtn.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Move tableView to front so it shows on top of sheetView
+        view.bringSubviewToFront(tableView)
+        view.bringSubviewToFront(bottomCurveView)
+        
+        // Setup Constraints
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            sheetView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
+            sheetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            sheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            sheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            searchContainerView.topAnchor.constraint(equalTo: sheetView.topAnchor, constant: 20),
+            searchContainerView.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 20),
+            searchContainerView.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -20),
+            searchContainerView.heightAnchor.constraint(equalToConstant: 48),
+            
+            // Adjust tableView constraints to fit inside sheetView
+            tableView.topAnchor.constraint(equalTo: searchContainerView.bottomAnchor, constant: 12),
+            tableView.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomCurveView.topAnchor),
+            
+            bottomCurveView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomCurveView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomCurveView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomCurveView.heightAnchor.constraint(equalToConstant: 100),
+            
+            bottomContinueBtn.centerXAnchor.constraint(equalTo: bottomCurveView.centerXAnchor),
+            bottomContinueBtn.topAnchor.constraint(equalTo: bottomCurveView.topAnchor, constant: 20),
+            bottomContinueBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+        ])
+        
+        // Animate Sheet
+        sheetView.transform = CGAffineTransform(translationX: 0, y: UIScreen.main.bounds.height)
+        tableView.alpha = 0
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+            self.sheetView.transform = .identity
+            self.tableView.alpha = 1
+        }
+    }
+    
+    @objc private func bottomContinueTapped() {
+        continueButtonTapped(UIButton())
     }
     
     private func suggestionsArray() -> [String] {
@@ -129,18 +204,20 @@ extension SkillsViewController: UITableViewDataSource {
                 fatalError("SelectedSkillCell not registered or wrong class")
             }
             cell.titleLabel.text = selected[indexPath.row]
+            cell.titleLabel.textColor = .textPrimary
             cell.delegate = self
             cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-            cell.backgroundColor = .systemBackground
+            cell.backgroundColor = .cardBg
             return cell
         } else {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: "SuggestionSkillCell", for: indexPath) as? SuggestionSkillCell else {
                 fatalError("SuggestionSkillCell not registered or wrong class")
             }
             cell.titleLabel.text = suggestionsArray()[indexPath.row]
+            cell.titleLabel.textColor = .textPrimary
             cell.delegate = self
             cell.separatorInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-            cell.backgroundColor = .systemBackground
+            cell.backgroundColor = .cardBg
             return cell
         }
     }

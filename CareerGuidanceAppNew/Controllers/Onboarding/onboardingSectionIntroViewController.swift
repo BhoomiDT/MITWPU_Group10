@@ -25,61 +25,172 @@ class onboardingSectionIntroViewController: UIViewController {
         get { UserDefaults.standard.string(forKey: "kRecommendedDomainName") }
         set { UserDefaults.standard.set(newValue, forKey: "kRecommendedDomainName") }
     }
+    private let sheetView = UIView()
+    private let sheetTitleLabel = UILabel()
+    private let sheetSubtitleLabel = UILabel()
+    private let sheetContinueBtn = UIButton(type: .system)
+    private let sheetSkipBtn = UIButton(type: .system)
+    
+    private let topIconContainer = UIView()
+    private let topIconView = UIImageView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureContent()
         navigationItem.hidesBackButton = (sectionIndex != 1)
-        
+        setupCustomUI()
+        configureContent()
     }
     
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    private func setupCustomUI() {
+        // Hide original storyboards UI
+        iconBackgroundView?.isHidden = true
+        imageView?.isHidden = true
+        titleLabel?.isHidden = true
+        subtitleLabel?.isHidden = true
+        btnContinue?.isHidden = true
+        btnSkip?.isHidden = true
         
+        view.backgroundColor = .themeBg
         
-        iconBackgroundView.layer.cornerRadius = iconBackgroundView.frame.height / 2
-        iconBackgroundView.layer.masksToBounds = true
+        // Setup top animated icon
+        let colors: [UIColor] = [.systemPink, .systemTeal, .systemOrange, .systemPurple, .systemGreen]
+        let color = colors[sectionIndex % colors.count]
+        
+        topIconContainer.backgroundColor = color.withAlphaComponent(0.3)
+        topIconContainer.layer.cornerRadius = 60
+        topIconContainer.layer.masksToBounds = true
+        topIconContainer.layer.borderWidth = 2
+        topIconContainer.layer.borderColor = color.cgColor
+        topIconContainer.alpha = 0
+        topIconContainer.transform = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        
+        topIconView.tintColor = color
+        topIconView.contentMode = .scaleAspectFit
+        
+        view.addSubview(topIconContainer)
+        topIconContainer.addSubview(topIconView)
+        
+        topIconContainer.translatesAutoresizingMaskIntoConstraints = false
+        topIconView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Setup Bottom Sheet
+        sheetView.backgroundColor = .cardBg
+        sheetView.layer.cornerRadius = 40
+        sheetView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        // Push it down initially for animation
+        sheetView.transform = CGAffineTransform(translationX: 0, y: UIScreen.main.bounds.height)
+        
+        view.addSubview(sheetView)
+        sheetView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Sheet Content
+        sheetTitleLabel.font = .systemFont(ofSize: 28, weight: .bold)
+        sheetTitleLabel.textColor = .textPrimary
+        sheetTitleLabel.numberOfLines = 0
+        sheetTitleLabel.textAlignment = .center
+        
+        sheetSubtitleLabel.font = .systemFont(ofSize: 16)
+        sheetSubtitleLabel.textColor = .textSecondary
+        sheetSubtitleLabel.numberOfLines = 0
+        sheetSubtitleLabel.textAlignment = .center
+        
+        sheetContinueBtn.backgroundColor = .accentTeal
+        sheetContinueBtn.setTitle("Continue", for: .normal)
+        sheetContinueBtn.setTitleColor(.white, for: .normal)
+        sheetContinueBtn.titleLabel?.font = .boldSystemFont(ofSize: 18)
+        sheetContinueBtn.layer.cornerRadius = 14
+        sheetContinueBtn.addTarget(self, action: #selector(continueTapped), for: .touchUpInside)
+        
+        sheetSkipBtn.setTitle("Skip for now", for: .normal)
+        sheetSkipBtn.setTitleColor(.textSecondary, for: .normal)
+        sheetSkipBtn.titleLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        sheetSkipBtn.addTarget(self, action: #selector(skipTapped), for: .touchUpInside)
+        
+        sheetView.addSubview(sheetTitleLabel)
+        sheetView.addSubview(sheetSubtitleLabel)
+        sheetView.addSubview(sheetContinueBtn)
+        sheetView.addSubview(sheetSkipBtn)
+        
+        sheetTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        sheetSubtitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        sheetContinueBtn.translatesAutoresizingMaskIntoConstraints = false
+        sheetSkipBtn.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            topIconContainer.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            topIconContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 60),
+            topIconContainer.widthAnchor.constraint(equalToConstant: 120),
+            topIconContainer.heightAnchor.constraint(equalToConstant: 120),
+            
+            topIconView.centerXAnchor.constraint(equalTo: topIconContainer.centerXAnchor),
+            topIconView.centerYAnchor.constraint(equalTo: topIconContainer.centerYAnchor),
+            topIconView.widthAnchor.constraint(equalToConstant: 60),
+            topIconView.heightAnchor.constraint(equalToConstant: 60),
+            
+            sheetView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            sheetView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            sheetView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            sheetView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 0.5),
+            
+            sheetTitleLabel.topAnchor.constraint(equalTo: sheetView.topAnchor, constant: 40),
+            sheetTitleLabel.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 24),
+            sheetTitleLabel.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -24),
+            
+            sheetSubtitleLabel.topAnchor.constraint(equalTo: sheetTitleLabel.bottomAnchor, constant: 16),
+            sheetSubtitleLabel.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 24),
+            sheetSubtitleLabel.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -24),
+            
+            sheetContinueBtn.leadingAnchor.constraint(equalTo: sheetView.leadingAnchor, constant: 24),
+            sheetContinueBtn.trailingAnchor.constraint(equalTo: sheetView.trailingAnchor, constant: -24),
+            sheetContinueBtn.heightAnchor.constraint(equalToConstant: 54),
+            sheetContinueBtn.bottomAnchor.constraint(equalTo: sheetSkipBtn.topAnchor, constant: -16),
+            
+            sheetSkipBtn.centerXAnchor.constraint(equalTo: sheetView.centerXAnchor),
+            sheetSkipBtn.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            sheetSkipBtn.heightAnchor.constraint(equalToConstant: 44)
+        ])
     }
-    private var hasShownWelcomeModal = false
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if sectionIndex == 0 && !hasShownWelcomeModal {
-            presentWelcomePage()
+        
+        UIView.animate(withDuration: 0.6, delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 0.5, options: .curveEaseOut) {
+            self.topIconContainer.alpha = 1
+            self.topIconContainer.transform = .identity
+            self.sheetView.transform = .identity
         }
     }
-
-    private func presentWelcomePage() {
-        let storyboard = UIStoryboard(name: "WelcomePage", bundle: nil)
-        if let welcomeVC = storyboard.instantiateViewController(withIdentifier: "WelcomePage") as? WelcomeViewController {
-            welcomeVC.modalPresentationStyle = .pageSheet
-            hasShownWelcomeModal = true
-            
-            self.present(welcomeVC, animated: true, completion: nil)
-        }
+    
+    @objc private func continueTapped() {
+        continueButtonTapped(UIButton())
+    }
+    
+    @objc private func skipTapped() {
+        skipButtonTapped(UIButton())
     }
     
     func configureContent() {
         let questionnaire = OnboardingManager.shared.questionnaire
         
         if sectionIndex == 0 {
-            titleLabel.text = "Your Personal Roadmap"
-            subtitleLabel.text = "Let's create a personalized career path tailored just for you"
-            imageView.image = UIImage(systemName: "figure.walk")
+            sheetTitleLabel.text = "Your Personal Roadmap"
+            sheetSubtitleLabel.text = "Let's create a personalized career path tailored just for you"
+            topIconView.image = UIImage(systemName: "figure.walk")
         } else if sectionIndex == 1 {
-            titleLabel.text = "Technical Skills"
-            subtitleLabel.text = "Add your technical skills to get a personalized roadmap"
-            imageView.image = UIImage(systemName: "terminal.fill")
+            sheetTitleLabel.text = "Technical Skills"
+            sheetSubtitleLabel.text = "Add your technical skills to get a personalized roadmap"
+            topIconView.image = UIImage(systemName: "terminal.fill")
         } else {
             let dataIndex = sectionIndex - 2
             guard dataIndex < questionnaire.sections.count else { return }
             
             let sectionData = questionnaire.sections[dataIndex]
-            titleLabel.text = sectionData.title
-            subtitleLabel.text = sectionData.subtitle
-            imageView.image = UIImage(systemName: sectionData.symbolName)
+            sheetTitleLabel.text = sectionData.title
+            sheetSubtitleLabel.text = sectionData.subtitle
+            topIconView.image = UIImage(systemName: sectionData.symbolName)
         }
         
-        btnSkip.isHidden = (sectionIndex == 0)
+        sheetSkipBtn.isHidden = (sectionIndex == 0)
     }
     @IBAction func continueButtonTapped(_ sender: UIButton) {
         OnboardingManager.shared.lastVisitedSectionIndex = sectionIndex

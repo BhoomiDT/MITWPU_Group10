@@ -30,7 +30,62 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
             super.viewDidLoad()
             title = selectedLesson?.name ?? "Resources"
             setupCollectionView()
+            setupNavigationItem()
             fetchResources()
+        }
+
+        override func viewWillAppear(_ animated: Bool) {
+            super.viewWillAppear(animated)
+            
+            view.backgroundColor = .themeBg
+            collectionView.backgroundColor = .themeBg
+            
+            setupNavigationBarAppearance()
+        }
+
+        private func setupNavigationBarAppearance() {
+            let appearance = UINavigationBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .navBarBg
+            appearance.shadowColor = .clear
+            appearance.shadowImage = nil
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.textPrimary]
+            appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.textPrimary]
+            
+            navigationController?.navigationBar.standardAppearance = appearance
+            navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            navigationController?.navigationBar.compactAppearance = appearance
+            navigationController?.navigationBar.tintColor = .accentTeal
+            
+            navigationController?.navigationBar.prefersLargeTitles = true
+            navigationItem.largeTitleDisplayMode = .always
+            
+            navigationController?.navigationBar.setNeedsLayout()
+            navigationController?.navigationBar.layoutIfNeeded()
+        }
+
+        private func setupNavigationItem() {
+            navigationItem.hidesBackButton = true
+            
+            let backBtn = UIButton(type: .custom)
+            backBtn.backgroundColor = UIColor.textPrimary.withAlphaComponent(0.08)
+            backBtn.layer.cornerRadius = 18
+            backBtn.tintColor = .textPrimary
+            let config = UIImage.SymbolConfiguration(pointSize: 14, weight: .bold)
+            backBtn.setImage(UIImage(systemName: "chevron.left", withConfiguration: config), for: .normal)
+            backBtn.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
+            backBtn.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                backBtn.widthAnchor.constraint(equalToConstant: 36),
+                backBtn.heightAnchor.constraint(equalToConstant: 36)
+            ])
+            
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backBtn)
+        }
+        
+        @objc private func backTapped() {
+            navigationController?.popViewController(animated: true)
         }
 
         private func showStartTestModal(for lesson: Lesson) {
@@ -58,10 +113,10 @@ class MainResourcesViewController: UIViewController, StartTestModalDelegate {
             collectionView.dataSource = self
             
             if let layout = collectionView.collectionViewLayout as? UICollectionViewFlowLayout {
-                      layout.estimatedItemSize = .zero
-                      layout.minimumLineSpacing = 12
-                      layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16)
-                  }
+                layout.estimatedItemSize = .zero
+                layout.minimumLineSpacing = 12
+                layout.sectionInset = UIEdgeInsets(top: 8, left: 16, bottom: 16, right: 16)
+            }
 
             collectionView.register(
                 UINib(nibName: "VideoCollectionViewCell", bundle: nil),

@@ -22,6 +22,24 @@ class MilestonesTableViewCell: UITableViewCell {
             selectionStyle = .none
             iconBackgroundView.layer.cornerRadius = 8
             iconBackgroundView.clipsToBounds = true
+            
+            backgroundColor = .clear
+            contentView.backgroundColor = .clear
+            containerView.backgroundColor = .cardBg
+            titleLabel.textColor = .textPrimary
+            subtitleLabel.textColor = .textSecondary
+            
+            containerView.layer.borderWidth = 1
+            updateBorders()
+        }
+        
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            updateBorders()
+        }
+        
+        private func updateBorders() {
+            containerView.layer.borderColor = UIColor.cardBorder.cgColor
         }
     override func setSelected(_ selected: Bool, animated: Bool) { }
     override func setHighlighted(_ highlighted: Bool, animated: Bool) { }

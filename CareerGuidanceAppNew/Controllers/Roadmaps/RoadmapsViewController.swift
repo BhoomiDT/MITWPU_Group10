@@ -18,6 +18,9 @@ class RoadmapsViewController: UIViewController {
         registerRoadmapCells()
         setupSearchBar()
         loadRoadmapData() 
+        
+        view.backgroundColor = .themeBg
+        collectionView.backgroundColor = .themeBg
     }
         
     private func loadRoadmapData() {
@@ -40,6 +43,11 @@ class RoadmapsViewController: UIViewController {
         searchBar.delegate = self
         searchBar.placeholder = "Search for roadmaps"
         searchBar.backgroundImage = UIImage()
+        searchBar.barTintColor = .clear
+        searchBar.backgroundColor = .clear
+        searchBar.searchTextField.backgroundColor = .progressTrackBg
+        searchBar.searchTextField.textColor = .textPrimary
+        searchBar.searchTextField.leftView?.tintColor = .lightGray
     }
     
     private func generateRoadmapLayout() -> UICollectionViewLayout {

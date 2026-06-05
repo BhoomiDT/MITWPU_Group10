@@ -25,6 +25,14 @@ class StaticHeaderView: UIView {
         cardContainer.clipsToBounds = true
         startButton.layer.cornerRadius = 28
         startButton.clipsToBounds = true
+        
+        self.backgroundColor = .clear
+        cardContainer.backgroundColor = .cardBg
+        titleLabel.textColor = .textPrimary
+        bodyLabel.textColor = .textSecondary
+        
+        startButton.backgroundColor = .accentTeal
+        startButton.setTitleColor(.white, for: .normal)
     }
     
     @IBAction func startButtonTapped(_ sender: UIButton) {

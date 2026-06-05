@@ -5,6 +5,18 @@ class ProfileService {
     static let shared = ProfileService()
     private let client = SupabaseManager.shared.client
     
+    /// Cached user display name, populated during sync
+    var cachedName: String? {
+        get {
+            UserDefaults.standard.string(forKey: "kCachedUserFullName")
+        }
+        set {
+            if let newValue = newValue, newValue != "null" && !newValue.isEmpty {
+                UserDefaults.standard.set(newValue, forKey: "kCachedUserFullName")
+            }
+        }
+    }
+    
     private init() {}
     
     func fetchProfile() async throws -> UserProfile {
@@ -12,12 +24,17 @@ class ProfileService {
             throw NSError(domain: "AuthError", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
         }
         
-        return try await client.from("profiles")
-            .select()
-            .eq("id", value: userId)
-            .single()
-            .execute()
-            .value
+        do {
+            return try await client.from("profiles")
+                .select()
+                .eq("id", value: userId)
+                .single()
+                .execute()
+                .value
+        } catch let error as PostgrestError where error.code == "PGRST116" {
+            // No profile found, return an empty default profile
+            return UserProfile(id: userId, email: nil, full_name: nil, technical_skills: [], riasec_scores: [:], onboarding_completed: false, recommended_domain: nil, learning_streak: 0, completed_quizzes: 0, learning_days: 0, quests_completed: 0, xp: 0)
+        }
     }
     
     func updateProfile(_ profile: UserProfile) async throws {
@@ -32,12 +49,20 @@ class ProfileService {
         
         // Try to get name from session metadata if available
         let metadata = session.user.userMetadata
-        let name = metadata["full_name"]?.description.replacingOccurrences(of: "\"", with: "")
+        var name = metadata["full_name"]?.description.replacingOccurrences(of: "\"", with: "")
+        if name == "null" || name == "" {
+            name = nil
+        }
+        
+        let resolvedName = name ?? self.cachedName
+        if let resolvedName = resolvedName {
+            self.cachedName = resolvedName
+        }
         
         let profile = UserProfile(
             id: userId,
             email: session.user.email,
-            full_name: name,
+            full_name: resolvedName,
             technical_skills: OnboardingManager.shared.technicalSkills,
             riasec_scores: OnboardingManager.shared.riasecScoresMap,
             onboarding_completed: OnboardingManager.shared.isOnboardingCompleted,
@@ -60,6 +85,19 @@ class ProfileService {
     func syncRemoteToLocal() async {
         do {
             let profile = try await fetchProfile()
+            
+            // Cache name for greeting with Auth metadata fallback
+            if let fullName = profile.full_name, !fullName.isEmpty, fullName != "null" {
+                self.cachedName = fullName
+            } else if let session = try? await client.auth.session {
+                let metadata = session.user.userMetadata
+                if let name = metadata["full_name"]?.description.replacingOccurrences(of: "\"", with: ""), name != "null", !name.isEmpty {
+                    self.cachedName = name
+                    var updatedProfile = profile
+                    updatedProfile.full_name = name
+                    try? await updateProfile(updatedProfile)
+                }
+            }
             
             // Sync to OnboardingManager/UserDefaults
             OnboardingManager.shared.technicalSkills = profile.technical_skills ?? []

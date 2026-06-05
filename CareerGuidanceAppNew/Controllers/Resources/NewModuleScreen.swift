@@ -67,7 +67,8 @@ class NewModuleScreen: UIViewController, StartTestModalDelegate {
             forCellWithReuseIdentifier: "ViewCell"
         )
 
-        collectionNewModules.backgroundColor = .systemGroupedBackground
+        view.backgroundColor = .themeBg
+        collectionNewModules.backgroundColor = .themeBg
     }
 
     private func loadData() {

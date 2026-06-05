@@ -94,15 +94,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-
+        self.window = window
+        
+        let storyboard = UIStoryboard(name: "Badges", bundle: nil)
+        let badgesVC = storyboard.instantiateViewController(withIdentifier: "BadgesViewController") as! BadgesViewController
+        let navVC = UINavigationController(rootViewController: badgesVC)
+        navVC.navigationBar.prefersLargeTitles = true
+        window.rootViewController = navVC
+        window.makeKeyAndVisible()
+        return
+        
+        /*
         Task {
             let client = SupabaseManager.shared.client
             do {
+                // ⚠️ TEMPORARY: Force sign out so you can see the new Auth UI
+                // try? await client.auth.signOut()
+                
                 let session = try await client.auth.session
                 UserSessionManager.shared.setUserId(session.user.id)
                 
                 // Sync profile from Supabase
                 await ProfileService.shared.syncRemoteToLocal()
+                
+
                 
                 // User is logged in, decide where to go
                 DispatchQueue.main.async {
@@ -126,14 +141,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             } catch {
                 // No session, go to Welcome/Login
                 DispatchQueue.main.async {
-                    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                    if let initialVC = storyboard.instantiateInitialViewController() {
-                        window.rootViewController = initialVC
-                        window.makeKeyAndVisible()
-                    }
+                    let authVC = AuthViewController()
+                    window.rootViewController = authVC
+                    window.makeKeyAndVisible()
                 }
             }
         }
+        */
         
         self.window = window
     }

@@ -25,9 +25,30 @@ class ModuleCardCellCollectionViewCell: UICollectionViewCell {
     private func setupUI() {
         resourceButton.layer.cornerRadius = 20
         resourceButton.layer.borderWidth = 1
-        resourceButton.layer.borderColor = UIColor.systemTeal.cgColor
+        resourceButton.layer.borderColor = UIColor.accentTeal.cgColor
 
+        backgroundColor = .clear
+        contentView.backgroundColor = .cardBg
+        contentView.layer.cornerRadius = 16
+        contentView.layer.masksToBounds = true
+        contentView.layer.borderWidth = 1
         
+        titleLabel.textColor = .textPrimary
+        subtitleLabel.textColor = .textSecondary
+        
+        resourceButton.setTitleColor(.accentTeal, for: .normal)
+        
+        updateBorders()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateBorders()
+    }
+    
+    private func updateBorders() {
+        contentView.layer.borderColor = UIColor.cardBorder.cgColor
+        resourceButton.layer.borderColor = UIColor.accentTeal.cgColor
     }
     
     var onTestTapped: (() -> Void)?
@@ -117,8 +138,8 @@ class ModuleCardCellCollectionViewCell: UICollectionViewCell {
             titleColor = .white
         } else {
             titleText = "Start Test"
-            buttonBG = .systemGray5
-            titleColor = .systemGray
+            buttonBG = .progressTrackBg
+            titleColor = .textSecondary
         }
 
         // MODERN FIX: Use UIButton.Configuration

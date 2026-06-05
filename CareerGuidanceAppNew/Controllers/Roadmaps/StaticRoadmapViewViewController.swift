@@ -20,6 +20,8 @@ class StaticRoadmapViewViewController: UIViewController {
         super.viewDidLoad()
         self.title = roadmap?.title
         navigationController?.navigationBar.prefersLargeTitles = true
+        view.backgroundColor = .themeBg
+        tableView.backgroundColor = .themeBg
         setupTable()
         setupHeader()
         loadRoadmapData()

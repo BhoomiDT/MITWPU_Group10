@@ -194,32 +194,78 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
                OnboardingManager.shared.completedSectionIndexes)
          print(" Onboarding completed:",
                OnboardingManager.shared.isOnboardingCompleted)
+        self.extendedLayoutIncludesOpaqueBars = true
+        view.backgroundColor = .themeBg
+        collectionView.backgroundColor = .themeBg
+        collectionView.contentInset.bottom = 100
+        collectionView.contentInsetAdjustmentBehavior = .always
+
+        setupNavigationBarAppearance()
         
-        collectionView.backgroundColor = .appBackground
         Task {
             await ProfileService.shared.syncRemoteToLocal()
             await UserStats.shared.syncFromSupabase()
             await hydrateQuizHistory()
             
             DispatchQueue.main.async {
+                // Refresh greeting after name is fetched
+                self.title = self.getDynamicGreeting()
+                self.navigationController?.navigationBar.setNeedsLayout()
+                self.navigationController?.navigationBar.layoutIfNeeded()
                 self.collectionView.reloadData()
             }
         }
-        
-        collectionView.collectionViewLayout.invalidateLayout()
-        collectionView.setCollectionViewLayout(createLayout(), animated: false)
         view.bringSubviewToFront(floatingButton)
+    }
+    
+    private func setupNavigationBarAppearance() {
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = .navBarBg
+        appearance.shadowColor = .clear
+        appearance.shadowImage = nil
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.textPrimary]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.textPrimary]
+        
+        navigationController?.navigationBar.standardAppearance = appearance
+        navigationController?.navigationBar.scrollEdgeAppearance = appearance
+        navigationController?.navigationBar.compactAppearance = appearance
+        navigationController?.navigationBar.tintColor = .accentTeal
+        
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
+        self.title = getDynamicGreeting()
+        navigationController?.navigationBar.setNeedsLayout()
+        navigationController?.navigationBar.layoutIfNeeded()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            setupNavigationBarAppearance()
+        }
+    }
+    
+    private func getDynamicGreeting() -> String {
+        if let name = ProfileService.shared.cachedName, !name.isEmpty {
+            let firstName = name.components(separatedBy: " ").first ?? name
+            return "Hello \(firstName)"
+        }
+        return "Hello"
     }
     override func viewDidLoad() {
         
         super.viewDidLoad()
+        self.extendedLayoutIncludesOpaqueBars = true
+        view.sendSubviewToBack(collectionView)
         
         Task {
             await loadRoadmapsFromSupabase()
             collectionView.reloadData()
         }
         
-        navigationController!.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.largeTitleDisplayMode = .always
         navigationItem.hidesBackButton = true
         collectionView.delegate = self
         collectionView.dataSource = self
@@ -232,14 +278,15 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
         
         
         let config = UIImage.SymbolConfiguration(
-                pointSize: 18,
-                weight: .medium
+                pointSize: 22,
+                weight: .bold
             )
         let image = UIImage(
-                systemName: "headset",
+                systemName: "sparkles",
                 withConfiguration: config
             )
         floatingButton.setImage(image, for: .normal)
+        floatingButton.tintColor = .white
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -290,7 +337,38 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        setupFloatingOrb()
+    }
+    
+    private func setupFloatingOrb() {
         floatingButton.layer.cornerRadius = floatingButton.bounds.height / 2
+        floatingButton.backgroundColor = .clear
+        
+        // Remove existing gradient to prevent overlap
+        floatingButton.layer.sublayers?.removeAll(where: { $0 is CAGradientLayer })
+        
+        let gradient = CAGradientLayer()
+        gradient.frame = floatingButton.bounds
+        gradient.colors = [UIColor(hex: "1fa5a1").cgColor, UIColor.systemPurple.cgColor]
+        gradient.startPoint = CGPoint(x: 0, y: 0)
+        gradient.endPoint = CGPoint(x: 1, y: 1)
+        gradient.cornerRadius = floatingButton.bounds.height / 2
+        floatingButton.layer.insertSublayer(gradient, at: 0)
+        
+        floatingButton.layer.shadowColor = UIColor(hex: "1fa5a1").cgColor
+        floatingButton.layer.shadowRadius = 15
+        floatingButton.layer.shadowOpacity = 0.8
+        floatingButton.layer.shadowOffset = .zero
+        
+        if floatingButton.layer.animation(forKey: "pulse") == nil {
+            let pulse = CABasicAnimation(keyPath: "transform.scale")
+            pulse.duration = 1.5
+            pulse.fromValue = 0.95
+            pulse.toValue = 1.05
+            pulse.autoreverses = true
+            pulse.repeatCount = .infinity
+            floatingButton.layer.add(pulse, forKey: "pulse")
+        }
     }
     
     @IBAction func aiButtonTapped(_ sender: UIButton) {
@@ -475,27 +553,51 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
                 let shouldFillWidth = roadmapCount == 1
 
-                return self.layoutSection(
-                    height: isDone ? 165 : 170,
+                let section = self.layoutSection(
+                    height: isDone ? 170 : 180,
                     scroll: shouldFillWidth ? .none : .groupPaging,
                     header: header,
                     width: shouldFillWidth ? 1.0 : 0.85
                 )
+                
+                // 3D Cover Flow Effect for Section 1
+                if !shouldFillWidth {
+                    section.visibleItemsInvalidationHandler = { items, off, env in
+                        items.forEach { item in
+                            guard item.representedElementCategory == .cell else { return }
+                            let distanceFromCenter = abs((item.frame.midX - off.x) - env.container.contentSize.width / 2.0)
+                            let minScale: CGFloat = 0.85
+                            let scale = max(1.0 - (distanceFromCenter / env.container.contentSize.width) * 0.3, minScale)
+                            item.transform = CGAffineTransform(scaleX: scale, y: scale)
+                            item.alpha = scale // Fade out slightly as it shrinks
+                        }
+                    }
+                }
+                
+                return section
             }
 
             
             if index == 5 {
-                let s = self.layoutSection(height: 220, scroll: .continuousGroupLeadingBoundary, header: header, width: 0.85)
-                if isDone { s.visibleItemsInvalidationHandler = { items, off, env in
+                let section = self.layoutSection(height: 240, scroll: .continuousGroupLeadingBoundary, header: header, width: 0.85)
+                
+                // Stronger 3D Cover Flow Effect for Trending
+                section.visibleItemsInvalidationHandler = { items, off, env in
                     items.forEach { item in
-                        let scale = max(1.0 - (abs((item.frame.midX - off.x) - env.container.contentSize.width / 2.0) / env.container.contentSize.width), 0.95)
+                        guard item.representedElementCategory == .cell else { return }
+                        let distanceFromCenter = abs((item.frame.midX - off.x) - env.container.contentSize.width / 2.0)
+                        let minScale: CGFloat = 0.80
+                        let scale = max(1.0 - (distanceFromCenter / env.container.contentSize.width) * 0.35, minScale)
                         item.transform = CGAffineTransform(scaleX: scale, y: scale)
+                        item.alpha = scale
                     }
-                }}
-                return s
+                }
+                
+                return section
             }
-            let h = [110, 0, 275, 60, 60][index]
-            return self.layoutSection(height: CGFloat(h), header: index == 2 ? header : nil, top: (index == 3 || index == 4) ? 12 : 0)
+            // heights: idx 0=Stats, 2=Journey, 3=Leaderboard, 4=Badges
+            let h = [136, 0, 250, 68, 68][index]
+            return self.layoutSection(height: CGFloat(h), header: index == 2 ? header : nil, top: (index == 3 || index == 4) ? 8 : 0)
         }
     }
     
@@ -518,7 +620,8 @@ class HomeSectionHeaderView: UICollectionReusableView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        titleLabel.font = .boldSystemFont(ofSize: 20)
+        titleLabel.font = .systemFont(ofSize: 20, weight: .bold)
+        titleLabel.textColor = .textPrimary
         viewAllButton.setTitle("View All", for: .normal)
         viewAllButton.tintColor = .appTeal
         viewAllButton.addTarget(self, action: #selector(tap), for: .touchUpInside)
