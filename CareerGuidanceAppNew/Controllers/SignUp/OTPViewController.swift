@@ -23,11 +23,15 @@ class OTPViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         // Back Button
-        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
-        backButton.setImage(UIImage(systemName: "chevron.left", withConfiguration: config), for: .normal)
+        var buttonConfig = UIButton.Configuration.plain()
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .bold)
+        buttonConfig.image = UIImage(systemName: "chevron.left", withConfiguration: symbolConfig)
+        buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: -2, bottom: 0, trailing: 0)
+        
+        backButton.configuration = buttonConfig
         backButton.tintColor = themeColor
-        backButton.backgroundColor = .systemGray5
-        backButton.layer.cornerRadius = 20
+        backButton.backgroundColor = .systemGray6
+        backButton.layer.cornerRadius = 22
         backButton.clipsToBounds = true
         backButton.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
         backButton.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +54,9 @@ class OTPViewController: UIViewController {
         otpTextField.font = .monospacedDigitSystemFont(ofSize: 32, weight: .bold)
         otpTextField.textAlignment = .center
         otpTextField.keyboardType = .numberPad
-        otpTextField.backgroundColor = .secondarySystemBackground
+        otpTextField.backgroundColor = .systemBackground
+        otpTextField.layer.borderWidth = 1.0
+        otpTextField.layer.borderColor = themeColor.cgColor
         otpTextField.layer.cornerRadius = 14
         otpTextField.layer.cornerCurve = .continuous
         otpTextField.textContentType = .oneTimeCode
@@ -86,7 +92,7 @@ class OTPViewController: UIViewController {
         view.addSubview(stackView)
         
         NSLayoutConstraint.activate([
-            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
             backButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             backButton.widthAnchor.constraint(equalToConstant: 44),
             backButton.heightAnchor.constraint(equalToConstant: 44),

@@ -28,16 +28,20 @@ class SignUpViewController: UIViewController {
         styleTextField(passwordTextField)
         styleTextField(confirmPasswordTextField)
         stylePrimaryButton(registerButton)
+        hideSocialLogin()
+        adjustFormSpacing()
     }
     
     private func addCircularBackButton() {
-        let backBtn = UIButton(type: .system)
-        let config = UIImage.SymbolConfiguration(pointSize: 18, weight: .semibold)
-        let image = UIImage(systemName: "chevron.left", withConfiguration: config)
-        backBtn.setImage(image, for: .normal)
+        var buttonConfig = UIButton.Configuration.plain()
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 16, weight: .bold)
+        buttonConfig.image = UIImage(systemName: "chevron.left", withConfiguration: symbolConfig)
+        buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: -2, bottom: 0, trailing: 0)
+        
+        let backBtn = UIButton(configuration: buttonConfig, primaryAction: nil)
         backBtn.tintColor = .appTeal
-        backBtn.backgroundColor = .systemGray5
-        backBtn.layer.cornerRadius = 20
+        backBtn.backgroundColor = .systemGray6
+        backBtn.layer.cornerRadius = 22
         backBtn.clipsToBounds = true
         backBtn.addTarget(self, action: #selector(backTapped), for: .touchUpInside)
         
@@ -45,10 +49,10 @@ class SignUpViewController: UIViewController {
         view.addSubview(backBtn)
         
         NSLayoutConstraint.activate([
-            backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            backBtn.widthAnchor.constraint(equalToConstant: 40),
-            backBtn.heightAnchor.constraint(equalToConstant: 40)
+            backBtn.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            backBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            backBtn.widthAnchor.constraint(equalToConstant: 44),
+            backBtn.heightAnchor.constraint(equalToConstant: 44)
         ])
     }
     
@@ -75,8 +79,8 @@ class SignUpViewController: UIViewController {
     
     private func styleTextField(_ textField: UITextField) {
         textField.borderStyle = .none
-        textField.backgroundColor = .systemGray6
-        textField.layer.cornerRadius = 12
+        textField.backgroundColor = .systemBackground
+        textField.layer.cornerRadius = 14
         textField.layer.cornerCurve = .continuous
         
         // Height constraint
@@ -87,23 +91,23 @@ class SignUpViewController: UIViewController {
         textField.leftView = paddingView
         textField.leftViewMode = .always
         
-        // Add a subtle border to make it pop
-        textField.layer.borderWidth = 1
-        textField.layer.borderColor = UIColor.systemGray5.cgColor
+        // Teal border
+        textField.layer.borderWidth = 1.0
+        textField.layer.borderColor = UIColor.appTeal.cgColor
     }
     
     private func stylePrimaryButton(_ button: UIButton) {
-        let themeColor = UIColor(red: 31/255, green: 165/255, blue: 161/255, alpha: 1.0)
-        button.backgroundColor = themeColor
+        button.backgroundColor = .appTeal
         button.setTitleColor(.white, for: .normal)
-        button.layer.cornerRadius = 14
+        button.layer.cornerRadius = 16
         button.layer.cornerCurve = .continuous
-        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
+        button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
         
-        button.layer.shadowColor = themeColor.cgColor
-        button.layer.shadowOffset = CGSize(width: 0, height: 4)
-        button.layer.shadowOpacity = 0.3
-        button.layer.shadowRadius = 8
+        // Flat premium look
+        button.layer.shadowOpacity = 0
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 56).isActive = true
     }
     
     func setUpPasswordToggle() {
@@ -206,6 +210,50 @@ class SignUpViewController: UIViewController {
             } else {
                 loginVC.modalPresentationStyle = .fullScreen
                 self.present(loginVC, animated: true)
+            }
+        }
+    }
+    
+    private func hideSocialLogin() {
+        button1.isHidden = true
+        button2.isHidden = true
+        
+        func hideOrLabel(in view: UIView) {
+            if let label = view as? UILabel, label.text == "or continue with" {
+                label.isHidden = true
+                return
+            }
+            for subview in view.subviews {
+                hideOrLabel(in: subview)
+            }
+        }
+        hideOrLabel(in: view)
+    }
+    
+    private func adjustFormSpacing() {
+        func findStackView(in view: UIView) -> UIStackView? {
+            if let stack = view as? UIStackView { return stack }
+            for subview in view.subviews {
+                if let found = findStackView(in: subview) { return found }
+            }
+            return nil
+        }
+        
+        if let mainStack = findStackView(in: view) {
+            mainStack.spacing = 24
+            for arrangedSubview in mainStack.arrangedSubviews {
+                if let fieldStack = arrangedSubview as? UIStackView {
+                    fieldStack.spacing = 8
+                    for fieldSubview in fieldStack.arrangedSubviews {
+                        if let label = fieldSubview as? UILabel {
+                            label.font = .systemFont(ofSize: 15, weight: .semibold)
+                            label.textColor = .secondaryLabel
+                            if label.text == "Email Id" {
+                                label.text = "Email Address"
+                            }
+                        }
+                    }
+                }
             }
         }
     }
