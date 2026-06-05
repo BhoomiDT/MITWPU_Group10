@@ -97,6 +97,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         Task {
             let client = SupabaseManager.shared.client
+            
+            // TEMPORARY FOR TESTING: Force sign out on launch to test Login/Sign-In Screen
+            try? await client.auth.signOut()
+            
             do {
                 let session = try await client.auth.session
                 UserSessionManager.shared.setUserId(session.user.id)

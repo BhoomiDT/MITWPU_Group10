@@ -12,12 +12,46 @@ class ProfileService {
             throw NSError(domain: "AuthError", code: 401, userInfo: [NSLocalizedDescriptionKey: "User not logged in"])
         }
         
-        return try await client.from("profiles")
-            .select()
-            .eq("id", value: userId)
-            .single()
-            .execute()
-            .value
+        do {
+            return try await client.from("profiles")
+                .select()
+                .eq("id", value: userId)
+                .single()
+                .execute()
+                .value
+        } catch let error as PostgrestError {
+            if error.code == "PGRST116" {
+                var email: String? = nil
+                if let session = try? await client.auth.session {
+                    email = session.user.email
+                }
+                return UserProfile(
+                    id: userId,
+                    email: email,
+                    full_name: nil,
+                    technical_skills: nil,
+                    riasec_scores: nil,
+                    onboarding_completed: nil,
+                    recommended_domain: nil,
+                    learning_streak: nil,
+                    completed_quizzes: nil,
+                    learning_days: nil,
+                    quests_completed: nil,
+                    xp: nil,
+                    phone: nil,
+                    dob: nil,
+                    gender: nil,
+                    college_degree: nil,
+                    career_interests: nil,
+                    bio: nil,
+                    resume_url: nil,
+                    linkedin_url: nil,
+                    github_url: nil,
+                    app_settings: nil
+                )
+            }
+            throw error
+        }
     }
     
     func updateProfile(_ profile: UserProfile) async throws {

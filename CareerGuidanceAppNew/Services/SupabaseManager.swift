@@ -13,6 +13,7 @@ class SupabaseManager {
     static let shared = SupabaseManager()
     
     let client: SupabaseClient
+    let supabaseKey: String
     private init() {
         // Using hardcoded values as fallback if Info.plist variables are not resolved
         let sbURL = (Bundle.main.object(forInfoDictionaryKey: "SUPABASE_URL") as? String) ?? ""
@@ -36,6 +37,7 @@ class SupabaseManager {
             resolvedKey = sbKey
         }
 
+        self.supabaseKey = resolvedKey
         client = SupabaseClient(
             supabaseURL: URL(string: supabaseURL)!,
             supabaseKey: resolvedKey

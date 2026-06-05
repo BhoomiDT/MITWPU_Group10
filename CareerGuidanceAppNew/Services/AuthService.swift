@@ -37,19 +37,48 @@ final class AuthService {
 
     func sendMFAOTP(email: String, userId: Foundation.UUID) async throws {
         let client = SupabaseManager.shared.client
+        if let session = try? await client.auth.session {
+            print("🔑 Found session token: \(session.accessToken.prefix(10))...")
+            client.functions.setAuth(token: session.accessToken)
+        } else {
+            print("⚠️ No session token found in client.auth")
+        }
         let payload = [
             "action": "send",
             "email": email,
             "userId": userId.uuidString.lowercased()
         ]
         
-        // Invoke the Edge Function
-        _ = try await client.functions.invoke("mfa-otp", options: FunctionInvokeOptions(body: payload))
-        print("📲 OTP request sent to Edge Function")
+        do {
+            _ = try await client.functions.invoke("mfa-otp", options: FunctionInvokeOptions(body: payload))
+            print("📲 OTP request sent to Edge Function")
+        } catch let error as FunctionsError {
+            switch error {
+            case .httpError(let code, let data):
+                let errorMessage = String(data: data, encoding: .utf8) ?? "No message"
+                print("❌ Edge Function HTTP Error [\(code)]: \(errorMessage)")
+                throw NSError(domain: "EdgeFunctionError", code: code, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+            case .relayError:
+                print("❌ Edge Function Relay Error")
+                throw error
+            @unknown default:
+                print("❌ Edge Function Unknown Error: \(error)")
+                throw error
+            }
+        } catch {
+            print("❌ Edge Function General Error: \(error)")
+            throw error
+        }
     }
 
     func verifyMFAOTP(email: String, otp: String) async throws -> Bool {
         let client = SupabaseManager.shared.client
+        if let session = try? await client.auth.session {
+            print("🔑 Found session token: \(session.accessToken.prefix(10))...")
+            client.functions.setAuth(token: session.accessToken)
+        } else {
+            print("⚠️ No session token found in client.auth")
+        }
         let payload = [
             "action": "verify",
             "email": email,
@@ -60,8 +89,21 @@ final class AuthService {
             _ = try await client.functions.invoke("mfa-otp", options: FunctionInvokeOptions(body: payload))
             print("✅ OTP Verified successfully")
             return true
+        } catch let error as FunctionsError {
+            switch error {
+            case .httpError(let code, let data):
+                let errorMessage = String(data: data, encoding: .utf8) ?? "No message"
+                print("❌ Edge Function HTTP Error [\(code)]: \(errorMessage)")
+                throw NSError(domain: "EdgeFunctionError", code: code, userInfo: [NSLocalizedDescriptionKey: errorMessage])
+            case .relayError:
+                print("❌ Edge Function Relay Error")
+                throw error
+            @unknown default:
+                print("❌ Edge Function Unknown Error: \(error)")
+                throw error
+            }
         } catch {
-            print("❌ OTP Verification failed: \(error)")
+            print("❌ Edge Function General Error: \(error)")
             throw error
         }
     }
