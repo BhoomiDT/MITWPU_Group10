@@ -37,4 +37,24 @@ extension UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         self.present(alert, animated: true)
     }
+    
+    @discardableResult
+    func checkAuthentication() -> Bool {
+        if UserSessionManager.shared.userId == nil {
+            print("⚠️ Unauthenticated access detected. Redirecting to Welcome screen...")
+            DispatchQueue.main.async {
+                let welcomeVC = WelcomeViewController()
+                let nav = UINavigationController(rootViewController: welcomeVC)
+                nav.isNavigationBarHidden = true
+                
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                   let window = windowScene.windows.first {
+                    window.rootViewController = nav
+                    window.makeKeyAndVisible()
+                }
+            }
+            return false
+        }
+        return true
+    }
 }

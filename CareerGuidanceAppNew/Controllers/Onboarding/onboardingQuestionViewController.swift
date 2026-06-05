@@ -37,6 +37,11 @@ class onboardingQuestionViewController: UIViewController {
         configureUI()
         setupBackChevron()
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard checkAuthentication() else { return }
+    }
         func setupBackChevron() {
             let backButton = UIBarButtonItem(
                 image: UIImage(systemName: "chevron.left"),

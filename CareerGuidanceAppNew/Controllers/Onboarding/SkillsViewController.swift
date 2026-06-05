@@ -80,6 +80,11 @@ class SkillsViewController: UIViewController {
         tableView.contentInset.bottom = searchContainerView.frame.height + 12
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard checkAuthentication() else { return }
+    }
+    
     private func suggestionsArray() -> [String] {
         return isFiltering ? filteredSuggestions : suggestions
     }

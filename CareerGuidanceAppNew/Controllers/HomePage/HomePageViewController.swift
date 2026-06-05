@@ -189,6 +189,7 @@ class HomePageViewController: UIViewController, UICollectionViewDelegate, UIColl
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        guard checkAuthentication() else { return }
         
         print(" Completed sections:",
                OnboardingManager.shared.completedSectionIndexes)

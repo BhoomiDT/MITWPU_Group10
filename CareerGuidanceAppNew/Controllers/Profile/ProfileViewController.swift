@@ -26,6 +26,11 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
         fetchUserData()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard checkAuthentication() else { return }
+    }
+    
     func fetchUserData() {
         Task {
             if let user = try? await SupabaseManager.shared.client.auth.session.user {
@@ -194,12 +199,13 @@ class ProfileViewController: UIViewController, UITableViewDelegate, UITableViewD
                 do {
                     try await AuthService.shared.signOut()
                     DispatchQueue.main.async {
-                        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-                        guard let initialVC = storyboard.instantiateInitialViewController() else { return }
+                        let welcomeVC = WelcomeViewController()
+                        let nav = UINavigationController(rootViewController: welcomeVC)
+                        nav.isNavigationBarHidden = true
                         
                         if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
                            let window = windowScene.windows.first {
-                            window.rootViewController = initialVC
+                            window.rootViewController = nav
                             window.makeKeyAndVisible()
                             UIView.transition(with: window, duration: 0.3, options: .transitionCrossDissolve, animations: nil, completion: nil)
                         }
